@@ -9,8 +9,9 @@
 	<script type="text/javascript" src="scripts/PluginDetect.js"></script>
 	<script type="text/javascript" src="scripts/fingerprint.js"></script>
 	<script type="text/javascript">
-	$(function(){
-		var flash = document.getElementById("OSData");
+	
+	$(window).load(function(){
+		var flash = $("#OSData")[0];
 		
 		//Platform
 		$('<input>').attr({
@@ -170,7 +171,7 @@
 		<div id="formdiv">
 		</div>
 	</form>
-	<!-- Flash for detecting fonts. -->
+	<!-- Flash for detecting fonts and other things. -->
 	<div>
 		<embed id="OSData" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" src="flash/OSData.swf">
 	</div>
