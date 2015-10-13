@@ -19,7 +19,6 @@ public class FingerprintDAO {
 	private static final String getSampleCountStr = "SELECT COUNT(*) FROM `Samples`;";
 
 	private static final String NO_JAVASCRIPT = "No JavaScript";
-	private static final String NO_FLASH = "No Flash";
 	private static final String NOT_SUPPORTED = "Not supported";
 
 	public static final Integer processFingerprint(Fingerprint fingerprint, CharacteristicsBean chrsbean, UniquenessBean uniquenessbean) {
@@ -94,9 +93,6 @@ public class FingerprintDAO {
 			}
 			{
 				CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "PlatformFlash", fingerprint.getPlatformFlash());
-				if(bean.getValue().equals(NO_JAVASCRIPT)){
-					bean.setValue(NO_FLASH);
-				}
 				bean.setName("Platform (Flash)");
 				bean.setNameHoverText("The name of the platform the browser is running on, detected using Flash.");
 				characteristics.add(bean);
@@ -121,9 +117,6 @@ public class FingerprintDAO {
 			}
 			{
 				CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "ScreenDetailsFlash", fingerprint.getScreenDetailsFlash());
-				if(bean.getValue().equals(NO_JAVASCRIPT)){
-					bean.setValue(NO_FLASH);
-				}
 				bean.setName("Screen Size (Flash)");
 				bean.setNameHoverText("The resolution of the client's monitor(s)."
 						+ " Different from the other screen size test in that this number can be the cumulative resolution of the monitors in multiple monitor set ups.");
@@ -131,9 +124,6 @@ public class FingerprintDAO {
 			}
 			{
 				CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "LanguageFlash", fingerprint.getLanguageFlash());
-				if(bean.getValue().equals(NO_JAVASCRIPT)){
-					bean.setValue(NO_FLASH);
-				}
 				bean.setName("Language (Flash)");
 				bean.setNameHoverText("The language of the client's browser, as detected using Flash.");
 				characteristics.add(bean);
@@ -142,9 +132,6 @@ public class FingerprintDAO {
 				CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "Fonts", fingerprint.getFonts());
 				if (bean.getValue().equals("")) {
 					bean.setValue("No fonts detected");
-				}
-				else if(bean.getValue().equals(NO_JAVASCRIPT)){
-					bean.setValue(NO_FLASH);
 				}
 				bean.setName("System Fonts");
 				bean.setNameHoverText("The fonts installed on the client's machine, detected using Flash.");
