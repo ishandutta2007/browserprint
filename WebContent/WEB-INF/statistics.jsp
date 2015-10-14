@@ -386,11 +386,11 @@
 	<h1>
 		Out of a total of ${ statisticsBean.numSamples } fingerprint samples:
 	</h1>
-	<div id="torUsersGraph" style="height: auto; width: auto" data-highcharts-chart="1"></div>
-	<div id="cookiesGraph" style="height: auto; width: auto" data-highcharts-chart="2"></div>
-	<div id="osGraph" style="height: auto; width: auto" data-highcharts-chart="3"></div>
-	<div id="browserGraph" style="height: auto; width: auto" data-highcharts-chart="4"></div>
-	<div id="timezoneGraph" style="height: auto; width: auto" data-highcharts-chart="5"></div>
+	<div id="torUsersGraph" style="height: auto; width: auto"></div>
+	<div id="cookiesGraph" style="height: auto; width: auto"></div>
+	<div id="osGraph" style="height: auto; width: auto"></div>
+	<div id="browserGraph" style="height: auto; width: auto"></div>
+	<div id="timezoneGraph" style="height: auto; width: auto"></div>
 <%@include file="footer.jsp" %>
 </body>
 </html>
