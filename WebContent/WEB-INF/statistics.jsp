@@ -71,7 +71,53 @@
 						pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
 					},
 					series: [{
-						name: 'Timezones',
+						name: 'Clients',
+						colorByPoint: true,
+						data: dataArray
+					}]
+				});
+			});
+			
+			/* Cookies enabled */
+			jQuery.getJSON("json?chart=cookiesEnabled", function(jsonData){
+				var nbTotal = 0;
+				$.each(jsonData, function(key, num) {
+					nbTotal += num;
+				});
+				
+				var dataArray = [];
+				$.each(jsonData, function(key, val){
+					var name = "ERROR";
+					if(key == "1"){
+						name = "Cookies enabled";
+					}
+					else if(key == "0"){
+						name = "Cookies disabled";
+					}
+					var per = val*100/nbTotal;
+					dataArray.push({name:name, y:per});
+				});
+				$('#cookiesGraph').highcharts({
+					chart: {
+						type: 'pie'
+					},
+					title: {
+						text: 'Percentage of clients with cookies enabled'
+					},
+					plotOptions: {
+						series: {
+							dataLabels: {
+								enabled: true,
+								format: '{point.name}: {point.y:.1f}%'
+							}
+						}
+					},
+					tooltip: {
+						headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+						pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
+					},
+					series: [{
+						name: 'Clients',
 						colorByPoint: true,
 						data: dataArray
 					}]
@@ -341,9 +387,10 @@
 		Out of a total of ${ statisticsBean.numSamples } fingerprint samples:
 	</h1>
 	<div id="torUsersGraph" style="height: auto; width: auto" data-highcharts-chart="1"></div>
-	<div id="osGraph" style="height: auto; width: auto" data-highcharts-chart="2"></div>
-	<div id="browserGraph" style="height: auto; width: auto" data-highcharts-chart="3"></div>
-	<div id="timezoneGraph" style="height: auto; width: auto" data-highcharts-chart="4"></div>
+	<div id="cookiesGraph" style="height: auto; width: auto" data-highcharts-chart="2"></div>
+	<div id="osGraph" style="height: auto; width: auto" data-highcharts-chart="3"></div>
+	<div id="browserGraph" style="height: auto; width: auto" data-highcharts-chart="4"></div>
+	<div id="timezoneGraph" style="height: auto; width: auto" data-highcharts-chart="5"></div>
 <%@include file="footer.jsp" %>
 </body>
 </html>

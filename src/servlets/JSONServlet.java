@@ -39,6 +39,9 @@ public class JSONServlet extends HttpServlet {
 		if(chart.equals("usingTor")){
 			out.print(JSONDAO.getPercentageTorUsers());
 		}
+		else if(chart.equals("cookiesEnabled")){
+			out.print(JSONDAO.getCookiesEnabled());
+		}
 		else if(chart.equals("OS")){
 			out.print(JSONDAO.getOSBreakdown());
 		}

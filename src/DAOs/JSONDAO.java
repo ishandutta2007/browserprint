@@ -53,7 +53,52 @@ public class JSONDAO {
 		}
 		return null;
 	}
+	
+	public static final String getCookiesEnabled() {
+		Connection conn = null;
+		try {
+			conn = Database.getConnection();
+			conn.setReadOnly(true);
 
+			String query = "SELECT `CookiesEnabled`, COUNT(*) FROM `Samples` GROUP BY `CookiesEnabled`;";
+			PreparedStatement select = conn.prepareStatement(query);
+
+			ResultSet rs = select.executeQuery();
+
+			JSONObject results = new JSONObject();
+			while (rs.next()) {
+				boolean usingTor = rs.getBoolean(1);
+				String usingTorStr;
+				if (usingTor) {
+					usingTorStr = "1";
+				}
+				else {
+					usingTorStr = "0";
+				}
+
+				int count = rs.getInt(2);
+				results.put(usingTorStr, count);
+			}
+			rs.close();
+			select.close();
+
+			return results.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			// Close the connection
+			// Finally triggers even if we return
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// Ignore
+				}
+			}
+		}
+		return null;
+	}
+	
 	public static final String getOSBreakdown() {
 		Connection conn = null;
 		try {
