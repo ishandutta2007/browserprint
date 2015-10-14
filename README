@@ -18,3 +18,7 @@ You need to have Apache Tomcat and MySQL installed for this to work.
 The page can now be accessed at http://localhost:8080/browserprint/ (assuming default Tomcat settings).
 
 This project was created using the Eclipse IDE configured to use Tomcat and can be easily set up and modified using them.
+
+# Optional
+* Remove or replace the Creative Commons license on the output of the web application in WebContent/WEB-INF/footer.jsp.
+  You are only required to retain the MIT license on the code, not the CC license on the web application output.
