@@ -11,7 +11,8 @@
 <body>
 <%@include file="header.html" %>
 	<script type="text/javascript" src="scripts/jquery-1.11.2.min.js"></script>
-	<script type="text/javascript" src="scripts/highcharts.js"></script>
+	<script type="text/javascript" src="scripts/Highcharts/highcharts.js"></script>
+	<script type="text/javascript" src="scripts/Highcharts/modules/drilldown.js"></script>
 	<script>
 		/*
 		 * Modified code from Am I Unique?
@@ -348,7 +349,7 @@
 					}
 				});
 				timeArray.push({name:"Others", drilldown:"Others", y:nbTimeOthers});
-				var timeDrillSeries = [{id:"Others", name:"Others", data: timeDrillArray}];
+				var timeDrillSeries = [{id:"Others", name:"Others", data:timeDrillArray}];
 				$('#timezoneGraph').highcharts({
 					chart: {
 						type: 'pie'
