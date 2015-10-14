@@ -51,6 +51,9 @@ public class JSONServlet extends HttpServlet {
 		else if(chart.equals("timezone")){
 			out.print(JSONDAO.getTimezones());
 		}
+		else if(chart.equals("language")){
+			out.print(JSONDAO.getLanguages());
+		}
 	}
 
 	/**

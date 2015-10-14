@@ -320,36 +320,35 @@
 			});
 			
 			/* TimeZone */
-			jQuery.getJSON("json?chart=timezone", function(timeData){
+			jQuery.getJSON("json?chart=timezone", function(jsonData){
 				var nbTotal = 0;
-				$.each(timeData, function(key, num) {
+				$.each(jsonData, function(key, num) {
 					nbTotal += num;
 				});
 				
-				var timeArray = [];
-				var timeDrillArray = [];
-				var nbTimeOthers = 0;
-				$.each(timeData, function(key, tab){
-					if(key != "No JS") {
-						var name = parseInt(key,10)/-60;
-						if(name<0){
-							name = "UTC" + name ;
+				var dataArray = [];
+				var otherDrillArray = [];
+				var nbOthers = 0;
+				$.each(jsonData, function(key, tab){
+					var name = key;
+					if(name != "No JavaScript") {
+						name = parseInt(name,10)/-60;
+						if(name < 0){
+							name = "UTC" + name;
 						} else {
-							name = "UTC+" + name ;
+							name = "UTC+" + name;
 						}
-					} else {
-						var name = "Not specified";
 					}
 					var per = tab*100/nbTotal;
 					if(per>3){
-						timeArray.push({name:name, y:per});
+						dataArray.push({name:name, y:per});
 					} else {
-						nbTimeOthers += per;
-						timeDrillArray.push({name:name,y:per});
+						nbOthers += per;
+						otherDrillArray.push({name:name,y:per});
 					}
 				});
-				timeArray.push({name:"Others", drilldown:"Others", y:nbTimeOthers});
-				var timeDrillSeries = [{id:"Others", name:"Others", data:timeDrillArray}];
+				dataArray.push({name:"Others", drilldown:"Others", y:nbOthers});
+				var dataDrillSeries = [{id:"Others", name:"Other timezones", data:otherDrillArray}];
 				$('#timezoneGraph').highcharts({
 					chart: {
 						type: 'pie'
@@ -375,12 +374,67 @@
 					series: [{
 						name: 'Timezones',
 						colorByPoint: true,
-						data: timeArray
+						data: dataArray
 					}],
 					drilldown: {
-						series: timeDrillSeries
+						series: dataDrillSeries
 					}
 				});
+			});
+			
+			/* Percentage of Tor Users */
+			jQuery.getJSON("json?chart=language", function(jsonData){
+				var nbTotal = 0;
+				$.each(jsonData, function(key, num) {
+					nbTotal += num;
+				});
+				
+				var dataArray = [];
+				var otherDrillArray = [];
+				var nbOthers = 0;
+				$.each(jsonData, function(key, tab){
+					var per = tab*100/nbTotal;
+					if(per>3){
+						dataArray.push({name:key, y:per});
+					} else {
+						nbOthers += per;
+						otherDrillArray.push({name:key,y:per});
+					}
+				});
+				dataArray.push({name:"Others", drilldown:"Others", y:nbOthers});
+				var dataDrillSeries = [{id:"Others", name:"Other client languages", data:otherDrillArray}];
+				$('#languageGraph').highcharts({
+					chart: {
+						type: 'pie'
+					},
+					title: {
+						text: 'Breakdown of languages'
+					},
+					subtitle: {
+						text: 'As detected using Flash.'
+					},
+					plotOptions: {
+						series: {
+							dataLabels: {
+								enabled: true,
+								format: '{point.name}: {point.y:.1f}%'
+							}
+						}
+					},
+					tooltip: {
+						headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+						pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
+					},
+					series: [{
+						name: 'Client languages',
+						colorByPoint: true,
+						data: dataArray
+					}],
+					drilldown: {
+						series: dataDrillSeries
+					}
+				});
+
 			});
 		});
 	</script>
@@ -392,6 +446,7 @@
 	<div id="osGraph" style="height: auto; width: auto"></div>
 	<div id="browserGraph" style="height: auto; width: auto"></div>
 	<div id="timezoneGraph" style="height: auto; width: auto"></div>
+	<div id="languageGraph" style="height: auto; width: auto"></div>
 <%@include file="footer.jsp" %>
 </body>
 </html>

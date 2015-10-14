@@ -67,17 +67,17 @@ public class JSONDAO {
 
 			JSONObject results = new JSONObject();
 			while (rs.next()) {
-				boolean usingTor = rs.getBoolean(1);
-				String usingTorStr;
-				if (usingTor) {
-					usingTorStr = "1";
+				boolean cookiesEnabled = rs.getBoolean(1);
+				String cookiesEnabledStr;
+				if (cookiesEnabled) {
+					cookiesEnabledStr = "1";
 				}
 				else {
-					usingTorStr = "0";
+					cookiesEnabledStr = "0";
 				}
 
 				int count = rs.getInt(2);
-				results.put(usingTorStr, count);
+				results.put(cookiesEnabledStr, count);
 			}
 			rs.close();
 			select.close();
@@ -213,7 +213,7 @@ public class JSONDAO {
 				int timezone = rs.getInt(1);
 				String timezoneStr;
 				if (rs.wasNull()) {
-					timezoneStr = "No JS";
+					timezoneStr = "No JavaScript";
 				}
 				else {
 					timezoneStr = Integer.toString(timezone);
@@ -221,6 +221,47 @@ public class JSONDAO {
 
 				int count = rs.getInt(2);
 				results.put(timezoneStr, count);
+			}
+			rs.close();
+			select.close();
+
+			return results.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			// Close the connection
+			// Finally triggers even if we return
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// Ignore
+				}
+			}
+		}
+		return null;
+	}
+	
+	public static final String getLanguages() {
+		Connection conn = null;
+		try {
+			conn = Database.getConnection();
+			conn.setReadOnly(true);
+
+			String query = "SELECT `LanguageFlash`, COUNT(*) FROM `Samples` GROUP BY `LanguageFlash`;";
+			PreparedStatement select = conn.prepareStatement(query);
+
+			ResultSet rs = select.executeQuery();
+
+			JSONObject results = new JSONObject();
+			while (rs.next()) {
+				String language = rs.getString(1);
+				if (rs.wasNull()) {
+					language = "No JavaScript";
+				}
+
+				int count = rs.getInt(2);
+				results.put(language, count);
 			}
 			rs.close();
 			select.close();
