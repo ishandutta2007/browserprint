@@ -33,6 +33,10 @@ The language of the client's browser, as detected using Flash.
 ### System Fonts
 The fonts installed on the client's machine, detected using Flash.
 
+### Character Sizes
+The height and width of a set of Unicode characters rendered at 2200pt with a variety of styles applied to them (e.g. sans-serif).
+Different systems render these characters differently and this is one way to detect that without using a canvas.
+
 ### Are Cookies Enabled?
 Whether cookies are enabled.
 

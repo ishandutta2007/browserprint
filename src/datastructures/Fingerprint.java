@@ -15,6 +15,7 @@ public class Fingerprint {
 	private String screenDetailsFlash;
 	private String languageFlash;
 	private String fonts;
+	private String charSizes;
 
 	private boolean cookiesEnabled;
 
@@ -47,6 +48,7 @@ public class Fingerprint {
 		screenDetailsFlash = null;
 		languageFlash = null;
 		fonts = null;
+		charSizes = null;
 		cookiesEnabled = false;
 		superCookie = null;
 		doNotTrack = null;
@@ -149,6 +151,14 @@ public class Fingerprint {
 		this.fonts = fonts;
 	}
 
+	public String getCharSizes() {
+		return charSizes;
+	}
+
+	public void setCharSizes(String charSizes) {
+		this.charSizes = charSizes;
+	}
+	
 	public boolean isCookiesEnabled() {
 		return cookiesEnabled;
 	}

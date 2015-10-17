@@ -274,7 +274,7 @@ function getCharacterSizes(){
 		for(var j = 0; j < font_families.length; ++j){
 			span.attr("style", "font-family:" + font_families[j]);
 			if(i != 0 || j != 0){
-				sizesStr += ",";
+				sizesStr += " ";
 			}
 			sizesStr += span.width() + "x" + div.height();				
 		}

@@ -15,7 +15,7 @@ import beans.UniquenessBean;
 import datastructures.Fingerprint;
 
 public class FingerprintDAO {
-	private static final String insertSampleStr = "INSERT INTO `Samples`(`IP`,`TimeStamp`,`UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `LanguageFlash`, `Fonts`, `CookiesEnabled`, `SuperCookie`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `AdsBlocked`, `Canvas`, `WebGLVendor`, `WebGLRenderer`) VALUES(?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+	private static final String insertSampleStr = "INSERT INTO `Samples`(`IP`,`TimeStamp`,`UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `LanguageFlash`, `Fonts`, `CharSizes`, `CookiesEnabled`, `SuperCookie`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `AdsBlocked`, `Canvas`, `WebGLVendor`, `WebGLRenderer`) VALUES(?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 	private static final String getSampleCountStr = "SELECT COUNT(*) FROM `Samples`;";
 
 	private static final String NO_JAVASCRIPT = "No JavaScript";
@@ -135,6 +135,12 @@ public class FingerprintDAO {
 				}
 				bean.setName("System Fonts");
 				bean.setNameHoverText("The fonts installed on the client's machine, detected using Flash.");
+				characteristics.add(bean);
+			}
+			{
+				CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "CharSizes", fingerprint.getCharSizes());
+				bean.setName("Character Sizes");
+				bean.setNameHoverText("The height and width of a set of Unicode characters when rendered with a set of different styles (e.g. sans-serif).");
 				characteristics.add(bean);
 			}
 			{
@@ -278,6 +284,8 @@ public class FingerprintDAO {
 		++index;
 		insertSample.setString(index, fingerprint.getFonts());
 		++index;
+		insertSample.setString(index, fingerprint.getCharSizes());
+		++index;
 		insertSample.setBoolean(index, fingerprint.isCookiesEnabled());
 		++index;
 		insertSample.setString(index, fingerprint.getSuperCookie());
@@ -393,6 +401,7 @@ public class FingerprintDAO {
 				+ " AND `ScreenDetailsFlash`" + (fingerprint.getScreenDetailsFlash() == null ? " IS NULL" : " = ?")
 				+ " AND `LanguageFlash`" + (fingerprint.getLanguageFlash() == null ? " IS NULL" : " = ?")
 				+ " AND `Fonts`" + (fingerprint.getFonts() == null ? " IS NULL" : " = ?")
+				+ " AND `CharSizes`" + (fingerprint.getCharSizes() == null ? " IS NULL" : " = ?")
 				+ " AND `CookiesEnabled` = ?"
 				+ " AND `SuperCookie`" + (fingerprint.getSuperCookie() == null ? " IS NULL" : " = ?")
 				+ " AND `DoNotTrack`" + (fingerprint.getDoNotTrack() == null ? " IS NULL" : " = ?")
@@ -449,6 +458,10 @@ public class FingerprintDAO {
 		}
 		if (fingerprint.getFonts() != null) {
 			checkExists.setString(index, fingerprint.getFonts());
+			++index;
+		}
+		if (fingerprint.getCharSizes() != null) {
+			checkExists.setString(index, fingerprint.getCharSizes());
 			++index;
 		}
 		checkExists.setBoolean(index, fingerprint.isCookiesEnabled());
@@ -540,6 +553,7 @@ public class FingerprintDAO {
 				+ " AND `ScreenDetailsFlash`" + (fingerprint.getScreenDetailsFlash() == null ? " IS NULL" : " = ?")
 				+ " AND `LanguageFlash`" + (fingerprint.getLanguageFlash() == null ? " IS NULL" : " = ?")
 				+ " AND `Fonts`" + (fingerprint.getFonts() == null ? " IS NULL" : " = ?")
+				+ " AND `CharSizes`" + (fingerprint.getCharSizes() == null ? " IS NULL" : " = ?")
 				+ " AND `CookiesEnabled` = ?"
 				+ " AND `SuperCookie`" + (fingerprint.getSuperCookie() == null ? " IS NULL" : " = ?")
 				+ " AND `DoNotTrack`" + (fingerprint.getDoNotTrack() == null ? " IS NULL" : " = ?")
@@ -593,6 +607,10 @@ public class FingerprintDAO {
 		}
 		if (fingerprint.getFonts() != null) {
 			checkExists.setString(index, fingerprint.getFonts());
+			++index;
+		}
+		if (fingerprint.getCharSizes() != null) {
+			checkExists.setString(index, fingerprint.getCharSizes());
 			++index;
 		}
 		checkExists.setBoolean(index, fingerprint.isCookiesEnabled());

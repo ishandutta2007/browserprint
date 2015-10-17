@@ -66,6 +66,7 @@ public class TestServlet extends HttpServlet {
 		 * Extract the rest of the fingerprint from the POST details.
 		 */
 		fingerprint.setPlatform(request.getParameter("Platform"));
+		fingerprint.setPlatformFlash(request.getParameter("PlatformFlash"));
 		fingerprint.setPluginDetails(request.getParameter("PluginDetails"));
 		{
 			Integer timezone;
@@ -80,7 +81,22 @@ public class TestServlet extends HttpServlet {
 		fingerprint.setScreenDetailsFlash(request.getParameter("ScreenDetailsFlash"));
 		fingerprint.setLanguageFlash(request.getParameter("LanguageFlash"));
 		fingerprint.setFonts(request.getParameter("Fonts"));
+		fingerprint.setCharSizes(request.getParameter("CharSizes"));
 		fingerprint.setSuperCookie(request.getParameter("SuperCookie"));
+		{
+			long ourTime = new Date().getTime();
+			long theirTime;
+			try {
+				theirTime = Long.parseLong(request.getParameter("Time"));
+			} catch (NumberFormatException ex) {
+				// Difference of 0.
+				theirTime = ourTime;
+			}
+
+			// Get how many minutes our times differ by.
+			long difference = (ourTime - theirTime) / (1000 * 60);
+			fingerprint.setClockDifference(difference);
+		}
 		fingerprint.setDateTime(request.getParameter("DateTime"));
 		fingerprint.setMathTan(request.getParameter("MathTan"));
 		{
@@ -97,22 +113,6 @@ public class TestServlet extends HttpServlet {
 		fingerprint.setCanvas(request.getParameter("Canvas"));
 		fingerprint.setWebGLVendor(request.getParameter("WebGLVendor"));
 		fingerprint.setWebGLRenderer(request.getParameter("WebGLRenderer"));
-		fingerprint.setPlatformFlash(request.getParameter("PlatformFlash"));
-
-		{
-			long ourTime = new Date().getTime();
-			long theirTime;
-			try {
-				theirTime = Long.parseLong(request.getParameter("Time"));
-			} catch (NumberFormatException ex) {
-				// Difference of 0.
-				theirTime = ourTime;
-			}
-
-			// Get how many minutes our times differ by.
-			long difference = (ourTime - theirTime) / (1000 * 60);
-			fingerprint.setClockDifference(difference);
-		}
 
 		serveRequest(request, response, fingerprint);
 	}

@@ -136,6 +136,14 @@
 				}).appendTo('#formdiv');
 			}
 			
+			//CharSizes
+			$('<input>').attr({
+	    		type: 'hidden',
+	    		id: 'CharSizes',
+	    		name: 'CharSizes',
+	    		value: getCharacterSizes()
+			}).appendTo('#formdiv');
+			
 			//SuperCookie
 			$('<input>').attr({
 	    		type: 'hidden',
@@ -190,14 +198,6 @@
 	    		id: 'WebGLRenderer',
 	    		name: 'WebGLRenderer',
 	    		value: getWebGLRenderer()
-			}).appendTo('#formdiv');
-			
-			//CharSizes
-			$('<input>').attr({
-	    		type: 'hidden',
-	    		id: 'CharSizes',
-	    		name: 'CharSizes',
-	    		value: getCharacterSizes()
 			}).appendTo('#formdiv');
 			
 			//Submit the page.
