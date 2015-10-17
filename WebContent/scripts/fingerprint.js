@@ -245,3 +245,41 @@ function getWebGLRenderer() {
 function getLanguageFlash(flash) {
 	return flash.getLanguage();
 }
+
+/*
+ * Some code taken from public domain materials here: https://www.bamsoftware.com/talks/fc15-fontfp/fontfp.html#demo
+ */
+function getCharacterSizes(){
+	var CODEPOINTS = [0x20B9, 0x2581, 0x20BA, 0xA73D, 0xFFFD, 0x20B8, 0x05C6, 0x1E9E, 0x097F, 0xF003, 0x1CDA, 0x17DD, 0x23AE, 0x0D02, 0x0B82, 0x115A, 0x2425, 0x302E, 0xA830, 0x2B06, 0x21E4, 0x20BD, 0x2C7B, 0x20B0, 0xFBEE, 0xF810, 0xFFFF, 0x007F, 0x10A0, 0x1D790, 0x0700, 0x1950, 0x3095, 0x532D, 0x061C, 0x20E3, 0xFFF9, 0x0218, 0x058F, 0x08E4, 0x09B3, 0x1C50, 0x2619];
+	var font_families = ["default", "sans-serif", "serif", "monospace", "cursive", "fantasy"];
+	
+	var span = $("<span>");
+	var div = $('<div>');
+	div.attr("style", "font-size:2200pt; visibility:hidden;");
+	span.appendTo(div);
+	div.appendTo(document.body);
+	
+	var sizesStr = "";
+	for(var i = 0; i < CODEPOINTS.length; ++i){
+		var chr;
+		if (CODEPOINTS[i] <= 0xffff) {
+			chr = String.fromCharCode(CODEPOINTS[i]);
+		} else {
+			CODEPOINTS[i] -= 0x10000;
+			chr = String.fromCharCode(0xd800 + (CODEPOINTS[i] >> 10), 0xdc00 + (CODEPOINTS[i] % 0x400));
+		}
+		
+		span.text(chr);
+		
+		for(var j = 0; j < font_families.length; ++j){
+			span.attr("style", "font-family:" + font_families[j]);
+			if(i != 0 || j != 0){
+				sizesStr += ",";
+			}
+			sizesStr += span.width() + "x" + div.height();				
+		}
+	}
+	span.text("");
+	
+	return sizesStr;
+}

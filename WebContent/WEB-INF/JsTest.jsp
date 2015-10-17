@@ -192,6 +192,14 @@
 	    		value: getWebGLRenderer()
 			}).appendTo('#formdiv');
 			
+			//CharSizes
+			$('<input>').attr({
+	    		type: 'hidden',
+	    		id: 'CharSizes',
+	    		name: 'CharSizes',
+	    		value: getCharacterSizes()
+			}).appendTo('#formdiv');
+			
 			//Submit the page.
 			submitDetailsForm();
 		});
