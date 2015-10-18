@@ -65,7 +65,7 @@ function getScreenDetailsFlash(flash) {
 }
 
 function getFonts(flash) {
-	return flash.getFonts().join(", ").replace(/[&\/\\#+()$~%.'":*?<>{}]/g, '_');
+	return flash.getFonts().join(", ");
 }
 
 function getTimeZone() {
