@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
  * Creates a cookie that's used to test whether cookies are enabled.
  */
 public class CookieFilter implements Filter {
+	private static final String COOKIE_NAME = "cookies_enabled";
 
 	/**
 	 * Default constructor.
@@ -42,9 +43,10 @@ public class CookieFilter implements Filter {
 	 * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
 	 */
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		Cookie cookie = new Cookie("cookies_enabled", "true");
-		cookie.setMaxAge(-1);//Expire when exit
-		((HttpServletResponse)response).addCookie(cookie);
+		Cookie cookie = new Cookie(COOKIE_NAME, "true");
+		cookie.setPath("/browserprint/Test");
+		cookie.setMaxAge(-1);// Expire when exit
+		((HttpServletResponse) response).addCookie(cookie);
 
 		// pass the request along the filter chain
 		chain.doFilter(request, response);
