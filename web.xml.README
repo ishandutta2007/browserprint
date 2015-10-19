@@ -57,3 +57,11 @@
     <param-name>devEmail</param-name>
     <param-value>example@example.com</param-value>
   </context-param>
+
+  <!--
+       The password we use to encrypt / decrypt the SampleSetID we store in cookies.
+  -->
+  <context-param>
+    <param-name>SampleSetIDEncryptionPassword</param-name>
+    <param-value>ChangeMe</param-value>
+  </context-param>

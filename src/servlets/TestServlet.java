@@ -2,21 +2,34 @@ package servlets;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
+import java.security.AlgorithmParameters;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.spec.KeySpec;
+import java.util.Base64;
+import java.util.Base64.Decoder;
+import java.util.Base64.Encoder;
 import java.util.Date;
 
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import util.TorCheck;
 import DAOs.FingerprintDAO;
 import beans.CharacteristicsBean;
 import beans.UniquenessBean;
 import datastructures.Fingerprint;
+import util.TorCheck;
 
 /**
  * Servlet implementation class TestServlet
@@ -104,8 +117,7 @@ public class TestServlet extends HttpServlet {
 			if (adsBlocked != null) {
 				if (adsBlocked.equals("1")) {
 					fingerprint.setAdsBlocked(true);
-				}
-				else if (adsBlocked.equals("0")) {
+				} else if (adsBlocked.equals("0")) {
 					fingerprint.setAdsBlocked(false);
 				}
 			}
@@ -158,20 +170,14 @@ public class TestServlet extends HttpServlet {
 		fingerprint.setUser_agent(getUserAgentHeaderString(request));
 		fingerprint.setAccept_headers(getAcceptHeadersString(request));
 		fingerprint.setDoNotTrack(getDoNotTrackHeaderString(request));
-		fingerprint.setUsingTor(TorCheck.isUsingTor(
-				getServletContext().getInitParameter("serversPublicIP"),
-				request.getLocalPort(),
-				request.getRemoteAddr(),
-				getServletContext().getInitParameter("TorDNSELServer")
-				) == true);
+		fingerprint.setUsingTor(TorCheck.isUsingTor(getServletContext().getInitParameter("serversPublicIP"), request.getLocalPort(), request.getRemoteAddr(), getServletContext().getInitParameter("TorDNSELServer")) == true);
 
 		fingerprint.setIpAddress(getClientIP(request, fingerprint.isUsingTor()));
 
 		Cookie cookies[] = request.getCookies();
 		if (cookies != null) {
 			fingerprint.setCookiesEnabled(true);
-		}
-		else {
+		} else {
 			fingerprint.setCookiesEnabled(false);
 		}
 		fingerprint.setSampleSetID(getSampleSetID(request));
@@ -186,7 +192,7 @@ public class TestServlet extends HttpServlet {
 	 * @param request
 	 * @return
 	 */
-	private Integer getSampleSetID(HttpServletRequest request) {
+	private Integer getSampleSetID(HttpServletRequest request) throws ServletException {
 		Cookie cookies[] = request.getCookies();
 
 		if (cookies == null) {
@@ -199,7 +205,34 @@ public class TestServlet extends HttpServlet {
 		for (int i = 0; i < cookies.length; ++i) {
 			if (cookies[i].getName().equals("SampleSetID")) {
 				try {
-					sampleSetID = Integer.parseInt(cookies[i].getValue());
+					String cookieParts[] = cookies[i].getValue().split("\\|");
+					if (cookieParts.length != 3) {
+						throw new ServletException("Invalid SampleSetID cookie.");
+					}
+					/* Get password. */
+					String password = getServletContext().getInitParameter("SampleSetIDEncryptionPassword");
+
+					/* Extract the encrypted data, initialisation vector, and salt from the cookie. */
+					Decoder decoder = Base64.getDecoder();
+					byte ciphertext[] = decoder.decode(cookieParts[0]);
+					byte iv[] = decoder.decode(cookieParts[1]);
+					byte salt[] = decoder.decode(cookieParts[2]);
+					byte plainbytes[];
+					try {
+						/* Derive the key, given password and salt. */
+						SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+						KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, 256);
+						SecretKey tmp = factory.generateSecret(spec);
+						SecretKey secret = new SecretKeySpec(tmp.getEncoded(), "AES");
+
+						/* Decrypt the message, given derived key and initialization vector. */
+						Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+						cipher.init(Cipher.DECRYPT_MODE, secret, new IvParameterSpec(iv));
+						plainbytes = cipher.doFinal(ciphertext);
+					} catch (Exception ex) {
+						throw new ServletException(ex);
+					}
+					sampleSetID = ByteBuffer.wrap(plainbytes).asIntBuffer().get();
 					break;
 				} catch (NumberFormatException ex) {
 					// Ignore. Pretend invalid SampleSetID doesn't exist.
@@ -210,17 +243,48 @@ public class TestServlet extends HttpServlet {
 	}
 
 	/**
-	 * Save a set of sample IDs to a cookie in the HTTP response.
+	 * Save the encrypted SampleSetID in a cookie in the HTTP response.
 	 * 
 	 * @param response
 	 * @param sampleIDs
 	 */
-	private void saveSampleSetID(HttpServletResponse response, Integer sampleSetID) {
+	private void saveSampleSetID(HttpServletResponse response, Integer sampleSetID) throws ServletException {
 		if (sampleSetID == null) {
 			// This should never happen, but if it somehow did it could cause a null pointer exception.
 			return;
 		} else {
-			Cookie sampleSetIdCookie = new Cookie("SampleSetID", sampleSetID.toString());
+			/* Get password. */
+			String password = getServletContext().getInitParameter("SampleSetIDEncryptionPassword");
+
+			/* Generate salt. */
+			SecureRandom rand = new SecureRandom();
+			byte salt[] = new byte[8];
+			rand.nextBytes(salt);
+
+			byte[] iv;
+			byte[] ciphertext;
+			try {
+				/* Derive the key, given password and salt. */
+				SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+				KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, 256);
+				SecretKey tmp = factory.generateSecret(spec);
+				SecretKey secret = new SecretKeySpec(tmp.getEncoded(), "AES");
+
+				/* Encrypt the SampleSetID. */
+				Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+				cipher.init(Cipher.ENCRYPT_MODE, secret);
+				AlgorithmParameters params = cipher.getParameters();
+				iv = params.getParameterSpec(IvParameterSpec.class).getIV();
+				ciphertext = cipher.doFinal(ByteBuffer.allocate(4).putInt(sampleSetID).array());
+			} catch (Exception ex) {
+				throw new ServletException(ex);
+			}
+
+			/* Store the encrypted SampleSetID in a cookie */
+
+			Encoder encoder = Base64.getEncoder();
+			String cookieStr = encoder.encodeToString(ciphertext) + "|" + encoder.encodeToString(iv) + "|" + encoder.encodeToString(salt);
+			Cookie sampleSetIdCookie = new Cookie("SampleSetID", cookieStr);
 			sampleSetIdCookie.setMaxAge(60 * 60 * 24 * 30);// 30 days
 			response.addCookie(sampleSetIdCookie);
 		}
@@ -268,14 +332,10 @@ public class TestServlet extends HttpServlet {
 
 		try {
 			// We get the headers this more long-winded way so that they may have unicode characters inside them.
-			return new String(accept.getBytes("ISO8859-1"), "UTF-8") + " "
-					+ new String(accept_encoding.getBytes("ISO8859-1"), "UTF-8") + " "
-					+ new String(accept_language.getBytes("ISO8859-1"), "UTF-8");
+			return new String(accept.getBytes("ISO8859-1"), "UTF-8") + " " + new String(accept_encoding.getBytes("ISO8859-1"), "UTF-8") + " " + new String(accept_language.getBytes("ISO8859-1"), "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			// Fallback to regular method.
-			return accept + " "
-					+ accept_encoding + " "
-					+ accept_language;
+			return accept + " " + accept_encoding + " " + accept_language;
 		}
 	}
 
@@ -309,10 +369,10 @@ public class TestServlet extends HttpServlet {
 	 * @throws NoSuchAlgorithmException
 	 */
 	private String getClientIP(HttpServletRequest request, boolean isUsingTor) throws ServletException {
-		if(isUsingTor){
+		if (isUsingTor) {
 			String saveTorUserIP = getServletContext().getInitParameter("SaveTorUserIP");
-			if(saveTorUserIP != null && saveTorUserIP.equals("1")){
-				//Return full exit-node IP address.
+			if (saveTorUserIP != null && saveTorUserIP.equals("1")) {
+				// Return full exit-node IP address.
 				return request.getRemoteAddr();
 			}
 		}
@@ -335,8 +395,7 @@ public class TestServlet extends HttpServlet {
 				} catch (UnsupportedEncodingException ex) {
 					throw new ServletException(ex);
 				}
-			}
-			else if (ipHandling.equals("PARTIAL")) {
+			} else if (ipHandling.equals("PARTIAL")) {
 				// Collect IP address with last octet set to zero
 				String ip = request.getRemoteAddr();
 				ip = ip.replaceAll("\\.\\d+$", ".0");
