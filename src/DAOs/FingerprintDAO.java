@@ -7,12 +7,18 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import beans.CharacteristicBean;
 import beans.CharacteristicsBean;
+import beans.HistoryBean;
+import beans.HistoryListBean;
 import beans.UniquenessBean;
 import datastructures.Fingerprint;
+import util.SampleIDs;
 
 public class FingerprintDAO {
 	private static final String insertSampleStr = "INSERT INTO `Samples`(`IP`,`TimeStamp`,`UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `LanguageFlash`, `Fonts`, `CharSizes`, `CookiesEnabled`, `SuperCookie`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `AdsBlocked`, `Canvas`, `WebGLVendor`, `WebGLRenderer`) VALUES(?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
@@ -38,12 +44,12 @@ public class FingerprintDAO {
 				 * Record it.
 				 */
 				sampleID = insertSample(conn, fingerprint);
-				
+
 				/*
 				 * Insert SampleID into SampleSets table.
 				 */
 				insertSampleSet(conn, fingerprint, sampleID);
-				
+
 				/*
 				 * Save statistics of the fingerprint.
 				 */
@@ -81,8 +87,7 @@ public class FingerprintDAO {
 			{
 				CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "AcceptHeaders", fingerprint.getAccept_headers());
 				bean.setName("HTTP_ACCEPT Headers");
-				bean.setNameHoverText("The concatenation of three headers from the HTTP request:"
-						+ " The Accept request header, the Accept-Encoding request header, and the Accept-Language request header.");
+				bean.setNameHoverText("The concatenation of three headers from the HTTP request:" + " The Accept request header, the Accept-Encoding request header, and the Accept-Language request header.");
 				characteristics.add(bean);
 			}
 			{
@@ -118,8 +123,7 @@ public class FingerprintDAO {
 			{
 				CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "ScreenDetailsFlash", fingerprint.getScreenDetailsFlash());
 				bean.setName("Screen Size (Flash)");
-				bean.setNameHoverText("The resolution of the client's monitor(s)."
-						+ " Different from the other screen size test in that this number can be the cumulative resolution of the monitors in multiple monitor set ups.");
+				bean.setNameHoverText("The resolution of the client's monitor(s)." + " Different from the other screen size test in that this number can be the cumulative resolution of the monitors in multiple monitor set ups.");
 				characteristics.add(bean);
 			}
 			{
@@ -152,8 +156,7 @@ public class FingerprintDAO {
 			{
 				CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "SuperCookie", fingerprint.getSuperCookie());
 				bean.setName("Limited supercookie test");
-				bean.setNameHoverText("Three tests of whether DOM storage is supported (and enabled) in the client's web browser."
-						+ " Tests for localStorage, sessionStorage, and Internet Explorer's userData.");
+				bean.setNameHoverText("Three tests of whether DOM storage is supported (and enabled) in the client's web browser." + " Tests for localStorage, sessionStorage, and Internet Explorer's userData.");
 				characteristics.add(bean);
 			}
 			{
@@ -168,51 +171,40 @@ public class FingerprintDAO {
 			{
 				CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "ClockDifference", fingerprint.getClockDifference());
 				bean.setName("Client/server time difference (minutes)");
-				bean.setNameHoverText("The approximate amount of difference between the time on the client's computer and the clock on the server."
-						+ " i.e., the clock on the client's computer is 5 minutes ahead of the clock on the server.");
+				bean.setNameHoverText("The approximate amount of difference between the time on the client's computer and the clock on the server." + " i.e., the clock on the client's computer is 5 minutes ahead of the clock on the server.");
 				characteristics.add(bean);
 			}
 			{
 				CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "DateTime", fingerprint.getDateTime());
 				bean.setName("Date/Time format");
-				bean.setNameHoverText("When the JavaScript function toLocaleString() is called on a date it can reveal information about the language of the browser via the names of days and months."
-						+ " For instance the output 'Thursday January 01, 10:30:00 GMT+1030 1970' reveals that English is our configured language because 'Thursday' is English."
-						+ " Additionally different browsers tend to return differently formatted results."
-						+ " For instance Opera returns the above whereas Firefox returns '1/1/1970 9:30:00 am' for the same date (UNIX epoch)."
-						+ " Additionally timezone information may be revealed."
-						+ " For instance the above were taken on a computer configured for CST (+9:30), which is why the times shown aren't midnight.");
+				bean.setNameHoverText("When the JavaScript function toLocaleString() is called on a date it can reveal information about the language of the browser via the names of days and months." + " For instance the output 'Thursday January 01, 10:30:00 GMT+1030 1970' reveals that English is our configured language because 'Thursday' is English." + " Additionally different browsers tend to return differently formatted results." + " For instance Opera returns the above whereas Firefox returns '1/1/1970 9:30:00 am' for the same date (UNIX epoch)." + " Additionally timezone information may be revealed." + " For instance the above were taken on a computer configured for CST (+9:30), which is why the times shown aren't midnight.");
 				characteristics.add(bean);
 			}
 			{
 				CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "MathTan", fingerprint.getMathTan());
 				bean.setName("Math/Tan function");
-				bean.setNameHoverText("The same math functions run on different platforms and browsers can produce different results."
-						+ " In particular we are interested in the output of Math.tan(-1e300), which has been observed to produce different values depending on operating system."
-						+ " For instance on a 64bit Linux machine it produces the value -1.4214488238747245 and on a Windows machine it produces the value -4.987183803371025.");
+				bean.setNameHoverText("The same math functions run on different platforms and browsers can produce different results." + " In particular we are interested in the output of Math.tan(-1e300), which has been observed to produce different values depending on operating system." + " For instance on a 64bit Linux machine it produces the value -1.4214488238747245 and on a Windows machine it produces the value -4.987183803371025.");
 				characteristics.add(bean);
 			}
 			{
 				CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "UsingTor", fingerprint.isUsingTor());
 				bean.setName("Using Tor?");
-				bean.setNameHoverText("Checks whether a client's request came from a Tor exit node, and hence whether they're using Tor."
-						+ " It does so by performing a TorDNSEL request for each client.");
+				bean.setNameHoverText("Checks whether a client's request came from a Tor exit node, and hence whether they're using Tor." + " It does so by performing a TorDNSEL request for each client.");
 				characteristics.add(bean);
 			}
 			{
 				CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "AdsBlocked", fingerprint.getAdsBlocked());
 				bean.setName("Ads blocked?");
-				bean.setNameHoverText("Checks whether ad blocking software is installed."
-						+ " It does so by attempting to display an ad and checking whether it was successful.");
+				bean.setNameHoverText("Checks whether ad blocking software is installed." + " It does so by attempting to display an ad and checking whether it was successful.");
 				characteristics.add(bean);
 			}
 			{
 				CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "Canvas", fingerprint.getCanvas());
 				bean.setName("Canvas");
-				if(bean.getValue().equals(NO_JAVASCRIPT) == false && bean.getValue().equals(NOT_SUPPORTED) == false){
+				if (bean.getValue().equals(NO_JAVASCRIPT) == false && bean.getValue().equals(NOT_SUPPORTED) == false) {
 					bean.setValue("<img width=\"400\" height=\"60\" src=\"" + bean.getValue() + "\">");
 				}
-				bean.setNameHoverText("Rendering of a specific picture with the HTML5 Canvas element following a fixed set of instructions."
-						+ " The picture presents some slight noticeable variations depending on the OS and the browser used.");
+				bean.setNameHoverText("Rendering of a specific picture with the HTML5 Canvas element following a fixed set of instructions." + " The picture presents some slight noticeable variations depending on the OS and the browser used.");
 				characteristics.add(bean);
 			}
 			{
@@ -269,10 +261,9 @@ public class FingerprintDAO {
 		++index;
 		insertSample.setString(index, fingerprint.getPluginDetails());
 		++index;
-		if(fingerprint.getTimeZone() != null){
+		if (fingerprint.getTimeZone() != null) {
 			insertSample.setInt(index, fingerprint.getTimeZone());
-		}
-		else{
+		} else {
 			insertSample.setNull(index, java.sql.Types.INTEGER);
 		}
 		++index;
@@ -304,10 +295,9 @@ public class FingerprintDAO {
 		++index;
 		insertSample.setBoolean(index, fingerprint.isUsingTor());
 		++index;
-		if(fingerprint.getAdsBlocked() != null){
+		if (fingerprint.getAdsBlocked() != null) {
 			insertSample.setBoolean(index, fingerprint.getAdsBlocked());
-		}
-		else{
+		} else {
 			insertSample.setNull(index, java.sql.Types.BOOLEAN);
 		}
 		++index;
@@ -328,7 +318,7 @@ public class FingerprintDAO {
 		insertSample.close();
 		return sampleID;
 	}
-	
+
 	/**
 	 * 
 	 * @param conn
@@ -338,34 +328,33 @@ public class FingerprintDAO {
 	 * @throws SQLException
 	 */
 	private static void insertSampleSet(Connection conn, Fingerprint fingerprint, Integer sampleID) throws SQLException {
-		if(fingerprint.getSampleSetID() == null){
+		if (fingerprint.getSampleSetID() == null) {
 			/*
 			 * Insert whole new SampleSetID.
 			 */
 			String query = "INSERT INTO `SampleSets`(`SampleID`) VALUES(?);";
 			PreparedStatement insertSampleSet = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-			
+
 			insertSampleSet.setInt(1, sampleID);
 			insertSampleSet.execute();
-			
+
 			ResultSet rs = insertSampleSet.getGeneratedKeys();
 			if (rs.next()) {
 				fingerprint.setSampleSetID(rs.getInt(1));
 			}
 			rs.close();
 			insertSampleSet.close();
-		}
-		else{
+		} else {
 			/*
 			 * Insert new SampleID for existing SampleSetID.
 			 */
 			String query = "INSERT INTO `SampleSets`(`SampleSetID`,`SampleID`) VALUES(?, ?);";
 			PreparedStatement insertSampleSet = conn.prepareStatement(query);
-			
+
 			insertSampleSet.setInt(1, fingerprint.getSampleSetID());
 			insertSampleSet.setInt(2, sampleID);
 			insertSampleSet.execute();
-			
+
 			insertSampleSet.close();
 		}
 	}
@@ -380,42 +369,19 @@ public class FingerprintDAO {
 	 * @throws SQLException
 	 */
 	private static Integer checkSampleChanged(Connection conn, Fingerprint fingerprint) throws SQLException {
-		if(fingerprint.getSampleSetID() == null){
+		if (fingerprint.getSampleSetID() == null) {
 			/*
 			 * We know we haven't seen this sample before because there's no SampleSetID.
 			 */
 			return null;
 		}
-		
+
 		/*
 		 * We have seen this user before. Check if their fingerprint has changed.
 		 */
-		String query = "SELECT `Samples`.`SampleID` FROM `SampleSets` INNER JOIN `Samples` ON `SampleSets`.`SampleID` = `Samples`.`SampleID` WHERE `SampleSetID` = ?"
-				+ " AND `UserAgent`" + (fingerprint.getUser_agent() == null ? " IS NULL" : " = ?")
-				+ " AND `AcceptHeaders`" + (fingerprint.getAccept_headers() == null ? " IS NULL" : " = ?")
-				+ " AND `Platform`" + (fingerprint.getPlatform() == null ? " IS NULL" : " = ?")
-				+ " AND `PlatformFlash`" + (fingerprint.getPlatformFlash() == null ? " IS NULL" : " = ?")
-				+ " AND `PluginDetails`" + (fingerprint.getPluginDetails() == null ? " IS NULL" : " = ?")
-				+ " AND `TimeZone`" + (fingerprint.getTimeZone() == null ? " IS NULL" : " = ?")
-				+ " AND `ScreenDetails`" + (fingerprint.getScreenDetails() == null ? " IS NULL" : " = ?")
-				+ " AND `ScreenDetailsFlash`" + (fingerprint.getScreenDetailsFlash() == null ? " IS NULL" : " = ?")
-				+ " AND `LanguageFlash`" + (fingerprint.getLanguageFlash() == null ? " IS NULL" : " = ?")
-				+ " AND `Fonts`" + (fingerprint.getFonts() == null ? " IS NULL" : " = ?")
-				+ " AND `CharSizes`" + (fingerprint.getCharSizes() == null ? " IS NULL" : " = ?")
-				+ " AND `CookiesEnabled` = ?"
-				+ " AND `SuperCookie`" + (fingerprint.getSuperCookie() == null ? " IS NULL" : " = ?")
-				+ " AND `DoNotTrack`" + (fingerprint.getDoNotTrack() == null ? " IS NULL" : " = ?")
-				+ " AND `ClockDifference`" + (fingerprint.getClockDifference() == null ? " IS NULL" : " = ?")
-				+ " AND `DateTime`" + (fingerprint.getDateTime() == null ? " IS NULL" : " = ?")
-				+ " AND `MathTan`" + (fingerprint.getMathTan() == null ? " IS NULL" : " = ?")
-				+ " AND `UsingTor` = ?"
-				+ " AND `AdsBlocked`" + (fingerprint.getAdsBlocked() == null ? " IS NULL" : " = ?")
-				+ " AND `Canvas`" + (fingerprint.getCanvas() == null ? " IS NULL" : " = ?")
-				+ " AND `WebGLVendor`" + (fingerprint.getWebGLVendor() == null ? " IS NULL" : " = ?")
-				+ " AND `WebGLRenderer`" + (fingerprint.getWebGLRenderer() == null ? " IS NULL" : " = ?")
-				+ ";";
+		String query = "SELECT `Samples`.`SampleID` FROM `SampleSets` INNER JOIN `Samples` ON `SampleSets`.`SampleID` = `Samples`.`SampleID` WHERE `SampleSetID` = ?" + " AND `UserAgent`" + (fingerprint.getUser_agent() == null ? " IS NULL" : " = ?") + " AND `AcceptHeaders`" + (fingerprint.getAccept_headers() == null ? " IS NULL" : " = ?") + " AND `Platform`" + (fingerprint.getPlatform() == null ? " IS NULL" : " = ?") + " AND `PlatformFlash`" + (fingerprint.getPlatformFlash() == null ? " IS NULL" : " = ?") + " AND `PluginDetails`" + (fingerprint.getPluginDetails() == null ? " IS NULL" : " = ?") + " AND `TimeZone`" + (fingerprint.getTimeZone() == null ? " IS NULL" : " = ?") + " AND `ScreenDetails`" + (fingerprint.getScreenDetails() == null ? " IS NULL" : " = ?") + " AND `ScreenDetailsFlash`" + (fingerprint.getScreenDetailsFlash() == null ? " IS NULL" : " = ?") + " AND `LanguageFlash`" + (fingerprint.getLanguageFlash() == null ? " IS NULL" : " = ?") + " AND `Fonts`" + (fingerprint.getFonts() == null ? " IS NULL" : " = ?") + " AND `CharSizes`" + (fingerprint.getCharSizes() == null ? " IS NULL" : " = ?") + " AND `CookiesEnabled` = ?" + " AND `SuperCookie`" + (fingerprint.getSuperCookie() == null ? " IS NULL" : " = ?") + " AND `DoNotTrack`" + (fingerprint.getDoNotTrack() == null ? " IS NULL" : " = ?") + " AND `ClockDifference`" + (fingerprint.getClockDifference() == null ? " IS NULL" : " = ?") + " AND `DateTime`" + (fingerprint.getDateTime() == null ? " IS NULL" : " = ?") + " AND `MathTan`" + (fingerprint.getMathTan() == null ? " IS NULL" : " = ?") + " AND `UsingTor` = ?" + " AND `AdsBlocked`" + (fingerprint.getAdsBlocked() == null ? " IS NULL" : " = ?") + " AND `Canvas`" + (fingerprint.getCanvas() == null ? " IS NULL" : " = ?") + " AND `WebGLVendor`" + (fingerprint.getWebGLVendor() == null ? " IS NULL" : " = ?") + " AND `WebGLRenderer`" + (fingerprint.getWebGLRenderer() == null ? " IS NULL" : " = ?") + ";";
 		PreparedStatement checkExists = conn.prepareStatement(query);
-		
+
 		int index = 1;
 		checkExists.setInt(index, fingerprint.getSampleSetID());
 		++index;
@@ -542,30 +508,7 @@ public class FingerprintDAO {
 		/*
 		 * We have seen this user before. Check if their fingerprint has changed.
 		 */
-		String query = "SELECT COUNT(*) FROM `Samples` WHERE"
-				+ " `UserAgent`" + (fingerprint.getUser_agent() == null ? " IS NULL" : " = ?")
-				+ " AND `AcceptHeaders`" + (fingerprint.getAccept_headers() == null ? " IS NULL" : " = ?")
-				+ " AND `Platform`" + (fingerprint.getPlatform() == null ? " IS NULL" : " = ?")
-				+ " AND `PlatformFlash`" + (fingerprint.getPlatformFlash() == null ? " IS NULL" : " = ?")
-				+ " AND `PluginDetails`" + (fingerprint.getPluginDetails() == null ? " IS NULL" : " = ?")
-				+ " AND `TimeZone`" + (fingerprint.getTimeZone() == null ? " IS NULL" : " = ?")
-				+ " AND `ScreenDetails`" + (fingerprint.getScreenDetails() == null ? " IS NULL" : " = ?")
-				+ " AND `ScreenDetailsFlash`" + (fingerprint.getScreenDetailsFlash() == null ? " IS NULL" : " = ?")
-				+ " AND `LanguageFlash`" + (fingerprint.getLanguageFlash() == null ? " IS NULL" : " = ?")
-				+ " AND `Fonts`" + (fingerprint.getFonts() == null ? " IS NULL" : " = ?")
-				+ " AND `CharSizes`" + (fingerprint.getCharSizes() == null ? " IS NULL" : " = ?")
-				+ " AND `CookiesEnabled` = ?"
-				+ " AND `SuperCookie`" + (fingerprint.getSuperCookie() == null ? " IS NULL" : " = ?")
-				+ " AND `DoNotTrack`" + (fingerprint.getDoNotTrack() == null ? " IS NULL" : " = ?")
-				+ " AND `ClockDifference`" + (fingerprint.getClockDifference() == null ? " IS NULL" : " = ?")
-				+ " AND `DateTime`" + (fingerprint.getDateTime() == null ? " IS NULL" : " = ?")
-				+ " AND `MathTan`" + (fingerprint.getMathTan() == null ? " IS NULL" : " = ?")
-				+ " AND `UsingTor` = ?"
-				+ " AND `AdsBlocked`" + (fingerprint.getAdsBlocked() == null ? " IS NULL" : " = ?")
-				+ " AND `Canvas`" + (fingerprint.getCanvas() == null ? " IS NULL" : " = ?")
-				+ " AND `WebGLVendor`" + (fingerprint.getWebGLVendor() == null ? " IS NULL" : " = ?")
-				+ " AND `WebGLRenderer`" + (fingerprint.getWebGLRenderer() == null ? " IS NULL" : " = ?")
-				+ ";";
+		String query = "SELECT COUNT(*) FROM `Samples` WHERE" + " `UserAgent`" + (fingerprint.getUser_agent() == null ? " IS NULL" : " = ?") + " AND `AcceptHeaders`" + (fingerprint.getAccept_headers() == null ? " IS NULL" : " = ?") + " AND `Platform`" + (fingerprint.getPlatform() == null ? " IS NULL" : " = ?") + " AND `PlatformFlash`" + (fingerprint.getPlatformFlash() == null ? " IS NULL" : " = ?") + " AND `PluginDetails`" + (fingerprint.getPluginDetails() == null ? " IS NULL" : " = ?") + " AND `TimeZone`" + (fingerprint.getTimeZone() == null ? " IS NULL" : " = ?") + " AND `ScreenDetails`" + (fingerprint.getScreenDetails() == null ? " IS NULL" : " = ?") + " AND `ScreenDetailsFlash`" + (fingerprint.getScreenDetailsFlash() == null ? " IS NULL" : " = ?") + " AND `LanguageFlash`" + (fingerprint.getLanguageFlash() == null ? " IS NULL" : " = ?") + " AND `Fonts`" + (fingerprint.getFonts() == null ? " IS NULL" : " = ?") + " AND `CharSizes`" + (fingerprint.getCharSizes() == null ? " IS NULL" : " = ?") + " AND `CookiesEnabled` = ?" + " AND `SuperCookie`" + (fingerprint.getSuperCookie() == null ? " IS NULL" : " = ?") + " AND `DoNotTrack`" + (fingerprint.getDoNotTrack() == null ? " IS NULL" : " = ?") + " AND `ClockDifference`" + (fingerprint.getClockDifference() == null ? " IS NULL" : " = ?") + " AND `DateTime`" + (fingerprint.getDateTime() == null ? " IS NULL" : " = ?") + " AND `MathTan`" + (fingerprint.getMathTan() == null ? " IS NULL" : " = ?") + " AND `UsingTor` = ?" + " AND `AdsBlocked`" + (fingerprint.getAdsBlocked() == null ? " IS NULL" : " = ?") + " AND `Canvas`" + (fingerprint.getCanvas() == null ? " IS NULL" : " = ?") + " AND `WebGLVendor`" + (fingerprint.getWebGLVendor() == null ? " IS NULL" : " = ?") + " AND `WebGLRenderer`" + (fingerprint.getWebGLRenderer() == null ? " IS NULL" : " = ?") + ";";
 		PreparedStatement checkExists = conn.prepareStatement(query);
 
 		int index = 1;
@@ -681,18 +624,16 @@ public class FingerprintDAO {
 		PreparedStatement getCount;
 		String querystr = "SELECT COUNT(*) FROM `Samples` WHERE `" + dbname + "`";
 		if (value != null) {
-			if (value){
+			if (value) {
 				chrbean.setValue("Yes");
-			}
-			else {
+			} else {
 				chrbean.setValue("No");
 			}
 			querystr += " = ?;";
 
 			getCount = conn.prepareStatement(querystr);
 			getCount.setBoolean(1, value);
-		}
-		else {
+		} else {
 			chrbean.setValue(NO_JAVASCRIPT);
 
 			querystr += " IS NULL;";
@@ -733,8 +674,7 @@ public class FingerprintDAO {
 
 			getCount = conn.prepareStatement(querystr);
 			getCount.setString(1, value);
-		}
-		else {
+		} else {
 			chrbean.setValue(NO_JAVASCRIPT);
 
 			querystr += " IS NULL;";
@@ -774,8 +714,7 @@ public class FingerprintDAO {
 
 			getCount = conn.prepareStatement(querystr);
 			getCount.setInt(1, value);
-		}
-		else {
+		} else {
 			chrbean.setValue(NO_JAVASCRIPT);
 
 			querystr += " IS NULL;";
@@ -791,7 +730,7 @@ public class FingerprintDAO {
 
 		return chrbean;
 	}
-	
+
 	/**
 	 * Create a CharacteristicBean.
 	 * 
@@ -815,8 +754,7 @@ public class FingerprintDAO {
 
 			getCount = conn.prepareStatement(querystr);
 			getCount.setLong(1, value);
-		}
-		else {
+		} else {
 			chrbean.setValue(NO_JAVASCRIPT);
 
 			querystr += " IS NULL;";
@@ -831,5 +769,46 @@ public class FingerprintDAO {
 		chrbean.setBits(Math.abs(Math.log(chrbean.getInX()) / Math.log(2)));
 
 		return chrbean;
+	}
+
+	public static HistoryListBean getSampleSetIDsHistory(Integer sampleSetID, ServletContext context) throws ServletException{
+		HistoryListBean history = new HistoryListBean();
+		Connection conn = null;
+		try {
+			conn = Database.getConnection();
+			conn.setReadOnly(true);
+
+			if (sampleSetID == null) {
+				/*
+				 * No sampleSetID means no history.
+				 */
+				return history;
+			}
+
+			String query = "SELECT `SampleID`, `Timestamp` FROM `SampleSets` INNER JOIN `Samples` USING (`SampleID`) WHERE `SampleSetID` = ?;";
+			PreparedStatement getHistory = conn.prepareStatement(query);
+			getHistory.setInt(1, sampleSetID);
+
+			ResultSet rs = getHistory.executeQuery();
+			while (rs.next()) {
+				history.addHistoryBean(new HistoryBean(SampleIDs.encryptInteger(rs.getInt(1), context), rs.getString(2)));
+			}
+			rs.close();
+			getHistory.close();
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			// Close the connection
+			// Finally triggers even if we return
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// Ignore
+				}
+			}
+		}
+		return history;
 	}
 }

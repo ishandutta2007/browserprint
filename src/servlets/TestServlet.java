@@ -2,23 +2,10 @@ package servlets;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.nio.ByteBuffer;
-import java.security.AlgorithmParameters;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.spec.KeySpec;
-import java.util.Base64;
-import java.util.Base64.Decoder;
-import java.util.Base64.Encoder;
 import java.util.Date;
 
-import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.PBEKeySpec;
-import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
@@ -29,6 +16,7 @@ import DAOs.FingerprintDAO;
 import beans.CharacteristicsBean;
 import beans.UniquenessBean;
 import datastructures.Fingerprint;
+import util.SampleIDs;
 import util.TorCheck;
 
 /**
@@ -148,7 +136,7 @@ public class TestServlet extends HttpServlet {
 		/*
 		 * Save SampleSetID in a cookie if we have one now.
 		 */
-		saveSampleSetID(response, fingerprint.getSampleSetID());
+		SampleIDs.saveSampleSetID(response, fingerprint.getSampleSetID(), getServletContext());
 
 		/*
 		 * Forward to the output page.
@@ -180,114 +168,9 @@ public class TestServlet extends HttpServlet {
 		} else {
 			fingerprint.setCookiesEnabled(false);
 		}
-		fingerprint.setSampleSetID(getSampleSetID(request));
+		fingerprint.setSampleSetID(SampleIDs.getSampleSetID(request, getServletContext()));
 
 		return fingerprint;
-	}
-
-	/**
-	 * Get the SampleSetID from a request.
-	 * The browser uses this to prevent double counting of fingerprints.
-	 * 
-	 * @param request
-	 * @return
-	 */
-	private Integer getSampleSetID(HttpServletRequest request) throws ServletException {
-		Cookie cookies[] = request.getCookies();
-
-		if (cookies == null) {
-			// No SampleIDs. Just return an empty list.
-			return null;
-		}
-
-		// Find the SampleIDs cookie.
-		Integer sampleSetID = null;
-		for (int i = 0; i < cookies.length; ++i) {
-			if (cookies[i].getName().equals("SampleSetID")) {
-				try {
-					String cookieParts[] = cookies[i].getValue().split("\\|");
-					if (cookieParts.length != 3) {
-						throw new ServletException("Invalid SampleSetID cookie.");
-					}
-					/* Get password. */
-					String password = getServletContext().getInitParameter("SampleSetIDEncryptionPassword");
-
-					/* Extract the encrypted data, initialisation vector, and salt from the cookie. */
-					Decoder decoder = Base64.getDecoder();
-					byte ciphertext[] = decoder.decode(cookieParts[0]);
-					byte iv[] = decoder.decode(cookieParts[1]);
-					byte salt[] = decoder.decode(cookieParts[2]);
-					byte plainbytes[];
-					try {
-						/* Derive the key, given password and salt. */
-						SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
-						KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, 256);
-						SecretKey tmp = factory.generateSecret(spec);
-						SecretKey secret = new SecretKeySpec(tmp.getEncoded(), "AES");
-
-						/* Decrypt the message, given derived key and initialization vector. */
-						Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-						cipher.init(Cipher.DECRYPT_MODE, secret, new IvParameterSpec(iv));
-						plainbytes = cipher.doFinal(ciphertext);
-					} catch (Exception ex) {
-						throw new ServletException(ex);
-					}
-					sampleSetID = ByteBuffer.wrap(plainbytes).asIntBuffer().get();
-					break;
-				} catch (NumberFormatException ex) {
-					// Ignore. Pretend invalid SampleSetID doesn't exist.
-				}
-			}
-		}
-		return sampleSetID;
-	}
-
-	/**
-	 * Save the encrypted SampleSetID in a cookie in the HTTP response.
-	 * 
-	 * @param response
-	 * @param sampleIDs
-	 */
-	private void saveSampleSetID(HttpServletResponse response, Integer sampleSetID) throws ServletException {
-		if (sampleSetID == null) {
-			// This should never happen, but if it somehow did it could cause a null pointer exception.
-			return;
-		} else {
-			/* Get password. */
-			String password = getServletContext().getInitParameter("SampleSetIDEncryptionPassword");
-
-			/* Generate salt. */
-			SecureRandom rand = new SecureRandom();
-			byte salt[] = new byte[8];
-			rand.nextBytes(salt);
-
-			byte[] iv;
-			byte[] ciphertext;
-			try {
-				/* Derive the key, given password and salt. */
-				SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
-				KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, 256);
-				SecretKey tmp = factory.generateSecret(spec);
-				SecretKey secret = new SecretKeySpec(tmp.getEncoded(), "AES");
-
-				/* Encrypt the SampleSetID. */
-				Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-				cipher.init(Cipher.ENCRYPT_MODE, secret);
-				AlgorithmParameters params = cipher.getParameters();
-				iv = params.getParameterSpec(IvParameterSpec.class).getIV();
-				ciphertext = cipher.doFinal(ByteBuffer.allocate(4).putInt(sampleSetID).array());
-			} catch (Exception ex) {
-				throw new ServletException(ex);
-			}
-
-			/* Store the encrypted SampleSetID in a cookie */
-
-			Encoder encoder = Base64.getEncoder();
-			String cookieStr = encoder.encodeToString(ciphertext) + "|" + encoder.encodeToString(iv) + "|" + encoder.encodeToString(salt);
-			Cookie sampleSetIdCookie = new Cookie("SampleSetID", cookieStr);
-			sampleSetIdCookie.setMaxAge(60 * 60 * 24 * 30);// 30 days
-			response.addCookie(sampleSetIdCookie);
-		}
 	}
 
 	/**
