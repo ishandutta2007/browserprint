@@ -9,6 +9,7 @@
 	<title>Browserprint</title>
 	<link type="text/css" href="style.css" rel="stylesheet">
 	<script type="text/javascript" src="scripts/jquery-1.11.2.min.js"></script>
+	<script type="text/javascript" src="scripts/jquery-dateFormat.min.js"></script>
 </head>
 <body>
 <%@include file="header.html" %>
@@ -22,7 +23,7 @@
 				var regex = /^(\d+)\/(\d+)\/(\d+), (\d+):(\d+):(\d+) UTC$/;
 				var match = regex.exec($(this).text());
 				var newDate = new Date(Date.UTC(match[3], match[2], match[1], match[4], match[5], match[6], 0));
-				$(this).text(newDate.toLocaleString());
+				$(this).text($.format.date(newDate, 'dd/MM/yyyy, HH:mm:ss'));
 			});
 		</script>
 	</select>
