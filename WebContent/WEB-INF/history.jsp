@@ -16,17 +16,20 @@
 	<p>
 		<a href=".">Back</a>
 	</p>
-	<select id="historySelector">
-		<c:forEach var="history" items="${ historyListBean.history }"><option value="${ history.sampleID }">${ history.timestamp }</option></c:forEach>
+	<form action="history" method="get">
+		<select name="historySelector" id="historySelector">
+			<c:forEach var="history" items="${ historyListBean.history }"><option value="${ history.sampleID }">${ history.timestamp }</option></c:forEach>
+		</select>
 		<script>
-			$('#historySelector > option').each(function() {
-				var regex = /^(\d+)\/(\d+)\/(\d+), (\d+):(\d+):(\d+) UTC$/;
-				var match = regex.exec($(this).text());
-				var newDate = new Date(Date.UTC(match[3], match[2], match[1], match[4], match[5], match[6], 0));
-				$(this).text($.format.date(newDate, 'dd/MM/yyyy, HH:mm:ss'));
-			});
+		$('#historySelector > option').each(function() {
+			var regex = /^(\d+)\/(\d+)\/(\d+), (\d+):(\d+):(\d+) UTC$/;
+			var match = regex.exec($(this).text());
+			var newDate = new Date(Date.UTC(match[3], match[2], match[1], match[4], match[5], match[6], 0));
+			$(this).text($.format.date(newDate, 'dd/MM/yyyy, HH:mm:ss'));
+		});
 		</script>
-	</select>
+		<input type="submit" value="View"/>
+	</form>
 <%@include file="footer.jsp" %>
 </body>
 </html>
