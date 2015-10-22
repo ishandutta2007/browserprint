@@ -5,7 +5,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -791,7 +796,10 @@ public class FingerprintDAO {
 
 			ResultSet rs = getHistory.executeQuery();
 			while (rs.next()) {
-				history.addHistoryBean(new HistoryBean(SampleIDs.encryptInteger(rs.getInt(1), context), rs.getString(2)));
+				Timestamp timestamp = rs.getTimestamp(2);
+				SimpleDateFormat dateformat = new SimpleDateFormat("dd/MM/yyyy, HH:mm:ss z");
+				dateformat.setTimeZone(TimeZone.getTimeZone("UTC"));
+				history.addHistoryBean(new HistoryBean(SampleIDs.encryptInteger(rs.getInt(1), context), dateformat.format(timestamp)));
 			}
 			rs.close();
 			getHistory.close();

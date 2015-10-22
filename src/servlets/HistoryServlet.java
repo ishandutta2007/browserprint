@@ -38,7 +38,7 @@ public class HistoryServlet extends HttpServlet {
 		 * Get SampleIDs associated with that SampleSetID.
 		 */
 		HistoryListBean history = FingerprintDAO.getSampleSetIDsHistory(sampleSetID, getServletContext());
-		request.setAttribute("historyBean", history);
+		request.setAttribute("historyListBean", history);
 
 		/*
 		 * Forward to the history page.
