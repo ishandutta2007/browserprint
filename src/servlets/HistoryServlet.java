@@ -34,6 +34,8 @@ public class HistoryServlet extends HttpServlet {
 		 */
 		Integer sampleSetID = SampleIDs.getSampleSetID(request, getServletContext());
 
+		request.setAttribute("cookiesEnabled", (request.getCookies() != null));
+
 		/*
 		 * Get SampleIDs associated with that SampleSetID.
 		 */

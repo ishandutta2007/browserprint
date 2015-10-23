@@ -14,8 +14,11 @@
 <body>
 <%@include file="header.html" %>
 	<p>
-		<a href=".">Back</a>
+		View past browser fingerprints.
 	</p>
+	<c:if test="${ !requestScope.cookiesEnabled }"><p>
+		To keep track of your history you need cookies enabled.
+	</p></c:if>
 	<form action="history" method="get">
 		<select name="historySelector" id="historySelector">
 			<c:forEach var="history" items="${ historyListBean.history }"><option value="${ history.sampleID }">${ history.timestamp }</option></c:forEach>
