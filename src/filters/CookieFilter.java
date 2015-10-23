@@ -44,7 +44,7 @@ public class CookieFilter implements Filter {
 	 */
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		Cookie cookie = new Cookie(COOKIE_NAME, "true");
-		cookie.setPath("/browserprint/Test");
+		cookie.setPath("/browserprint/");
 		cookie.setMaxAge(-1);// Expire when exit
 		((HttpServletResponse) response).addCookie(cookie);
 
