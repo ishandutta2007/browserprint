@@ -86,32 +86,18 @@ public class FingerprintDAO {
 	 * @return The fingerprint, or null if no fingerprint with the specified sampleID was found.
 	 * @throws SQLException
 	 */
-	public static Fingerprint getFingerprintBeans(int sampleID, CharacteristicsBean chrsbean, UniquenessBean uniquenessbean) {
-		Connection conn = null;
-		try{
-			conn = Database.getConnection();
+	public static Fingerprint getFingerprintBeans(int sampleID, CharacteristicsBean chrsbean, UniquenessBean uniquenessbean) throws SQLException {
+		Connection conn = Database.getConnection();
 			conn.setReadOnly(true);
 			
 			Fingerprint fingerprint = getFingerprintFromSampleID(conn, sampleID);
 			if(fingerprint == null){
+				conn.close();
 				return null;
 			}
 			getFingerprintBeans(conn, fingerprint, chrsbean, uniquenessbean);
+			conn.close();
 			return fingerprint;
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			// Close the connection
-			// Finally triggers even if we return
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-					// Ignore
-				}
-			}
-		}
-		return null;
 	}
 	
 	/**

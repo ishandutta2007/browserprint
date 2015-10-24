@@ -1,6 +1,7 @@
 package servlets;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -44,14 +45,22 @@ public class HistoryServlet extends HttpServlet {
 		if(sampleIDstr != null){
 			// A SampleID was specified, decrypt it.
 			Integer sampleID = SampleIDs.decryptInteger(sampleIDstr, getServletContext());
-			
-			// Get the data associated with the SampleID.
-			CharacteristicsBean chrsbean = new CharacteristicsBean();
-			UniquenessBean uniquenessbean = new UniquenessBean();
-			Fingerprint fingerprint = FingerprintDAO.getFingerprintBeans(sampleID, chrsbean, uniquenessbean);
-			if(fingerprint != null){
-				request.setAttribute("chrsBean", chrsbean);
-				request.setAttribute("uniquenessBean", uniquenessbean);
+
+			try{
+				// Get the data associated with the SampleID.
+				CharacteristicsBean chrsbean = new CharacteristicsBean();
+				UniquenessBean uniquenessbean = new UniquenessBean();
+				Fingerprint fingerprint = FingerprintDAO.getFingerprintBeans(sampleID, chrsbean, uniquenessbean);
+				if(fingerprint != null){
+					request.setAttribute("chrsBean", chrsbean);
+					request.setAttribute("uniquenessBean", uniquenessbean);
+				}
+				else{
+					throw new ServletException("Valid sample ID, but no associated sample.");
+				}
+			}catch(SQLException ex){
+				//Database error.
+				throw new ServletException(ex);
 			}
 		}
 		

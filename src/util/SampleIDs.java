@@ -71,7 +71,7 @@ public class SampleIDs {
 	public static Integer decryptInteger(String encrypted, ServletContext context) throws ServletException {
 		String encryptedParts[] = encrypted.split("\\|");
 		if (encryptedParts.length != 3) {
-			throw new ServletException("Invalid SampleSetID cookie.");
+			throw new ServletException("Invalid encrypted string.");
 		}
 		/* Get password. */
 		String password = context.getInitParameter("SampleSetIDEncryptionPassword");
