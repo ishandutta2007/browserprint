@@ -970,7 +970,7 @@ public class FingerprintDAO {
 		fingerprint.setDateTime(rs.getString(index));
 		++index;
 		//MathTan
-		fingerprint.setDateTime(rs.getString(index));
+		fingerprint.setMathTan(rs.getString(index));
 		++index;
 		//UsingTor
 		fingerprint.setUsingTor(rs.getBoolean(index));
