@@ -2,6 +2,8 @@
 --%><%@page session="false"%><%--
 --%><%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%><%--
 --%><jsp:useBean id="historyListBean" class="beans.HistoryListBean" scope="request" /><%--
+--%><jsp:useBean id="chrBean" class="beans.CharacteristicsBean" scope="request" /><%--
+--%><jsp:useBean id="uniquessBean" class="beans.UniquenessBean" scope="request" /><%--
 --%><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
@@ -20,10 +22,10 @@
 		To keep track of your history you need cookies enabled.
 	</p></c:if>
 	<form action="history" method="get">
-		<select name="historySelector" id="historySelector">
+		<select name="sampleID" id="historySelector">
 			<c:forEach var="history" items="${ historyListBean.history }"><option value="${ history.sampleID }">${ history.timestamp }</option></c:forEach>
 		</select>
-		<script>
+		<script type="text/javascript">
 		$('#historySelector > option').each(function() {
 			var regex = /^(\d+)\/(\d+)\/(\d+), (\d+):(\d+):(\d+) UTC$/;
 			var match = regex.exec($(this).text());
