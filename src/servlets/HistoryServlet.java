@@ -50,8 +50,8 @@ public class HistoryServlet extends HttpServlet {
 			UniquenessBean uniquenessbean = new UniquenessBean();
 			Fingerprint fingerprint = FingerprintDAO.getFingerprintBeans(sampleID, chrsbean, uniquenessbean);
 			if(fingerprint != null){
-				request.setAttribute("chrsbean", chrsbean);
-				request.setAttribute("uniquenessbean", uniquenessbean);
+				request.setAttribute("chrsBean", chrsbean);
+				request.setAttribute("uniquenessBean", uniquenessbean);
 			}
 		}
 		

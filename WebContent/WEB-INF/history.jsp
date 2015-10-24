@@ -2,8 +2,9 @@
 --%><%@page session="false"%><%--
 --%><%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%><%--
 --%><jsp:useBean id="historyListBean" class="beans.HistoryListBean" scope="request" /><%--
---%><jsp:useBean id="chrBean" class="beans.CharacteristicsBean" scope="request" /><%--
---%><jsp:useBean id="uniquessBean" class="beans.UniquenessBean" scope="request" /><%--
+--%><jsp:useBean id="chrsBean" class="beans.CharacteristicsBean" scope="request" /><%--
+--%><jsp:useBean id="uniquenessBean" class="beans.UniquenessBean" scope="request" /><%--
+--%><%@taglib prefix="common" tagdir="/WEB-INF/tags"%><%--
 --%><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
@@ -34,7 +35,9 @@
 		});
 		</script>
 		<input type="submit" value="View"/>
+		<input type="submit" value="Compare to"/>
 	</form>
+<common:displayFingerprint uniquenessBean="${ uniquenessBean }" chrsBean="${ chrsBean }"/>
 <%@include file="footer.jsp" %>
 </body>
 </html>
