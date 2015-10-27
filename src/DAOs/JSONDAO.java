@@ -210,17 +210,13 @@ public class JSONDAO {
 
 			JSONObject results = new JSONObject();
 			while (rs.next()) {
-				int timezone = rs.getInt(1);
-				String timezoneStr;
+				String timezone = rs.getString(1);
 				if (rs.wasNull()) {
-					timezoneStr = "No JavaScript";
-				}
-				else {
-					timezoneStr = Integer.toString(timezone);
+					timezone = "No JavaScript";
 				}
 
 				int count = rs.getInt(2);
-				results.put(timezoneStr, count);
+				results.put(timezone, count);
 			}
 			rs.close();
 			select.close();

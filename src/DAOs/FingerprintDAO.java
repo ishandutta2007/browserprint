@@ -298,7 +298,7 @@ public class FingerprintDAO {
 		insertSample.setString(index, fingerprint.getPluginDetails());
 		++index;
 		if (fingerprint.getTimeZone() != null) {
-			insertSample.setInt(index, fingerprint.getTimeZone());
+			insertSample.setString(index, fingerprint.getTimeZone());
 		} else {
 			insertSample.setNull(index, java.sql.Types.INTEGER);
 		}
@@ -465,7 +465,7 @@ public class FingerprintDAO {
 			++index;
 		}
 		if (fingerprint.getTimeZone() != null) {
-			checkExists.setInt(index, fingerprint.getTimeZone());
+			checkExists.setString(index, fingerprint.getTimeZone());
 			++index;
 		}
 		if (fingerprint.getScreenDetails() != null) {
@@ -612,7 +612,7 @@ public class FingerprintDAO {
 			++index;
 		}
 		if (fingerprint.getTimeZone() != null) {
-			checkExists.setInt(index, fingerprint.getTimeZone());
+			checkExists.setString(index, fingerprint.getTimeZone());
 			++index;
 		}
 		if (fingerprint.getScreenDetails() != null) {
@@ -923,7 +923,7 @@ public class FingerprintDAO {
 		fingerprint.setPluginDetails(rs.getString(index));
 		++index;
 		//TimeZone
-		fingerprint.setTimeZone(rs.getInt(index));
+		fingerprint.setTimeZone(rs.getString(index));
 		++index;
 		//ScreenDetails
 		fingerprint.setScreenDetails(rs.getString(index));

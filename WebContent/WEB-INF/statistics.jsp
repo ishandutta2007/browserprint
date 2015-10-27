@@ -331,7 +331,12 @@
 				var nbOthers = 0;
 				$.each(jsonData, function(key, tab){
 					var name = key;
-					if(name != "No JavaScript") {
+					if(isNaN(name)){
+						if(name != "No JavaScript") {
+							name = "Non-numeric timezone";
+						}
+					}
+					else{						
 						name = parseInt(name,10)/-60;
 						if(name < 0){
 							name = "UTC" + name;
