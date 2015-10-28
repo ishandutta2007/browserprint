@@ -41,23 +41,19 @@ public class HistoryServlet extends HttpServlet {
 		request.setAttribute("historyListBean", history);
 
 		// Was a SampleID specified?
-		String sampleIDstr = request.getParameter("sampleID");
-		if(sampleIDstr != null){
-			// A SampleID was specified, decrypt it.
-			Integer sampleID = SampleIDs.decryptInteger(sampleIDstr, getServletContext());
-			request.setAttribute("sampleID", sampleID);
-
+		String sampleUUID = request.getParameter("sampleUUID");
+		if(sampleUUID != null){
 			try{
 				// Get the data associated with the SampleID.
 				CharacteristicsBean chrsbean = new CharacteristicsBean();
 				UniquenessBean uniquenessbean = new UniquenessBean();
-				Fingerprint fingerprint = FingerprintDAO.getFingerprintBeans(sampleID, chrsbean, uniquenessbean);
+				Fingerprint fingerprint = FingerprintDAO.getFingerprintBeans(sampleUUID, chrsbean, uniquenessbean);
 				if(fingerprint != null){
 					request.setAttribute("chrsBean", chrsbean);
 					request.setAttribute("uniquenessBean", uniquenessbean);
 				}
 				else{
-					throw new ServletException("Valid sample ID, but no associated sample.");
+					throw new ServletException("No sample associated with given sampleUUID.");
 				}
 			}catch(SQLException ex){
 				//Database error.

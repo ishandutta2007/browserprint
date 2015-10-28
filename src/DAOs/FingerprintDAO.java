@@ -9,6 +9,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.TimeZone;
+import java.util.UUID;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -24,9 +25,10 @@ import datastructures.Fingerprint;
 import util.SampleIDs;
 
 public class FingerprintDAO {
-	private static final String insertSampleStr = "INSERT INTO `Samples`(`IP`,`TimeStamp`,`UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `LanguageFlash`, `Fonts`, `CharSizes`, `CookiesEnabled`, `SuperCookie`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `AdsBlocked`, `Canvas`, `WebGLVendor`, `WebGLRenderer`) VALUES(?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+	private static final String insertSampleStr = "INSERT INTO `Samples`(`IP`, `TimeStamp`, `SampleUUID`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `LanguageFlash`, `Fonts`, `CharSizes`, `CookiesEnabled`, `SuperCookie`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `AdsBlocked`, `Canvas`, `WebGLVendor`, `WebGLRenderer`) VALUES(?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 	private static final String getSampleCountStr = "SELECT COUNT(*) FROM `Samples`;";
-	private static final String selectSampleStr = "SELECT `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `LanguageFlash`, `Fonts`, `CharSizes`, `CookiesEnabled`, `SuperCookie`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `AdsBlocked`, `Canvas`, `WebGLVendor`, `WebGLRenderer` FROM `Samples` WHERE `SampleID` = ?;";
+	private static final String selectSampleStr = "SELECT `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `LanguageFlash`, `Fonts`, `CharSizes`, `CookiesEnabled`, `SuperCookie`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `AdsBlocked`, `Canvas`, `WebGLVendor`, `WebGLRenderer` FROM `Samples` WHERE `SampleUUID` = ?;";
+	private static final String selectSampleSetIDHistory = "SELECT `SampleUUID`, `Timestamp` FROM `SampleSets` INNER JOIN `Samples` USING (`SampleID`) WHERE `SampleSetID` = ?;";
 	
 	private static final String NO_JAVASCRIPT = "No JavaScript";
 	private static final String NOT_SUPPORTED = "Not supported";
@@ -86,11 +88,11 @@ public class FingerprintDAO {
 	 * @return The fingerprint, or null if no fingerprint with the specified sampleID was found.
 	 * @throws SQLException
 	 */
-	public static Fingerprint getFingerprintBeans(int sampleID, CharacteristicsBean chrsbean, UniquenessBean uniquenessbean) throws SQLException {
+	public static Fingerprint getFingerprintBeans(String sampleUUID, CharacteristicsBean chrsbean, UniquenessBean uniquenessbean) throws SQLException {
 		Connection conn = Database.getConnection();
 			conn.setReadOnly(true);
 			
-			Fingerprint fingerprint = getFingerprintFromSampleID(conn, sampleID);
+			Fingerprint fingerprint = getFingerprintFromSampleID(conn, sampleUUID);
 			if(fingerprint == null){
 				conn.close();
 				return null;
@@ -283,9 +285,13 @@ public class FingerprintDAO {
 	 * @throws SQLException
 	 */
 	private static Integer insertSample(Connection conn, Fingerprint fingerprint) throws SQLException {
+		String sampleUUID = UUID.randomUUID().toString();
+		
 		PreparedStatement insertSample = conn.prepareStatement(insertSampleStr, Statement.RETURN_GENERATED_KEYS);
 		int index = 1;
 		insertSample.setString(index, fingerprint.getIpAddress());
+		++index;
+		insertSample.setString(index, sampleUUID);
 		++index;
 		insertSample.setString(index, fingerprint.getUser_agent());
 		++index;
@@ -342,7 +348,6 @@ public class FingerprintDAO {
 		insertSample.setString(index, fingerprint.getWebGLVendor());
 		++index;
 		insertSample.setString(index, fingerprint.getWebGLRenderer());
-
 		insertSample.execute();
 
 		ResultSet rs = insertSample.getGeneratedKeys();
@@ -864,8 +869,7 @@ public class FingerprintDAO {
 				return history;
 			}
 
-			String query = "SELECT `SampleID`, `Timestamp` FROM `SampleSets` INNER JOIN `Samples` USING (`SampleID`) WHERE `SampleSetID` = ?;";
-			PreparedStatement getHistory = conn.prepareStatement(query);
+			PreparedStatement getHistory = conn.prepareStatement(selectSampleSetIDHistory);
 			getHistory.setInt(1, sampleSetID);
 
 			ResultSet rs = getHistory.executeQuery();
@@ -873,7 +877,7 @@ public class FingerprintDAO {
 				Timestamp timestamp = rs.getTimestamp(2);
 				SimpleDateFormat dateformat = new SimpleDateFormat("dd/MM/yyyy, HH:mm:ss z");
 				dateformat.setTimeZone(TimeZone.getTimeZone("UTC"));
-				history.addHistoryBean(new HistoryBean(rs.getInt(1), SampleIDs.encryptInteger(rs.getInt(1), context), dateformat.format(timestamp)));
+				history.addHistoryBean(new HistoryBean(rs.getString(1), dateformat.format(timestamp)));
 			}
 			rs.close();
 			getHistory.close();
@@ -894,9 +898,9 @@ public class FingerprintDAO {
 		return history;
 	}
 
-	private static Fingerprint getFingerprintFromSampleID(Connection conn, int sampleID) throws SQLException {
+	private static Fingerprint getFingerprintFromSampleID(Connection conn, String sampleUUID) throws SQLException {
 		PreparedStatement getFingerprint = conn.prepareStatement(selectSampleStr);
-		getFingerprint.setInt(1, sampleID);
+		getFingerprint.setString(1, sampleUUID);
 
 		ResultSet rs = getFingerprint.executeQuery();
 		if (!rs.next()) {

@@ -21,9 +21,9 @@
 		To keep track of your history you need cookies enabled.
 	</p></c:if>
 	<form action="history" method="get">
-		<select name="sampleID" id="historySelector"><%--
+		<select name="sampleUUID" id="historySelector"><%--
 			--%><c:forEach var="history" items="${ historyListBean.history }">
-			<option value="${ history.encryptedSampleID }">${ history.timestamp }</option><%--
+			<option value="${ history.sampleUUID }">${ history.timestamp }</option><%--
 			--%></c:forEach>
 		</select>
 		<script type="text/javascript">

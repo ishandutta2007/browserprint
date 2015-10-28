@@ -17,14 +17,14 @@
 <body>
 <%@include file="header.html" %>
 	<form action="compare" method="get">
-		<input type="hidden" name="sampleID1" value="${ param.sampleID }"/>
-		<select name="sampleID2" id="historySelector"><%--
+		<input type="hidden" name="sampleUUID1" value="${ param.sampleUUID }"/>
+		<select name="sampleUUID2" id="historySelector"><%--
 			--%><c:forEach var="history" items="${ historyListBean.history }"><%--
 				--%><c:choose><%--
-					--%><c:when test="${ requestScope.sampleID == history.sampleID }">
-			<option value="${ history.encryptedSampleID }" selected>${ history.timestamp }</option></c:when><%--
+					--%><c:when test="${ param.sampleUUID == history.sampleUUID }">
+			<option value="${ history.sampleUUID }" selected>${ history.timestamp }</option></c:when><%--
 					--%><c:otherwise>
-			<option value="${ history.encryptedSampleID }">${ history.timestamp }</option></c:otherwise><%--
+			<option value="${ history.sampleUUID }">${ history.timestamp }</option></c:otherwise><%--
 				--%></c:choose><%--
 			--%></c:forEach>
 		</select>

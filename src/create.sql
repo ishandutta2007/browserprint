@@ -6,9 +6,10 @@ USE `browserprint`;
  * REMEMBER TO INCREMENT THE DEFAULT VAULE OF `BrowserprintVersion` IF YOU CHANGE THIS.
  */
 CREATE TABLE `Samples` (
-  `BrowserprintVersion` SMALLINT UNSIGNED NOT NULL DEFAULT 2,
+  `BrowserprintVersion` SMALLINT UNSIGNED NOT NULL DEFAULT 3,
   `IP` TEXT NOT NULL,
   `TimeStamp` DATETIME NOT NULL,
+  `SampleUUID` CHAR(36) NOT NULL,
   `SampleID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `UserAgent` TEXT,
   `AcceptHeaders` TEXT,
@@ -32,7 +33,8 @@ CREATE TABLE `Samples` (
   `Canvas` TEXT,
   `WebGLVendor` TEXT,
   `WebGLRenderer` TEXT,
-  PRIMARY KEY(`SampleID`)
+  PRIMARY KEY(`SampleUUID`),
+  KEY(`SampleID`)
 )
 ENGINE=InnoDB;
 

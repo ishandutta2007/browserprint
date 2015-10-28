@@ -4,36 +4,25 @@ import java.io.Serializable;
 
 @SuppressWarnings("serial")
 public class HistoryBean implements Serializable{
-	private Integer sampleID;
-	private String encryptedSampleID;
+	private String sampleUUID;
 	private String timestamp;
 
 	public HistoryBean() {
-		sampleID = null;
-		encryptedSampleID = null;
+		sampleUUID = null;
 		timestamp = null;
 	}
 
-	public HistoryBean(Integer sampleID, String encryptedSampleID, String timestamp) {
-		this.sampleID = sampleID;
-		this.encryptedSampleID = encryptedSampleID;
+	public HistoryBean(String sampleUUID, String timestamp) {
+		this.sampleUUID = sampleUUID;
 		this.timestamp = timestamp;
 	}
 
-	public Integer getSampleID() {
-		return sampleID;
+	public String getSampleUUID() {
+		return sampleUUID;
 	}
 
-	public void setSampleID(Integer sampleID) {
-		this.sampleID = sampleID;
-	}
-
-	public String getEncryptedSampleID() {
-		return encryptedSampleID;
-	}
-
-	public void setEncryptedSampleID(String encryptedSampleID) {
-		this.encryptedSampleID = encryptedSampleID;
+	public void setSampleUUID(String sampleUUID) {
+		this.sampleUUID = sampleUUID;
 	}
 
 	public String getTimestamp() {
