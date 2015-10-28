@@ -16,11 +16,17 @@
 </head>
 <body>
 <%@include file="header.html" %>
-${ param.sampleID }
 	<form action="compare" method="get">
-		<input type="hidden" name="sampleID1" value=""/>
-		<select name="sampleID2" id="historySelector">
-			<c:forEach var="history" items="${ historyListBean.history }"><option value="${ history.sampleID }">${ history.timestamp }</option></c:forEach>
+		<input type="hidden" name="sampleID1" value="${ param.sampleID }"/>
+		<select name="sampleID2" id="historySelector"><%--
+			--%><c:forEach var="history" items="${ historyListBean.history }"><%--
+				--%><c:choose><%--
+					--%><c:when test="${ requestScope.sampleID == history.sampleID }">
+			<option value="${ history.encryptedSampleID }" selected>${ history.timestamp }</option></c:when><%--
+					--%><c:otherwise>
+			<option value="${ history.encryptedSampleID }">${ history.timestamp }</option></c:otherwise><%--
+				--%></c:choose><%--
+			--%></c:forEach>
 		</select>
 		<script type="text/javascript">
 		$('#historySelector > option').each(function() {

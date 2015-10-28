@@ -45,6 +45,7 @@ public class HistoryServlet extends HttpServlet {
 		if(sampleIDstr != null){
 			// A SampleID was specified, decrypt it.
 			Integer sampleID = SampleIDs.decryptInteger(sampleIDstr, getServletContext());
+			request.setAttribute("sampleID", sampleID);
 
 			try{
 				// Get the data associated with the SampleID.

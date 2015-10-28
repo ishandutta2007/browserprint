@@ -873,7 +873,7 @@ public class FingerprintDAO {
 				Timestamp timestamp = rs.getTimestamp(2);
 				SimpleDateFormat dateformat = new SimpleDateFormat("dd/MM/yyyy, HH:mm:ss z");
 				dateformat.setTimeZone(TimeZone.getTimeZone("UTC"));
-				history.addHistoryBean(new HistoryBean(SampleIDs.encryptInteger(rs.getInt(1), context), dateformat.format(timestamp)));
+				history.addHistoryBean(new HistoryBean(rs.getInt(1), SampleIDs.encryptInteger(rs.getInt(1), context), dateformat.format(timestamp)));
 			}
 			rs.close();
 			getHistory.close();
