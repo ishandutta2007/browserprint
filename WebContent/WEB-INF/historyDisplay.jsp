@@ -2,6 +2,8 @@
 --%><%@page session="false"%><%--
 --%><%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%><%--
 --%><jsp:useBean id="historyListBean" class="beans.HistoryListBean" scope="request" /><%--
+--%><jsp:useBean id="chrsBean" class="beans.CharacteristicsBean" scope="request" /><%--
+--%><jsp:useBean id="uniquenessBean" class="beans.UniquenessBean" scope="request" /><%--
 --%><%@taglib prefix="common" tagdir="/WEB-INF/tags"%><%--
 --%><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
@@ -14,14 +16,10 @@
 </head>
 <body>
 <%@include file="header.html" %>
-	<p>
-		View past browser fingerprints.
-	</p>
-	<c:if test="${ !requestScope.cookiesEnabled }"><p class="error">
-		To keep track of your history you need cookies enabled.
-	</p></c:if>
-	<form action="history" method="get">
-		<select name="sampleID" id="historySelector">
+${ param.sampleID }
+	<form action="compare" method="get">
+		<input type="hidden" name="sampleID1" value=""/>
+		<select name="sampleID2" id="historySelector">
 			<c:forEach var="history" items="${ historyListBean.history }"><option value="${ history.sampleID }">${ history.timestamp }</option></c:forEach>
 		</select>
 		<script type="text/javascript">
@@ -32,8 +30,9 @@
 			$(this).text($.format.date(newDate, 'dd/MM/yyyy, HH:mm:ss'));
 		});
 		</script>
-		<input type="submit" value="View"/>
+		<input type="submit" value="Compare to"/>
 	</form>
+<common:displayFingerprint uniquenessBean="${ uniquenessBean }" chrsBean="${ chrsBean }"/>
 <%@include file="footer.jsp" %>
 </body>
 </html>

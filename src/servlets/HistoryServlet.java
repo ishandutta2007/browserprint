@@ -62,12 +62,16 @@ public class HistoryServlet extends HttpServlet {
 				//Database error.
 				throw new ServletException(ex);
 			}
+			
+			// Forward to the history display page.
+			request.getRequestDispatcher("/WEB-INF/historyDisplay.jsp").forward(request, response);
 		}
-		
-		request.setAttribute("cookiesEnabled", (request.getCookies() != null));
-		
-		// Forward to the history page.
-		request.getRequestDispatcher("/WEB-INF/history.jsp").forward(request, response);
+		else{
+			request.setAttribute("cookiesEnabled", (request.getCookies() != null));
+
+			// Forward to the history page.
+			request.getRequestDispatcher("/WEB-INF/history.jsp").forward(request, response);
+		}
 	}
 
 	/**
