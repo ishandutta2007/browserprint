@@ -1,6 +1,9 @@
 package beans;
 
-public class UniquenessBean {
+import java.io.Serializable;
+
+@SuppressWarnings("serial")
+public class UniquenessBean implements Serializable{
 	private boolean isUnique;
 	private double bits;
 	private double inX;

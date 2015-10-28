@@ -1,8 +1,10 @@
 package beans;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class CharacteristicsBean {
+@SuppressWarnings("serial")
+public class CharacteristicsBean implements Serializable{
 	private ArrayList<CharacteristicBean> characteristics;
 
 	public CharacteristicsBean(){

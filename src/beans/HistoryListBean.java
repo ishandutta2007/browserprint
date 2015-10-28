@@ -1,8 +1,10 @@
 package beans;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class HistoryListBean {
+@SuppressWarnings("serial")
+public class HistoryListBean implements Serializable{
 	private ArrayList<HistoryBean> history;
 
 	public HistoryListBean(){

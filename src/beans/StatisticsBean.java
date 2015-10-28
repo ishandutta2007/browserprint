@@ -1,6 +1,9 @@
 package beans;
 
-public class StatisticsBean {
+import java.io.Serializable;
+
+@SuppressWarnings("serial")
+public class StatisticsBean implements Serializable{
 	private int numSamples;
 
 	public StatisticsBean() {

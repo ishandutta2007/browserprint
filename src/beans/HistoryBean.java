@@ -1,6 +1,9 @@
 package beans;
 
-public class HistoryBean {
+import java.io.Serializable;
+
+@SuppressWarnings("serial")
+public class HistoryBean implements Serializable{
 	private String sampleID;
 	private String timestamp;
 

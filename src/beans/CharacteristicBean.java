@@ -1,6 +1,10 @@
 package beans;
 
-public class CharacteristicBean {
+import java.io.Serializable;
+
+@SuppressWarnings("serial")
+public class CharacteristicBean implements Serializable{
+	
 	private String name;
 	private String nameHoverText;
 	private double bits;
