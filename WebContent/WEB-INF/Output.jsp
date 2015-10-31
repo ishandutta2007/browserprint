@@ -10,6 +10,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>Browserprint</title>
+	<meta name="robots" content="noindex" />
 	<link type="text/css" href="style.css" rel="stylesheet">
 </head>
 <body>

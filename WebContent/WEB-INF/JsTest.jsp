@@ -5,6 +5,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>Browserprint</title>
+	<meta name="robots" content="noindex" />
 	<script type="text/javascript" src="scripts/jquery-1.11.2.min.js"></script>
 	<script type="text/javascript" src="scripts/swfobject.js"></script>
 	<script type="text/javascript">
