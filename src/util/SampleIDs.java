@@ -30,7 +30,7 @@ public class SampleIDs {
 	 * @return
 	 * @throws ServletException
 	 */
-	public static Integer getSampleSetID(HttpServletRequest request, ServletContext context) throws ServletException {
+	public static String getSampleSetID(HttpServletRequest request, ServletContext context) throws ServletException {
 		Cookie cookies[] = request.getCookies();
 
 		if (cookies == null) {
@@ -39,10 +39,10 @@ public class SampleIDs {
 		}
 
 		// Find the SampleIDs cookie.
-		Integer sampleSetID = null;
+		String sampleSetID = null;
 		for (int i = 0; i < cookies.length; ++i) {
 			if (cookies[i].getName().equals("SampleSetID")) {
-				sampleSetID = decryptInteger(cookies[i].getValue(), context);
+				sampleSetID = cookies[i].getValue();
 				break;
 			}
 		}
@@ -56,19 +56,26 @@ public class SampleIDs {
 	 * @param sampleIDs
 	 * @param context
 	 */
-	public static void saveSampleSetID(HttpServletResponse response, Integer sampleSetID, ServletContext context) throws ServletException {
+	public static void saveSampleSetID(HttpServletResponse response, String sampleSetID, ServletContext context) {
 		if (sampleSetID == null) {
 			// This should never happen, but if it somehow did it could cause a null pointer exception.
 			return;
 		} else {
-			String cookieStr = encryptInteger(sampleSetID, context);
-			Cookie sampleSetIdCookie = new Cookie("SampleSetID", cookieStr);
+			Cookie sampleSetIdCookie = new Cookie("SampleSetID", sampleSetID);
 			sampleSetIdCookie.setMaxAge(60 * 60 * 24 * 30);// 30 days
 			response.addCookie(sampleSetIdCookie);
 		}
 	}
 
-	public static Integer decryptInteger(String encrypted, ServletContext context) throws ServletException {
+	/**
+	 * Decrypt an integer from a String.
+	 * 
+	 * @param encrypted
+	 * @param context
+	 * @return
+	 * @throws ServletException
+	 */
+	private static Integer decryptInteger(String encrypted, ServletContext context) throws ServletException {
 		String encryptedParts[] = encrypted.split("\\|");
 		if (encryptedParts.length != 3) {
 			throw new ServletException("Invalid encrypted string.");
@@ -107,7 +114,7 @@ public class SampleIDs {
 	 * @return
 	 * @throws ServletException
 	 */
-	public static String encryptInteger(Integer integer, ServletContext context) throws ServletException {
+	private static String encryptInteger(Integer integer, ServletContext context) throws ServletException {
 		/* Get password. */
 		String password = context.getInitParameter("SampleSetIDEncryptionPassword");
 

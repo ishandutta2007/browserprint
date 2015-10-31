@@ -6,7 +6,7 @@ USE `browserprint`;
  * REMEMBER TO INCREMENT THE DEFAULT VAULE OF `BrowserprintVersion` IF YOU CHANGE THIS.
  */
 CREATE TABLE `Samples` (
-  `BrowserprintVersion` SMALLINT UNSIGNED NOT NULL DEFAULT 3,
+  `BrowserprintVersion` SMALLINT UNSIGNED NOT NULL DEFAULT 4,
   `IP` TEXT NOT NULL,
   `TimeStamp` DATETIME NOT NULL,
   `SampleUUID` CHAR(36) NOT NULL,
@@ -52,7 +52,7 @@ CREATE TABLE `SampleStatistics` (
 ENGINE=InnoDB;
 
 CREATE TABLE `SampleSets` (
-  `SampleSetID` INT NOT NULL AUTO_INCREMENT,
+  `SampleSetID` CHAR(36) NOT NULL,
   `SampleID` BIGINT UNSIGNED NOT NULL,
   FOREIGN KEY(`SampleID`) REFERENCES `Samples`(`SampleID`)
     ON DELETE CASCADE

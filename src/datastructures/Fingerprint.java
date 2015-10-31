@@ -2,7 +2,7 @@ package datastructures;
 
 
 public class Fingerprint {
-	private Integer sampleSetID;
+	private String sampleSetID;
 	
 	private String user_agent;
 	private String accept_headers;
@@ -63,11 +63,11 @@ public class Fingerprint {
 		webGLRenderer = null;
 	}
 
-	public Integer getSampleSetID() {
+	public String getSampleSetID() {
 		return sampleSetID;
 	}
 
-	public void setSampleSetID(Integer sampleSetID) {
+	public void setSampleSetID(String sampleSetID) {
 		this.sampleSetID = sampleSetID;
 	}
 	

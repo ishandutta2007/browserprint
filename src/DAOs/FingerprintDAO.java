@@ -359,7 +359,7 @@ public class FingerprintDAO {
 				insertSample.execute();
 				foundUniqueUUID = true;
 			} catch (MySQLIntegrityConstraintViolationException ex) {
-				System.err.println("Duplicate UUID: " + sampleUUID);
+				System.err.println("Duplicate SampleUUID: " + sampleUUID);
 			}
 		}
 
@@ -386,17 +386,26 @@ public class FingerprintDAO {
 			/*
 			 * Insert whole new SampleSetID.
 			 */
-			String query = "INSERT INTO `SampleSets`(`SampleID`) VALUES(?);";
+			String query = "INSERT INTO `SampleSets`(`SampleSetID`,`SampleID`) VALUES(?, ?);";
 			PreparedStatement insertSampleSet = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
-			insertSampleSet.setInt(1, sampleID);
-			insertSampleSet.execute();
+			insertSampleSet.setInt(2, sampleID);
 
-			ResultSet rs = insertSampleSet.getGeneratedKeys();
-			if (rs.next()) {
-				fingerprint.setSampleSetID(rs.getInt(1));
+			/*
+			 * Try to insert with a different random SampleSetUUID until a unique one is found.
+			 */
+			boolean foundUniqueUUID = false;
+			while (!foundUniqueUUID) {
+				String sampleSetUUID = UUID.randomUUID().toString();
+				insertSampleSet.setString(1, sampleSetUUID);
+				try {
+					insertSampleSet.execute();
+					foundUniqueUUID = true;
+					fingerprint.setSampleSetID(sampleSetUUID);
+				} catch (MySQLIntegrityConstraintViolationException ex) {
+					System.err.println("Duplicate SampleSetUUID: " + sampleSetUUID);
+				}
 			}
-			rs.close();
 			insertSampleSet.close();
 		} else {
 			/*
@@ -405,7 +414,7 @@ public class FingerprintDAO {
 			String query = "INSERT INTO `SampleSets`(`SampleSetID`,`SampleID`) VALUES(?, ?);";
 			PreparedStatement insertSampleSet = conn.prepareStatement(query);
 
-			insertSampleSet.setInt(1, fingerprint.getSampleSetID());
+			insertSampleSet.setString(1, fingerprint.getSampleSetID());
 			insertSampleSet.setInt(2, sampleID);
 			insertSampleSet.execute();
 
@@ -437,7 +446,7 @@ public class FingerprintDAO {
 		PreparedStatement checkExists = conn.prepareStatement(query);
 
 		int index = 1;
-		checkExists.setInt(index, fingerprint.getSampleSetID());
+		checkExists.setString(index, fingerprint.getSampleSetID());
 		++index;
 
 		if (fingerprint.getUser_agent() != null) {
@@ -825,7 +834,7 @@ public class FingerprintDAO {
 		return chrbean;
 	}
 
-	public static HistoryListBean getSampleSetIDsHistory(Integer sampleSetID, ServletContext context) throws ServletException {
+	public static HistoryListBean getSampleSetIDsHistory(String sampleSetID, ServletContext context) throws ServletException {
 		HistoryListBean history = new HistoryListBean();
 		Connection conn = null;
 		try {
@@ -840,7 +849,7 @@ public class FingerprintDAO {
 			}
 
 			PreparedStatement getHistory = conn.prepareStatement(selectSampleSetIDHistory);
-			getHistory.setInt(1, sampleSetID);
+			getHistory.setString(1, sampleSetID);
 
 			ResultSet rs = getHistory.executeQuery();
 			while (rs.next()) {
