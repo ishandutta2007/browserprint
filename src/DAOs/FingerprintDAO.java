@@ -16,20 +16,21 @@ import javax.servlet.ServletException;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
+
 import beans.CharacteristicBean;
 import beans.CharacteristicsBean;
 import beans.HistoryBean;
 import beans.HistoryListBean;
 import beans.UniquenessBean;
 import datastructures.Fingerprint;
-import util.SampleIDs;
 
 public class FingerprintDAO {
-	private static final String insertSampleStr = "INSERT INTO `Samples`(`IP`, `TimeStamp`, `SampleUUID`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `LanguageFlash`, `Fonts`, `CharSizes`, `CookiesEnabled`, `SuperCookie`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `AdsBlocked`, `Canvas`, `WebGLVendor`, `WebGLRenderer`) VALUES(?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+	private static final String insertSampleStr = "INSERT INTO `Samples`(`SampleUUID`, `IP`, `TimeStamp`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `LanguageFlash`, `Fonts`, `CharSizes`, `CookiesEnabled`, `SuperCookie`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `AdsBlocked`, `Canvas`, `WebGLVendor`, `WebGLRenderer`) VALUES(?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 	private static final String getSampleCountStr = "SELECT COUNT(*) FROM `Samples`;";
 	private static final String selectSampleStr = "SELECT `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `LanguageFlash`, `Fonts`, `CharSizes`, `CookiesEnabled`, `SuperCookie`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `AdsBlocked`, `Canvas`, `WebGLVendor`, `WebGLRenderer` FROM `Samples` WHERE `SampleUUID` = ?;";
 	private static final String selectSampleSetIDHistory = "SELECT `SampleUUID`, `Timestamp` FROM `SampleSets` INNER JOIN `Samples` USING (`SampleID`) WHERE `SampleSetID` = ?;";
-	
+
 	private static final String NO_JAVASCRIPT = "No JavaScript";
 	private static final String NOT_SUPPORTED = "Not supported";
 
@@ -82,6 +83,7 @@ public class FingerprintDAO {
 
 	/**
 	 * Takes a sampleID, gets the fingerprint associated with it, and then fills a CharacteristicsBean and UniquenessBean with the fingerprint's data and statistics.
+	 * 
 	 * @param sampleID
 	 * @param chrsbean
 	 * @param uniquenessbean
@@ -90,20 +92,21 @@ public class FingerprintDAO {
 	 */
 	public static Fingerprint getFingerprintBeans(String sampleUUID, CharacteristicsBean chrsbean, UniquenessBean uniquenessbean) throws SQLException {
 		Connection conn = Database.getConnection();
-			conn.setReadOnly(true);
-			
-			Fingerprint fingerprint = getFingerprintFromSampleID(conn, sampleUUID);
-			if(fingerprint == null){
-				conn.close();
-				return null;
-			}
-			getFingerprintBeans(conn, fingerprint, chrsbean, uniquenessbean);
+		conn.setReadOnly(true);
+
+		Fingerprint fingerprint = getFingerprintFromSampleID(conn, sampleUUID);
+		if (fingerprint == null) {
 			conn.close();
-			return fingerprint;
+			return null;
+		}
+		getFingerprintBeans(conn, fingerprint, chrsbean, uniquenessbean);
+		conn.close();
+		return fingerprint;
 	}
-	
+
 	/**
 	 * Takes a fingerprint and then fills a CharacteristicsBean and UniquenessBean with the fingerprint's data and statistics.
+	 * 
 	 * @param conn
 	 * @param fingerprint
 	 * @param chrsbean
@@ -285,13 +288,9 @@ public class FingerprintDAO {
 	 * @throws SQLException
 	 */
 	private static Integer insertSample(Connection conn, Fingerprint fingerprint) throws SQLException {
-		String sampleUUID = UUID.randomUUID().toString();
-		
 		PreparedStatement insertSample = conn.prepareStatement(insertSampleStr, Statement.RETURN_GENERATED_KEYS);
-		int index = 1;
+		int index = 2;
 		insertSample.setString(index, fingerprint.getIpAddress());
-		++index;
-		insertSample.setString(index, sampleUUID);
 		++index;
 		insertSample.setString(index, fingerprint.getUser_agent());
 		++index;
@@ -348,7 +347,21 @@ public class FingerprintDAO {
 		insertSample.setString(index, fingerprint.getWebGLVendor());
 		++index;
 		insertSample.setString(index, fingerprint.getWebGLRenderer());
-		insertSample.execute();
+
+		/*
+		 * Try to insert with a different random UUID until a unique one is found.
+		 */
+		boolean foundUniqueUUID = false;
+		while (!foundUniqueUUID) {
+			String sampleUUID = UUID.randomUUID().toString();
+			insertSample.setString(1, sampleUUID);
+			try {
+				insertSample.execute();
+				foundUniqueUUID = true;
+			} catch (MySQLIntegrityConstraintViolationException ex) {
+				System.err.println("Duplicate UUID: " + sampleUUID);
+			}
+		}
 
 		ResultSet rs = insertSample.getGeneratedKeys();
 		Integer sampleID = null;
@@ -420,29 +433,7 @@ public class FingerprintDAO {
 		/*
 		 * We have seen this user before. Check if their fingerprint has changed.
 		 */
-		String query = "SELECT `Samples`.`SampleID` FROM `SampleSets` INNER JOIN `Samples` ON `SampleSets`.`SampleID` = `Samples`.`SampleID` WHERE `SampleSetID` = ?"
-			 + " AND `UserAgent`" + (fingerprint.getUser_agent() == null ? " IS NULL" : " = ?")
-			 + " AND `AcceptHeaders`" + (fingerprint.getAccept_headers() == null ? " IS NULL" : " = ?")
-			 + " AND `Platform`" + (fingerprint.getPlatform() == null ? " IS NULL" : " = ?")
-			 + " AND `PlatformFlash`" + (fingerprint.getPlatformFlash() == null ? " IS NULL" : " = ?")
-			 + " AND `PluginDetails`" + (fingerprint.getPluginDetails() == null ? " IS NULL" : " = ?")
-			 + " AND `TimeZone`" + (fingerprint.getTimeZone() == null ? " IS NULL" : " = ?")
-			 + " AND `ScreenDetails`" + (fingerprint.getScreenDetails() == null ? " IS NULL" : " = ?")
-			 + " AND `ScreenDetailsFlash`" + (fingerprint.getScreenDetailsFlash() == null ? " IS NULL" : " = ?")
-			 + " AND `LanguageFlash`" + (fingerprint.getLanguageFlash() == null ? " IS NULL" : " = ?")
-			 + " AND `Fonts`" + (fingerprint.getFonts() == null ? " IS NULL" : " = ?")
-			 + " AND `CharSizes`" + (fingerprint.getCharSizes() == null ? " IS NULL" : " = ?")
-			 + " AND `CookiesEnabled` = ?"
-			 + " AND `SuperCookie`" + (fingerprint.getSuperCookie() == null ? " IS NULL" : " = ?")
-			 + " AND `DoNotTrack`" + (fingerprint.getDoNotTrack() == null ? " IS NULL" : " = ?")
-			 + " AND `ClockDifference`" + (fingerprint.getClockDifference() == null ? " IS NULL" : " = ?")
-			 + " AND `DateTime`" + (fingerprint.getDateTime() == null ? " IS NULL" : " = ?")
-			 + " AND `MathTan`" + (fingerprint.getMathTan() == null ? " IS NULL" : " = ?")
-			 + " AND `UsingTor` = ?"
-			 + " AND `AdsBlocked`" + (fingerprint.getAdsBlocked() == null ? " IS NULL" : " = ?")
-			 + " AND `Canvas`" + (fingerprint.getCanvas() == null ? " IS NULL" : " = ?")
-			 + " AND `WebGLVendor`" + (fingerprint.getWebGLVendor() == null ? " IS NULL" : " = ?")
-			 + " AND `WebGLRenderer`" + (fingerprint.getWebGLRenderer() == null ? " IS NULL" : " = ?") + ";";
+		String query = "SELECT `Samples`.`SampleID` FROM `SampleSets` INNER JOIN `Samples` ON `SampleSets`.`SampleID` = `Samples`.`SampleID` WHERE `SampleSetID` = ?" + " AND `UserAgent`" + (fingerprint.getUser_agent() == null ? " IS NULL" : " = ?") + " AND `AcceptHeaders`" + (fingerprint.getAccept_headers() == null ? " IS NULL" : " = ?") + " AND `Platform`" + (fingerprint.getPlatform() == null ? " IS NULL" : " = ?") + " AND `PlatformFlash`" + (fingerprint.getPlatformFlash() == null ? " IS NULL" : " = ?") + " AND `PluginDetails`" + (fingerprint.getPluginDetails() == null ? " IS NULL" : " = ?") + " AND `TimeZone`" + (fingerprint.getTimeZone() == null ? " IS NULL" : " = ?") + " AND `ScreenDetails`" + (fingerprint.getScreenDetails() == null ? " IS NULL" : " = ?") + " AND `ScreenDetailsFlash`" + (fingerprint.getScreenDetailsFlash() == null ? " IS NULL" : " = ?") + " AND `LanguageFlash`" + (fingerprint.getLanguageFlash() == null ? " IS NULL" : " = ?") + " AND `Fonts`" + (fingerprint.getFonts() == null ? " IS NULL" : " = ?") + " AND `CharSizes`" + (fingerprint.getCharSizes() == null ? " IS NULL" : " = ?") + " AND `CookiesEnabled` = ?" + " AND `SuperCookie`" + (fingerprint.getSuperCookie() == null ? " IS NULL" : " = ?") + " AND `DoNotTrack`" + (fingerprint.getDoNotTrack() == null ? " IS NULL" : " = ?") + " AND `ClockDifference`" + (fingerprint.getClockDifference() == null ? " IS NULL" : " = ?") + " AND `DateTime`" + (fingerprint.getDateTime() == null ? " IS NULL" : " = ?") + " AND `MathTan`" + (fingerprint.getMathTan() == null ? " IS NULL" : " = ?") + " AND `UsingTor` = ?" + " AND `AdsBlocked`" + (fingerprint.getAdsBlocked() == null ? " IS NULL" : " = ?") + " AND `Canvas`" + (fingerprint.getCanvas() == null ? " IS NULL" : " = ?") + " AND `WebGLVendor`" + (fingerprint.getWebGLVendor() == null ? " IS NULL" : " = ?") + " AND `WebGLRenderer`" + (fingerprint.getWebGLRenderer() == null ? " IS NULL" : " = ?") + ";";
 		PreparedStatement checkExists = conn.prepareStatement(query);
 
 		int index = 1;
@@ -571,28 +562,7 @@ public class FingerprintDAO {
 		/*
 		 * We have seen this user before. Check if their fingerprint has changed.
 		 */
-		String query = "SELECT COUNT(*) FROM `Samples` WHERE" + " `UserAgent`" + (fingerprint.getUser_agent() == null ? " IS NULL" : " = ?")
-				+ " AND `AcceptHeaders`" + (fingerprint.getAccept_headers() == null ? " IS NULL" : " = ?")
-				+ " AND `Platform`" + (fingerprint.getPlatform() == null ? " IS NULL" : " = ?")
-				+ " AND `PlatformFlash`" + (fingerprint.getPlatformFlash() == null ? " IS NULL" : " = ?")
-				+ " AND `PluginDetails`" + (fingerprint.getPluginDetails() == null ? " IS NULL" : " = ?")
-				+ " AND `TimeZone`" + (fingerprint.getTimeZone() == null ? " IS NULL" : " = ?")
-				+ " AND `ScreenDetails`" + (fingerprint.getScreenDetails() == null ? " IS NULL" : " = ?")
-				+ " AND `ScreenDetailsFlash`" + (fingerprint.getScreenDetailsFlash() == null ? " IS NULL" : " = ?")
-				+ " AND `LanguageFlash`" + (fingerprint.getLanguageFlash() == null ? " IS NULL" : " = ?")
-				+ " AND `Fonts`" + (fingerprint.getFonts() == null ? " IS NULL" : " = ?")
-				+ " AND `CharSizes`" + (fingerprint.getCharSizes() == null ? " IS NULL" : " = ?")
-				+ " AND `CookiesEnabled` = ?"
-				+ " AND `SuperCookie`" + (fingerprint.getSuperCookie() == null ? " IS NULL" : " = ?")
-				+ " AND `DoNotTrack`" + (fingerprint.getDoNotTrack() == null ? " IS NULL" : " = ?")
-				+ " AND `ClockDifference`" + (fingerprint.getClockDifference() == null ? " IS NULL" : " = ?")
-				+ " AND `DateTime`" + (fingerprint.getDateTime() == null ? " IS NULL" : " = ?")
-				+ " AND `MathTan`" + (fingerprint.getMathTan() == null ? " IS NULL" : " = ?") + ""
-				+ " AND `UsingTor` = ?"
-				+ " AND `AdsBlocked`" + (fingerprint.getAdsBlocked() == null ? " IS NULL" : " = ?")
-				+ " AND `Canvas`" + (fingerprint.getCanvas() == null ? " IS NULL" : " = ?")
-				+ " AND `WebGLVendor`" + (fingerprint.getWebGLVendor() == null ? " IS NULL" : " = ?")
-				+ " AND `WebGLRenderer`" + (fingerprint.getWebGLRenderer() == null ? " IS NULL" : " = ?") + ";";
+		String query = "SELECT COUNT(*) FROM `Samples` WHERE" + " `UserAgent`" + (fingerprint.getUser_agent() == null ? " IS NULL" : " = ?") + " AND `AcceptHeaders`" + (fingerprint.getAccept_headers() == null ? " IS NULL" : " = ?") + " AND `Platform`" + (fingerprint.getPlatform() == null ? " IS NULL" : " = ?") + " AND `PlatformFlash`" + (fingerprint.getPlatformFlash() == null ? " IS NULL" : " = ?") + " AND `PluginDetails`" + (fingerprint.getPluginDetails() == null ? " IS NULL" : " = ?") + " AND `TimeZone`" + (fingerprint.getTimeZone() == null ? " IS NULL" : " = ?") + " AND `ScreenDetails`" + (fingerprint.getScreenDetails() == null ? " IS NULL" : " = ?") + " AND `ScreenDetailsFlash`" + (fingerprint.getScreenDetailsFlash() == null ? " IS NULL" : " = ?") + " AND `LanguageFlash`" + (fingerprint.getLanguageFlash() == null ? " IS NULL" : " = ?") + " AND `Fonts`" + (fingerprint.getFonts() == null ? " IS NULL" : " = ?") + " AND `CharSizes`" + (fingerprint.getCharSizes() == null ? " IS NULL" : " = ?") + " AND `CookiesEnabled` = ?" + " AND `SuperCookie`" + (fingerprint.getSuperCookie() == null ? " IS NULL" : " = ?") + " AND `DoNotTrack`" + (fingerprint.getDoNotTrack() == null ? " IS NULL" : " = ?") + " AND `ClockDifference`" + (fingerprint.getClockDifference() == null ? " IS NULL" : " = ?") + " AND `DateTime`" + (fingerprint.getDateTime() == null ? " IS NULL" : " = ?") + " AND `MathTan`" + (fingerprint.getMathTan() == null ? " IS NULL" : " = ?") + "" + " AND `UsingTor` = ?" + " AND `AdsBlocked`" + (fingerprint.getAdsBlocked() == null ? " IS NULL" : " = ?") + " AND `Canvas`" + (fingerprint.getCanvas() == null ? " IS NULL" : " = ?") + " AND `WebGLVendor`" + (fingerprint.getWebGLVendor() == null ? " IS NULL" : " = ?") + " AND `WebGLRenderer`" + (fingerprint.getWebGLRenderer() == null ? " IS NULL" : " = ?") + ";";
 		PreparedStatement checkExists = conn.prepareStatement(query);
 
 		int index = 1;
@@ -904,89 +874,89 @@ public class FingerprintDAO {
 
 		ResultSet rs = getFingerprint.executeQuery();
 		if (!rs.next()) {
-			//No sample found with that sampleID. 
+			// No sample found with that sampleID.
 			return null;
 		}
-		
+
 		Fingerprint fingerprint = new Fingerprint();
-		
+
 		int index = 1;
-		//UserAgent
+		// UserAgent
 		fingerprint.setUser_agent(rs.getString(index));
 		++index;
-		//AcceptHeaders
+		// AcceptHeaders
 		fingerprint.setAccept_headers(rs.getString(index));
 		++index;
-		//Platform
+		// Platform
 		fingerprint.setPlatform(rs.getString(index));
 		++index;
-		//PlatformFlash
+		// PlatformFlash
 		fingerprint.setPlatformFlash(rs.getString(index));
 		++index;
-		//PluginDetails
+		// PluginDetails
 		fingerprint.setPluginDetails(rs.getString(index));
 		++index;
-		//TimeZone
+		// TimeZone
 		fingerprint.setTimeZone(rs.getString(index));
 		++index;
-		//ScreenDetails
+		// ScreenDetails
 		fingerprint.setScreenDetails(rs.getString(index));
 		++index;
-		//ScreenDetailsFlash
+		// ScreenDetailsFlash
 		fingerprint.setScreenDetailsFlash(rs.getString(index));
 		++index;
-		//LanguageFlash
+		// LanguageFlash
 		fingerprint.setLanguageFlash(rs.getString(index));
 		++index;
-		//Fonts
+		// Fonts
 		fingerprint.setFonts(rs.getString(index));
 		++index;
-		//CharSizes
+		// CharSizes
 		fingerprint.setCharSizes(rs.getString(index));
 		++index;
-		//CookiesEnabled
+		// CookiesEnabled
 		fingerprint.setCookiesEnabled(rs.getBoolean(index));
 		++index;
-		//SuperCookie
+		// SuperCookie
 		fingerprint.setSuperCookie(rs.getString(index));
 		++index;
-		//DoNotTrack
+		// DoNotTrack
 		fingerprint.setDoNotTrack(rs.getString(index));
 		++index;
-		//ClockDifference
+		// ClockDifference
 		fingerprint.setClockDifference(rs.getLong(index));
-		if(rs.wasNull()){
+		if (rs.wasNull()) {
 			fingerprint.setClockDifference(null);
 		}
 		++index;
-		//DateTime
+		// DateTime
 		fingerprint.setDateTime(rs.getString(index));
 		++index;
-		//MathTan
+		// MathTan
 		fingerprint.setMathTan(rs.getString(index));
 		++index;
-		//UsingTor
+		// UsingTor
 		fingerprint.setUsingTor(rs.getBoolean(index));
 		++index;
-		//AdsBlocked
+		// AdsBlocked
 		fingerprint.setAdsBlocked(rs.getBoolean(index));
-		if(rs.wasNull()){
+		if (rs.wasNull()) {
 			fingerprint.setAdsBlocked(null);
 		}
 		++index;
-		//Canvas
+		// Canvas
 		fingerprint.setCanvas(rs.getString(index));
 		++index;
-		//WebGLVendor
+		// WebGLVendor
 		fingerprint.setWebGLVendor(rs.getString(index));
 		++index;
-		//WebGLRenderer
+		// WebGLRenderer
 		fingerprint.setWebGLRenderer(rs.getString(index));
 		++index;
-		
+
 		rs.close();
 		getFingerprint.close();
-		
+
 		return fingerprint;
 	}
 }
