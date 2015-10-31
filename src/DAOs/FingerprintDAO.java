@@ -955,6 +955,9 @@ public class FingerprintDAO {
 		++index;
 		//ClockDifference
 		fingerprint.setClockDifference(rs.getLong(index));
+		if(rs.wasNull()){
+			fingerprint.setClockDifference(null);
+		}
 		++index;
 		//DateTime
 		fingerprint.setDateTime(rs.getString(index));
@@ -967,6 +970,9 @@ public class FingerprintDAO {
 		++index;
 		//AdsBlocked
 		fingerprint.setAdsBlocked(rs.getBoolean(index));
+		if(rs.wasNull()){
+			fingerprint.setAdsBlocked(null);
+		}
 		++index;
 		//Canvas
 		fingerprint.setCanvas(rs.getString(index));
