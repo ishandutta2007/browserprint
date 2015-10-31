@@ -53,7 +53,7 @@ public class HistoryServlet extends HttpServlet {
 					request.setAttribute("uniquenessBean", uniquenessbean);
 				}
 				else{
-					throw new ServletException("No sample associated with given sampleUUID.");
+					throw new ServletException("No sample associated with given sampleUUID: " + sampleUUID);
 				}
 			}catch(SQLException ex){
 				//Database error.
