@@ -70,14 +70,19 @@
 	<h3>Sharing of data</h3>
 	<p>
 		Fingerprints, aggregated data about fingerprints, and other statistics may be published and shared publicly.
-		IP addresses will not be published, however statistics that can be derived from IP address, such as the country of clients may be published.
-		Additionally incomplete IP addresses may be published.
+		For non-Tor clients IP addresses will not be published, however statistics that can be derived from IP address, such as the country of clients may be published.
+		For Tor clients the IP address or identity of the Tor exit node being used may be published. 
 		An effort will be made to protect the privacy of clients in situations where their privacy may be threatened.
 	</p>
 	<p>
 		The database of collected data, may be shared with a third party upon request,
 		 provided they have a valid reason (e.g. research) and they agree to abide by our privacy policy.
 		We will do our best to prevent theft or misuse of collected data, however, such incidents are still possible.
+	</p>
+	<p>
+		Each fingerprint is assigned a unique UUID; this UUID, or a URL containing this UUID, may be shared by the client to allow others to see and compare their fingerprint.
+		The UUIDs used are so long (122 random bits) that it is very unlikely they can be guessed.
+		Hence it is very unlikely that a fingerprint will be viewed by others on the website without the client disclosing its UUID or URL.
 	</p>
 </div>
 <%@include file="footer.jsp" %>
