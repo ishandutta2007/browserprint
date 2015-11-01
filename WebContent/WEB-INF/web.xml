@@ -53,13 +53,13 @@
     <url-pattern>/privacy</url-pattern>
   </servlet-mapping>
   <servlet>
-    <display-name>HistoryServlet</display-name>
-    <servlet-name>HistoryServlet</servlet-name>
-    <servlet-class>servlets.HistoryServlet</servlet-class>
+    <display-name>ViewSampleServlet</display-name>
+    <servlet-name>ViewSampleServlet</servlet-name>
+    <servlet-class>servlets.ViewSampleServlet</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>HistoryServlet</servlet-name>
-    <url-pattern>/history</url-pattern>
+    <servlet-name>ViewSampleServlet</servlet-name>
+    <url-pattern>/view</url-pattern>
   </servlet-mapping>
   <filter>
     <filter-name>UTF8Filter</filter-name>

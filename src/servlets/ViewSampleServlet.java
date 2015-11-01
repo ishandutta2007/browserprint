@@ -18,13 +18,13 @@ import util.SampleIDs;
 /**
  * Servlet implementation class HistoryServlet
  */
-public class HistoryServlet extends HttpServlet {
+public class ViewSampleServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public HistoryServlet() {
+    public ViewSampleServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -61,13 +61,13 @@ public class HistoryServlet extends HttpServlet {
 			}
 			
 			// Forward to the history display page.
-			request.getRequestDispatcher("/WEB-INF/historyDisplay.jsp").forward(request, response);
+			request.getRequestDispatcher("/WEB-INF/viewSampleDisplay.jsp").forward(request, response);
 		}
 		else{
 			request.setAttribute("cookiesEnabled", (request.getCookies() != null));
 
 			// Forward to the history page.
-			request.getRequestDispatcher("/WEB-INF/history.jsp").forward(request, response);
+			request.getRequestDispatcher("/WEB-INF/viewSample.jsp").forward(request, response);
 		}
 	}
 
