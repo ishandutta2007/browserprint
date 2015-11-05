@@ -382,42 +382,50 @@ public class FingerprintDAO {
 	 * @throws SQLException
 	 */
 	private static void insertSampleSet(Connection conn, Fingerprint fingerprint, Integer sampleID) throws SQLException {
-		if (fingerprint.getSampleSetID() == null) {
+		String insertQuery = "INSERT INTO `SampleSets`(`SampleSetID`,`SampleID`) VALUES(?, ?);";
+		PreparedStatement insertSampleSet = conn.prepareStatement(insertQuery);
+		insertSampleSet.setInt(2, sampleID);
+		
+		if(fingerprint.getSampleSetID() != null){
+			/*
+			 * Check if the SampleSetID exists.
+			 * If it doesn't set fingerprint.sampleSetID to null so that it creates a new sampleSetID and inserts that.
+			 */
+			String selectQuery = "SELECT 1 FROM `SampleSets` WHERE `SampleSetID` = ? GROUP BY `SampleSetID`";
+			PreparedStatement selectSampleSet = conn.prepareStatement(selectQuery);
+			selectSampleSet.setString(1, fingerprint.getSampleSetID());
+			ResultSet rs = selectSampleSet.executeQuery();
+			if(!rs.next()){
+				fingerprint.setSampleSetID(null);
+			}
+			else{
+				/*
+				 * SampleSetID exists.
+				 * Insert new SampleID for existing SampleSetID.
+				 */
+				insertSampleSet.setString(1, fingerprint.getSampleSetID());
+				insertSampleSet.execute();
+				insertSampleSet.close();
+			}
+		}
+		
+		if(fingerprint.getSampleSetID() == null) {
 			/*
 			 * Insert whole new SampleSetID.
-			 */
-			String query = "INSERT INTO `SampleSets`(`SampleSetID`,`SampleID`) VALUES(?, ?);";
-			PreparedStatement insertSampleSet = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-
-			insertSampleSet.setInt(2, sampleID);
-
-			/*
 			 * Try to insert with a different random SampleSetUUID until a unique one is found.
 			 */
 			boolean foundUniqueUUID = false;
 			while (!foundUniqueUUID) {
-				String sampleSetUUID = UUID.randomUUID().toString();
-				insertSampleSet.setString(1, sampleSetUUID);
+				String sampleSetID = UUID.randomUUID().toString();
+				insertSampleSet.setString(1, sampleSetID);
 				try {
 					insertSampleSet.execute();
 					foundUniqueUUID = true;
-					fingerprint.setSampleSetID(sampleSetUUID);
+					fingerprint.setSampleSetID(sampleSetID);
 				} catch (MySQLIntegrityConstraintViolationException ex) {
-					System.err.println("Duplicate SampleSetUUID: " + sampleSetUUID);
+					System.err.println("Duplicate SampleSetUUID: " + sampleSetID);
 				}
 			}
-			insertSampleSet.close();
-		} else {
-			/*
-			 * Insert new SampleID for existing SampleSetID.
-			 */
-			String query = "INSERT INTO `SampleSets`(`SampleSetID`,`SampleID`) VALUES(?, ?);";
-			PreparedStatement insertSampleSet = conn.prepareStatement(query);
-
-			insertSampleSet.setString(1, fingerprint.getSampleSetID());
-			insertSampleSet.setInt(2, sampleID);
-			insertSampleSet.execute();
-
 			insertSampleSet.close();
 		}
 	}
