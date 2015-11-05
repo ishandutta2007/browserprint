@@ -40,8 +40,8 @@
 						fixDates("historySelector1");
 					</script>
 				</div>
-				<div class="">
-					<input type="submit" name="action" value="View" style="width:100%"/>
+				<div>
+					<input type="submit" name="action" value="View" id="sampleViewButton"/>
 				</div>
 			</div>
 			<div style="float:right;">
@@ -60,7 +60,7 @@
 				</div>
 			</div>
 			<div style="clear:left;">
-				<input type="submit" name="action" value="Compare" style="width:100%"/>
+				<input type="submit" name="action" value="Compare" id="sampleCompareButton"/>
 			</div>
 		</form>
 	</div>
