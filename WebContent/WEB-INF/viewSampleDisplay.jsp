@@ -13,34 +13,57 @@
 	<link type="text/css" href="style.css" rel="stylesheet">
 	<script type="text/javascript" src="scripts/jquery-1.11.2.min.js"></script>
 	<script type="text/javascript" src="scripts/jquery-dateFormat.min.js"></script>
+	<script type="text/javascript" src="scripts/view.js"></script>
 </head>
 <body>
 <%@include file="header.html" %>
 	<p>
 		<a href="view">Back</a>
 	</p>
-	<form action="compare" method="get">
-		<input type="hidden" name="sampleUUID1" value="${ param.sampleUUID }"/>
-		<select name="sampleUUID2" id="historySelector"><%--
-			--%><c:forEach var="history" items="${ historyListBean.history }"><%--
-				--%><c:choose><%--
-					--%><c:when test="${ param.sampleUUID == history.sampleUUID }">
-			<option value="${ history.sampleUUID }" selected>${ history.timestamp }</option></c:when><%--
-					--%><c:otherwise>
-			<option value="${ history.sampleUUID }">${ history.timestamp }</option></c:otherwise><%--
-				--%></c:choose><%--
-			--%></c:forEach>
-		</select>
-		<script type="text/javascript">
-		$('#historySelector > option').each(function() {
-			var regex = /^(\d+)\/(\d+)\/(\d+), (\d+):(\d+):(\d+) UTC$/;
-			var match = regex.exec($(this).text());
-			var newDate = new Date(Date.UTC(match[3], match[2], match[1], match[4], match[5], match[6], 0));
-			$(this).text($.format.date(newDate, 'dd/MM/yyyy, HH:mm:ss'));
-		});
-		</script>
-		<input type="submit" value="Compare to"/>
-	</form>
+	<div id="viewDiv">
+		<form action="view" method="get">
+			<div style="float:left;">
+				<div class="sampleBox">
+					History
+					<br/>
+					<select name="sampleUUID1" id="historySelector1" class="historySelect"><%--
+						--%><c:forEach var="history" items="${ historyListBean.history }"><%--
+							--%><c:choose><%--
+								--%><c:when test="${ param.sampleUUID1 == history.sampleUUID }">
+						<option value="${ history.sampleUUID }" selected>${ history.timestamp }</option></c:when><%--
+								--%><c:otherwise>
+						<option value="${ history.sampleUUID }">${ history.timestamp }</option></c:otherwise><%--
+							--%></c:choose><%--
+						--%></c:forEach>
+					</select>
+					<script type="text/javascript">
+						fixDates("historySelector1");
+					</script>
+				</div>
+				<div class="">
+					<input type="submit" name="action" value="View" style="width:100%"/>
+				</div>
+			</div>
+			<div style="float:right;">
+				<div class="sampleBox">
+					History
+					<br/>
+					<select name="sampleUUID2" id="historySelector2" class="historySelect">
+						<option selected value="">-------Select sample-------</option><%--
+						--%><c:forEach var="history" items="${ historyListBean.history }">
+						<option value="${ history.sampleUUID }">${ history.timestamp }</option><%--
+						--%></c:forEach>
+					</select>
+					<script type="text/javascript">
+						fixDates("historySelector2");
+					</script>
+				</div>
+			</div>
+			<div style="clear:left;">
+				<input type="submit" name="action" value="Compare" style="width:100%"/>
+			</div>
+		</form>
+	</div>
 <common:displayFingerprint uniquenessBean="${ uniquenessBean }" chrsBean="${ chrsBean }"/>
 <%@include file="footer.jsp" %>
 </body>

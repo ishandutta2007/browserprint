@@ -12,6 +12,7 @@
 	<link type="text/css" href="style.css" rel="stylesheet">
 	<script type="text/javascript" src="scripts/jquery-1.11.2.min.js"></script>
 	<script type="text/javascript" src="scripts/jquery-dateFormat.min.js"></script>
+	<script type="text/javascript" src="scripts/view.js"></script>
 </head>
 <body>
 <%@include file="header.html" %>
@@ -22,20 +23,16 @@
 		To keep track of your history you need cookies enabled.
 	</p></c:if>
 	<form action="view" method="get">
-		<select name="sampleUUID" id="historySelector"><%--
+		<select name="sampleUUID1" id="historySelector" class="historySelect">
+			<option selected value="">-------Select sample-------</option><%--
 			--%><c:forEach var="history" items="${ historyListBean.history }">
 			<option value="${ history.sampleUUID }">${ history.timestamp }</option><%--
 			--%></c:forEach>
 		</select>
 		<script type="text/javascript">
-		$('#historySelector > option').each(function() {
-			var regex = /^(\d+)\/(\d+)\/(\d+), (\d+):(\d+):(\d+) UTC$/;
-			var match = regex.exec($(this).text());
-			var newDate = new Date(Date.UTC(match[3], match[2], match[1], match[4], match[5], match[6], 0));
-			$(this).text($.format.date(newDate, 'dd/MM/yyyy, HH:mm:ss'));
-		});
+			fixDates("historySelector");
 		</script>
-		<input type="submit" value="View"/>
+		<input type="submit" name="action" value="View"/>
 	</form>
 <%@include file="footer.jsp" %>
 </body>

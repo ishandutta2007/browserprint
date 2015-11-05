@@ -20,14 +20,14 @@ import util.SampleIDs;
  */
 public class ViewSampleServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public ViewSampleServlet() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
+
+	/**
+	 * @see HttpServlet#HttpServlet()
+	 */
+	public ViewSampleServlet() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -40,34 +40,39 @@ public class ViewSampleServlet extends HttpServlet {
 		HistoryListBean history = FingerprintDAO.getSampleSetIDsHistory(sampleSetID, getServletContext());
 		request.setAttribute("historyListBean", history);
 
-		// Was a SampleID specified?
-		String sampleUUID = request.getParameter("sampleUUID");
-		if(sampleUUID != null){
-			try{
-				// Get the data associated with the SampleID.
-				CharacteristicsBean chrsbean = new CharacteristicsBean();
-				UniquenessBean uniquenessbean = new UniquenessBean();
-				Fingerprint fingerprint = FingerprintDAO.getFingerprintBeans(sampleUUID, chrsbean, uniquenessbean);
-				if(fingerprint != null){
-					request.setAttribute("chrsBean", chrsbean);
-					request.setAttribute("uniquenessBean", uniquenessbean);
+		String action = request.getParameter("action");
+
+		if (action == null || action.equals("View")) {
+			// Was a SampleID specified?
+			String sampleUUID = request.getParameter("sampleUUID1");
+			if (sampleUUID != null) {
+				try {
+					// Get the data associated with the SampleID.
+					CharacteristicsBean chrsbean = new CharacteristicsBean();
+					UniquenessBean uniquenessbean = new UniquenessBean();
+					Fingerprint fingerprint = FingerprintDAO.getFingerprintBeans(sampleUUID, chrsbean, uniquenessbean);
+					if (fingerprint != null) {
+						request.setAttribute("chrsBean", chrsbean);
+						request.setAttribute("uniquenessBean", uniquenessbean);
+					} else {
+						throw new ServletException("No sample associated with given sampleUUID: " + sampleUUID);
+					}
+				} catch (SQLException ex) {
+					// Database error.
+					throw new ServletException(ex);
 				}
-				else{
-					throw new ServletException("No sample associated with given sampleUUID: " + sampleUUID);
-				}
-			}catch(SQLException ex){
-				//Database error.
-				throw new ServletException(ex);
+
+				// Forward to the history display page.
+				request.getRequestDispatcher("/WEB-INF/viewSampleDisplay.jsp").forward(request, response);
+			} else {
+				request.setAttribute("cookiesEnabled", (request.getCookies() != null));
+
+				// Forward to the history page.
+				request.getRequestDispatcher("/WEB-INF/viewSample.jsp").forward(request, response);
 			}
-			
-			// Forward to the history display page.
-			request.getRequestDispatcher("/WEB-INF/viewSampleDisplay.jsp").forward(request, response);
 		}
 		else{
-			request.setAttribute("cookiesEnabled", (request.getCookies() != null));
-
-			// Forward to the history page.
-			request.getRequestDispatcher("/WEB-INF/viewSample.jsp").forward(request, response);
+			//TODO: compare
 		}
 	}
 
