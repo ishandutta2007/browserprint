@@ -105,7 +105,7 @@ public class ViewSampleServlet extends HttpServlet {
 						}
 						
 						// Forward to the history display page.
-						request.getRequestDispatcher("/WEB-INF/CompareSample.jsp").forward(request, response);
+						request.getRequestDispatcher("/WEB-INF/compareSample.jsp").forward(request, response);
 						return;
 					}
 					else{

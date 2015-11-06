@@ -4,20 +4,32 @@ body{
 	text-align: center;
 }
 
-table#characteristics{
+table#characteristics, table#comparison{
 	border-collapse: collapse;
 	margin-left: auto;
 	margin-right: auto;
+}
+
+table#characteristics{
 	max-width: 900px;
+}
+
+table#comparison{
+	clear:both;
+	width: 90%;
 }
 
 td,th{
 	border: 1px solid gray;
 }
 
-td.tableValue{
+td.tableValue, td.compareValue{
 	font-size: 0.9em;
 	word-break: break-word;
+}
+
+td.compareValue{
+	width: 45%;
 }
 
 #content{
@@ -37,6 +49,7 @@ td.tableValue{
 	width: 600px;
 	font-size: 0.8em;
 	text-align: center;
+	clear:both;
 }
 
 .hovertext{

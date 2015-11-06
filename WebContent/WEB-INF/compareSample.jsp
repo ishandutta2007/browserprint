@@ -4,6 +4,8 @@
 --%><jsp:useBean id="historyListBean" class="beans.HistoryListBean" scope="request" /><%--
 --%><jsp:useBean id="chrsBean1" class="beans.CharacteristicsBean" scope="request" /><%--
 --%><jsp:useBean id="uniquenessBean1" class="beans.UniquenessBean" scope="request" /><%--
+--%><jsp:useBean id="chrsBean2" class="beans.CharacteristicsBean" scope="request" /><%--
+--%><jsp:useBean id="uniquenessBean2" class="beans.UniquenessBean" scope="request" /><%--
 --%><%@taglib prefix="common" tagdir="/WEB-INF/tags"%><%--
 --%><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
@@ -65,7 +67,7 @@
 			</div>
 		</form>
 	</div>
-<common:displayFingerprint uniquenessBean="${ uniquenessBean1 }" chrsBean="${ chrsBean1 }"/>
+<common:compareFingerprints uniquenessBean1="${ uniquenessBean1 }" chrsBean1="${ chrsBean1 }" uniquenessBean2="${ uniquenessBean2 }" chrsBean2="${ chrsBean2 }"/>
 <%@include file="footer.jsp" %>
 </body>
 </html>
