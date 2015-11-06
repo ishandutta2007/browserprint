@@ -260,7 +260,7 @@ public class FingerprintDAO {
 			CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "Canvas", fingerprint.getCanvas());
 			bean.setName("Canvas");
 			if (bean.getValue().equals(NO_JAVASCRIPT) == false && bean.getValue().equals(NOT_SUPPORTED) == false) {
-				bean.setValue("<img width=\"400\" height=\"60\" src=\"" + bean.getValue() + "\">");
+				bean.setValue("<img width=\"400\" height=\"60\" alt=\"A HTML5 canvas test\" src=\"" + bean.getValue() + "\">");
 			}
 			bean.setNameHoverText("Rendering of a specific picture with the HTML5 Canvas element following a fixed set of instructions." + " The picture presents some slight noticeable variations depending on the OS and the browser used.");
 			characteristics.add(bean);

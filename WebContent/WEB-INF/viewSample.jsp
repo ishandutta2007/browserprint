@@ -8,7 +8,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>Browserprint</title>
-	<meta name="robots" content="noindex, nofollow" />
+	<meta name="robots" content="noindex, nofollow" >
 	<link type="text/css" href="style.css" rel="stylesheet">
 	<script type="text/javascript" src="scripts/jquery-1.11.2.min.js"></script>
 	<script type="text/javascript" src="scripts/jquery-dateFormat.min.js"></script>
