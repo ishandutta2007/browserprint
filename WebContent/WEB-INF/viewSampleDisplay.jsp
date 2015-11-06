@@ -20,7 +20,7 @@
 	<p>
 		<a href="view">Back</a>
 	</p>
-	<div id="viewDiv">
+	<div id="compareDiv">
 		<form action="view" method="get">
 			<div style="float:left;">
 				<div class="sampleBox">
@@ -41,7 +41,7 @@
 					</script>
 				</div>
 				<div>
-					<input type="submit" name="action" value="View" id="sampleViewButton"/>
+					<input type="submit" name="action" value="View" id="sampleViewButton2"/>
 				</div>
 			</div>
 			<div style="float:right;">

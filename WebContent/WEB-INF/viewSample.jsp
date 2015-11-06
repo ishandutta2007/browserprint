@@ -22,18 +22,28 @@
 	<c:if test="${ !requestScope.cookiesEnabled }"><p class="error">
 		To keep track of your history you need cookies enabled.
 	</p></c:if>
-	<form action="view" method="get">
-		<select name="sampleUUID1" id="historySelector" class="historySelect">
-			<option selected value="">-------Select sample-------</option><%--
-			--%><c:forEach var="history" items="${ historyListBean.history }">
-			<option value="${ history.sampleUUID }">${ history.timestamp }</option><%--
-			--%></c:forEach>
-		</select>
-		<script type="text/javascript">
-			fixDates("historySelector");
-		</script>
-		<input type="submit" name="action" value="View"/>
-	</form>
+	<div id="viewDiv">
+		<form action="view" method="get">
+			<div>
+				<div class="sampleBox">
+					History
+					<br/>
+						<select name="sampleUUID1" id="historySelector" class="historySelect">
+							<option selected value="">-------Select sample-------</option><%--
+							--%><c:forEach var="history" items="${ historyListBean.history }">
+							<option value="${ history.sampleUUID }">${ history.timestamp }</option><%--
+							--%></c:forEach>
+						</select>
+						<script type="text/javascript">
+							fixDates("historySelector");
+						</script>
+				</div>
+				<div>
+					<input type="submit" name="action" value="View" id="sampleViewButton"/>
+				</div>
+			</div>
+		</form>
+	</div>
 <%@include file="footer.jsp" %>
 </body>
 </html>

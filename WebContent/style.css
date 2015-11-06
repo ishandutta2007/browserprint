@@ -56,8 +56,14 @@ img{
 	color: red;
 }
 
-#viewDiv{
+#compareDiv{
 	width:450px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#viewDiv{
+	width:200px;
 	margin-left: auto;
 	margin-right: auto;
 }
@@ -71,12 +77,15 @@ img{
 	min-width:180px;
 }
 
-#sampleViewButton{
+#sampleViewButton, #sampleViewButton2{
 	width:100%;
 	border:1px solid #000000;
 	border-top:0px;
-	border-bottom:0px;
 	color:rgb(0,128,0);
+}
+
+#sampleViewButton2{
+	border-bottom:0px;
 }
 
 #sampleCompareButton{
