@@ -4,7 +4,13 @@ body{
 	text-align: center;
 }
 
-table#characteristics, table#comparison{
+div#comparisonDiv{
+	width: 90%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+table#characteristics, table#comparisonTable{
 	border-collapse: collapse;
 	margin-left: auto;
 	margin-right: auto;
@@ -14,9 +20,8 @@ table#characteristics{
 	max-width: 900px;
 }
 
-table#comparison{
+table#comparisonTable{
 	clear:both;
-	width: 90%;
 }
 
 td,th{
@@ -29,7 +34,7 @@ td.tableValue, td.compareValue{
 }
 
 td.compareValue{
-	width: 45%;
+	width: 42%;
 }
 
 #content{
@@ -52,7 +57,8 @@ td.compareValue{
 	clear:both;
 }
 
-.hovertext{
+td.hovertext{
+	width: 8%;
 	cursor: help;
 }
 
@@ -105,4 +111,18 @@ img{
 	width:100%;
 	border:1px solid #000000;
 	color:rgb(0,128,0);
+}
+
+tr.compareMatch{
+	background-color:rgb(152,251,152);
+}
+
+tr.compareDifferent{
+	background-color:rgb(255,192,203);
+}
+
+div.comparisonUniqueness{
+	display: inline-block;
+	max-width:42%;
+	width:42%;
 }
