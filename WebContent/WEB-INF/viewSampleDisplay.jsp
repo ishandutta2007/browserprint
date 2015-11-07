@@ -28,14 +28,7 @@
 					History
 					<br/>
 					<select name="sampleUUID1" id="historySelector1" class="historySelect"><%--
-						--%><c:forEach var="history" items="${ historyListBean.history }"><%--
-							--%><c:choose><%--
-								--%><c:when test="${ param.sampleUUID1 == history.sampleUUID }">
-						<option value="${ history.sampleUUID }" selected>${ history.timestamp }</option></c:when><%--
-								--%><c:otherwise>
-						<option value="${ history.sampleUUID }">${ history.timestamp }</option></c:otherwise><%--
-							--%></c:choose><%--
-						--%></c:forEach>
+						--%><common:historyOptions historyListBean="${ historyListBean }" sampleUUID="${ param.sampleUUID1 }" />
 					</select>
 					<script type="text/javascript">
 						fixDates("historySelector1");
@@ -49,11 +42,8 @@
 				<div class="sampleBox">
 					History
 					<br/>
-					<select name="sampleUUID2" id="historySelector2" class="historySelect">
-						<option selected value="">-------Select sample-------</option><%--
-						--%><c:forEach var="history" items="${ historyListBean.history }">
-						<option value="${ history.sampleUUID }">${ history.timestamp }</option><%--
-						--%></c:forEach>
+					<select name="sampleUUID2" id="historySelector2" class="historySelect"><%--
+						--%><common:historyOptions historyListBean="${ historyListBean }" />
 					</select>
 					<script type="text/javascript">
 						fixDates("historySelector2");

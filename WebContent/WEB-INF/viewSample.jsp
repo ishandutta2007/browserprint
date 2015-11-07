@@ -28,11 +28,8 @@
 				<div class="sampleBox">
 					History
 					<br/>
-						<select name="sampleUUID1" id="historySelector" class="historySelect">
-							<option selected value="">-------Select sample-------</option><%--
-							--%><c:forEach var="history" items="${ historyListBean.history }">
-							<option value="${ history.sampleUUID }">${ history.timestamp }</option><%--
-							--%></c:forEach>
+						<select name="sampleUUID1" id="historySelector" class="historySelect"><%--
+							--%><common:historyOptions historyListBean="${ historyListBean }" />
 						</select>
 						<script type="text/javascript">
 							fixDates("historySelector");
