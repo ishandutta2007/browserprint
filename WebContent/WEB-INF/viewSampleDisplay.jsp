@@ -23,75 +23,85 @@
 	</p>
 	<div id="compareDiv">
 		<form action="view" method="get">
-			<div style="float:left;">			
-				<table class="viewOptionsTable">
-					<tr>
-						<td>
+			<table class="viewOptionsTable">
+				<tr>
+					<td>
+						<c:choose><%--
+							--%><c:when test="${ requestScope.source1 == "history" }"><%--
+								--%><input type="radio" name="source1" value="history" checked><%--
+							--%></c:when><%--
+							--%><c:otherwise><%--
+								--%><input type="radio" name="source1" value="history"><%--
+							--%></c:otherwise><%--
+						--%></c:choose>
+					</td>
+					<td class="viewOptionsTd">
+						History
+						<br/>
+						<select name="UUID1history" id="historySelector1" class="historySelect">
 							<c:choose><%--
 								--%><c:when test="${ requestScope.source1 == "history" }"><%--
-									--%><input type="radio" name="source1" value="history" checked><%--
+									--%><common:historyOptions historyListBean="${ historyListBean }" sampleUUID="${ requestScope.sampleUUID1 }" /><%--
 								--%></c:when><%--
 								--%><c:otherwise><%--
-									--%><input type="radio" name="source1" value="history"><%--
+									--%><common:historyOptions historyListBean="${ historyListBean }" /><%--
 								--%></c:otherwise><%--
 							--%></c:choose>
-						</td>
-						<td class="viewOptionsTd">
-							History
-							<br/>
-							<select name="UUID1history" id="historySelector1" class="historySelect">
-								<c:choose><%--
-									--%><c:when test="${ requestScope.source1 == "history" }"><%--
-										--%><common:historyOptions historyListBean="${ historyListBean }" sampleUUID="${ requestScope.sampleUUID1 }" /><%--
-									--%></c:when><%--
-									--%><c:otherwise><%--
-										--%><common:historyOptions historyListBean="${ historyListBean }" /><%--
-									--%></c:otherwise><%--
-								--%></c:choose>
-							</select>
-							<script type="text/javascript">
-								fixDates("historySelector1");
-							</script>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<c:choose><%--
-								--%><c:when test="${ requestScope.source1 == "UUID" }"><%--
-									--%><input type="radio" name="source1" value="UUID" checked><%--
-								--%></c:when><%--
-								--%><c:otherwise><%--
-									--%><input type="radio" name="source1" value="UUID"><%--
-								--%></c:otherwise><%--
-							--%></c:choose>
-						</td>
-						<td class="viewOptionsTd">
-							UUID
-							<br/>
-							<input type="text" name="UUID1UUID" maxlength="36" style="display: inline-block;" value="<c:out value="${ requestScope.sampleUUID1 }"/>"></input>
-						</td>
-					</tr>
-					<tr>
-						<td></td>
-						<td class="viewOptionsButtonTd"><input type="submit" name="action" value="View" id="sampleViewButton"/></td>
-					</tr>
-				</table>
-			</div>
-			<div style="float:right;">
-				<div class="sampleBox">
-					History
-					<br/>
-					<select name="sampleUUID2" id="historySelector2" class="historySelect"><%--
-						--%><common:historyOptions historyListBean="${ historyListBean }" />
-					</select>
-					<script type="text/javascript">
-						fixDates("historySelector2");
-					</script>
-				</div>
-			</div>
-			<div style="clear:both;">
-				<input type="submit" name="action" value="Compare" id="sampleCompareButton"/>
-			</div>
+						</select>
+						<script type="text/javascript">
+							fixDates("historySelector1");
+						</script>
+					</td>
+					<td>
+						<input type="radio" name="source2" value="history" checked>
+					</td>
+					<td class="viewOptionsTd">
+						History
+						<br/>
+						<select name="UUID2history" id="historySelector2" class="historySelect">
+							<common:historyOptions historyListBean="${ historyListBean }" />
+						</select>
+						<script type="text/javascript">
+							fixDates("historySelector2");
+						</script>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<c:choose><%--
+							--%><c:when test="${ requestScope.source1 == "UUID" }"><%--
+								--%><input type="radio" name="source1" value="UUID" checked><%--
+							--%></c:when><%--
+							--%><c:otherwise><%--
+								--%><input type="radio" name="source1" value="UUID"><%--
+							--%></c:otherwise><%--
+						--%></c:choose>
+					</td>
+					<td class="viewOptionsTd">
+						UUID
+						<br/>
+						<input type="text" name="UUID1UUID" maxlength="36" style="display: inline-block;" value="<c:out value="${ requestScope.sampleUUID1 }"/>"></input>
+					</td>
+					<td>
+						<input type="radio" name="source2" value="UUID">
+					</td>
+					<td class="viewOptionsTd">
+						UUID
+						<br/>
+						<input type="text" name="UUID2UUID" maxlength="36" style="display: inline-block;"></input>
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td class="viewOptionsButtonTd"><input type="submit" name="action" value="View" class="sampleViewButton"/></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td colspan="4" class="viewOptionsButtonTd">
+						<input type="submit" name="action" value="Compare" class="sampleViewButton"/>
+					</td>
+				</tr>
+			</table>
 		</form>
 	</div>
 <common:displayFingerprint uniquenessBean="${ uniquenessBean1 }" chrsBean="${ chrsBean1 }"/>

@@ -26,7 +26,7 @@ public class ViewSampleServlet extends HttpServlet {
 	 */
 	public ViewSampleServlet() {
 		super();
-		// TODO Auto-generated constructor stub
+		// Auto-generated constructor stub
 	}
 
 	/**
@@ -42,8 +42,11 @@ public class ViewSampleServlet extends HttpServlet {
 
 		String action = request.getParameter("action");
 
-		if (action == null || action.equals("View")) {
-			String sampleUUID = null;
+		/*
+		 * Get SampleUUID1 and the source of the UUID.
+		 */
+		String sampleUUID1 = null;
+		{
 			String inputType = request.getParameter("source1");
 			if(inputType == null){
 				/*
@@ -53,29 +56,31 @@ public class ViewSampleServlet extends HttpServlet {
 				//throw new ServletException("Not implemented yet.");
 			}
 			else if(inputType.equals("history")){
-				sampleUUID = request.getParameter("UUID1history");
+				sampleUUID1 = request.getParameter("UUID1history");
 				request.setAttribute("source1", "history");
 			}
 			else if(inputType.equals("UUID")){
-				sampleUUID = request.getParameter("UUID1UUID");
+				sampleUUID1 = request.getParameter("UUID1UUID");
 				request.setAttribute("source1", "UUID");
 			}
 			else{
 				throw new ServletException("Unknown inputType1.");
 			}
-			request.setAttribute("sampleUUID1", sampleUUID);
-			
-			if (sampleUUID != null && !sampleUUID.equals("")) {
+			request.setAttribute("sampleUUID1", sampleUUID1);
+		}
+		
+		if (action == null || action.equals("View")) {
+			if (sampleUUID1 != null && !sampleUUID1.equals("")) {
 				try {
 					// Get the data associated with the SampleID.
 					CharacteristicsBean chrsbean = new CharacteristicsBean();
 					UniquenessBean uniquenessbean = new UniquenessBean();
-					Fingerprint fingerprint = FingerprintDAO.getFingerprintBeans(sampleUUID, chrsbean, uniquenessbean);
+					Fingerprint fingerprint = FingerprintDAO.getFingerprintBeans(sampleUUID1, chrsbean, uniquenessbean);
 					if (fingerprint != null) {
 						request.setAttribute("chrsBean1", chrsbean);
 						request.setAttribute("uniquenessBean1", uniquenessbean);
 					} else {
-						throw new ServletException("No sample associated with given sampleUUID1: " + sampleUUID);
+						throw new ServletException("No sample associated with given sampleUUID1: " + sampleUUID1);
 					}
 				} catch (SQLException ex) {
 					// Database error.
@@ -94,10 +99,31 @@ public class ViewSampleServlet extends HttpServlet {
 			}
 		}
 		else if(action.equals("Compare")){
-			//TODO: compare
+			String sampleUUID2 = null;
+			{
+				String inputType = request.getParameter("source2");
+				if(inputType == null){
+					/*
+					 * TODO: Handle JavaScript submit.
+					 * TODO: set input type (history / UUID).
+					 */
+					request.setAttribute("errorMessage", "Not implemented yet.");
+					throw new ServletException("Not implemented yet.");
+				}
+				else if(inputType.equals("history")){
+					sampleUUID2 = request.getParameter("UUID2history");
+					request.setAttribute("source2", "history");
+				}
+				else if(inputType.equals("UUID")){
+					sampleUUID2 = request.getParameter("UUID2UUID");
+					request.setAttribute("source2", "UUID");
+				}
+				else{
+					throw new ServletException("Unknown inputType2.");
+				}
+				request.setAttribute("sampleUUID2", sampleUUID2);
+			}
 			
-			String sampleUUID1 = request.getParameter("sampleUUID1");
-			String sampleUUID2 = request.getParameter("sampleUUID2");
 			// Were the SampleUUIDs specified?
 			if (sampleUUID1 != null && !sampleUUID1.equals("")) {
 				try {

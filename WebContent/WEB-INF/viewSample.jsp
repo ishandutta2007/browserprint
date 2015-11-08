@@ -48,7 +48,7 @@
 				</tr>
 				<tr>
 					<td></td>
-					<td class="viewOptionsButtonTd"><input type="submit" name="action" value="View" id="sampleViewButton"/></td>
+					<td class="viewOptionsButtonTd"><input type="submit" name="action" value="View" class="sampleViewButton"/></td>
 				</tr>
 			</table>
 		</form>
