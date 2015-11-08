@@ -24,21 +24,33 @@
 	</p></c:if>
 	<div id="viewDiv">
 		<form action="view" method="get">
-			<div>
-				<div class="sampleBox">
-					History
-					<br/>
-						<select name="sampleUUID1" id="historySelector" class="historySelect"><%--
+			<table class="viewOptionsTable">
+				<tr>
+					<td><input type="radio" name="inputType1" value="history" checked></td>
+					<td class="viewOptionsTd">
+						History
+						<br/>
+						<select name="UUID1history" id="historySelector" class="historySelect"><%--
 							--%><common:historyOptions historyListBean="${ historyListBean }" />
 						</select>
 						<script type="text/javascript">
 							fixDates("historySelector");
 						</script>
-				</div>
-				<div>
-					<input type="submit" name="action" value="View" id="sampleViewButton"/>
-				</div>
-			</div>
+					</td>
+				</tr>
+				<tr>
+					<td><input type="radio" name="inputType1" value="UUID"></td>
+					<td class="viewOptionsTd">
+						UUID
+						<br/>
+						<input type="text" name="UUID1UUID" maxlength="36" style="display: inline-block;"></input>
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td class="viewOptionsButtonTd"><input type="submit" name="action" value="View" id="sampleViewButton"/></td>
+				</tr>
+			</table>
 		</form>
 	</div>
 <%@include file="footer.jsp" %>

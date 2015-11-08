@@ -24,7 +24,7 @@ table#comparisonTable{
 	clear:both;
 }
 
-td,th{
+table#characteristics td, table#characteristics th, table#comparisonTable td, table#comparisonTable th{
 	border: 1px solid gray;
 }
 
@@ -82,24 +82,23 @@ img{
 }
 
 #viewDiv{
-	width:200px;
+	width:240px;
 	margin-left: auto;
 	margin-right: auto;
 }
 
-.sampleBox{
-	border:1px solid black;
+div.sampleBox{
 	padding:0.5em;
 }
 
-.historySelect{
+select.historySelect{
 	min-width:180px;
+	display: inline-block;
 }
 
 #sampleViewButton, #sampleViewButton2{
 	width:100%;
-	border:1px solid #000000;
-	border-top:0px;
+	border:0px;
 	color:rgb(0,128,0);
 }
 
@@ -125,4 +124,19 @@ div.comparisonUniqueness{
 	display: inline-block;
 	max-width:42%;
 	width:42%;
+}
+
+table.viewOptionsTable{
+	border-collapse: collapse;
+	border: 0px;
+}
+
+td.viewOptionsTd{
+	border:1px solid black;
+	padding:0.5em;
+}
+
+td.viewOptionsButtonTd{
+	border:1px solid black;
+	padding:0px;
 }
