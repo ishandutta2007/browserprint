@@ -96,14 +96,10 @@ select.historySelect{
 	display: inline-block;
 }
 
-#sampleViewButton, #sampleViewButton2{
+input#sampleViewButton{
 	width:100%;
 	border:0px;
 	color:rgb(0,128,0);
-}
-
-#sampleViewButton2{
-	border-bottom:0px;
 }
 
 #sampleCompareButton{

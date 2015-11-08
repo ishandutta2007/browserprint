@@ -26,20 +26,20 @@
 		<form action="view" method="get">
 			<table class="viewOptionsTable">
 				<tr>
-					<td><input type="radio" name="inputType1" value="history" checked></td>
+					<td><input type="radio" name="source1" value="history" checked></td>
 					<td class="viewOptionsTd">
 						History
 						<br/>
-						<select name="UUID1history" id="historySelector" class="historySelect"><%--
+						<select name="UUID1history" id="historySelector1" class="historySelect"><%--
 							--%><common:historyOptions historyListBean="${ historyListBean }" />
 						</select>
 						<script type="text/javascript">
-							fixDates("historySelector");
+							fixDates("historySelector1");
 						</script>
 					</td>
 				</tr>
 				<tr>
-					<td><input type="radio" name="inputType1" value="UUID"></td>
+					<td><input type="radio" name="source1" value="UUID"></td>
 					<td class="viewOptionsTd">
 						UUID
 						<br/>

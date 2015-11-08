@@ -44,22 +44,26 @@ public class ViewSampleServlet extends HttpServlet {
 
 		if (action == null || action.equals("View")) {
 			String sampleUUID = null;
-			String inputType = request.getParameter("inputType1");
+			String inputType = request.getParameter("source1");
 			if(inputType == null){
 				/*
 				 * TODO: Handle JavaScript submit.
+				 * TODO: set input type (history / UUID).
 				 */
 				//throw new ServletException("Not implemented yet.");
 			}
 			else if(inputType.equals("history")){
 				sampleUUID = request.getParameter("UUID1history");
+				request.setAttribute("source1", "history");
 			}
 			else if(inputType.equals("UUID")){
 				sampleUUID = request.getParameter("UUID1UUID");
+				request.setAttribute("source1", "UUID");
 			}
 			else{
 				throw new ServletException("Unknown inputType1.");
 			}
+			request.setAttribute("sampleUUID1", sampleUUID);
 			
 			if (sampleUUID != null && !sampleUUID.equals("")) {
 				try {
