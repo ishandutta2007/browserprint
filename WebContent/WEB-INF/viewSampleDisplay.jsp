@@ -53,13 +53,27 @@
 						</script>
 					</td>
 					<td>
-						<input type="radio" name="source2" value="history" checked>
+						<c:choose><%--
+							--%><c:when test="${ !requestScope.compare || requestScope.source2 == "history" }"><%--
+								--%><input type="radio" name="source2" value="history" checked><%--
+							--%></c:when><%--
+							--%><c:otherwise><%--
+								--%><input type="radio" name="source2" value="history"><%--
+							--%></c:otherwise><%--
+						--%></c:choose>
 					</td>
 					<td class="viewOptionsTd">
 						History
 						<br/>
 						<select name="UUID2history" id="historySelector2" class="historySelect">
-							<common:historyOptions historyListBean="${ historyListBean }" />
+							<c:choose><%--
+								--%><c:when test="${ requestScope.compare && requestScope.source2 == "history" }"><%--
+									--%><common:historyOptions historyListBean="${ historyListBean }" sampleUUID="${ requestScope.sampleUUID2 }" /><%--
+								--%></c:when><%--
+								--%><c:otherwise><%--
+									--%><common:historyOptions historyListBean="${ historyListBean }" /><%--
+								--%></c:otherwise><%--
+							--%></c:choose>
 						</select>
 						<script type="text/javascript">
 							fixDates("historySelector2");
@@ -80,15 +94,29 @@
 					<td class="viewOptionsTd">
 						UUID
 						<br/>
-						<input type="text" name="UUID1UUID" maxlength="36" style="display: inline-block;" value="<c:out value="${ requestScope.sampleUUID1 }"/>"></input>
+						<input type="text" name="UUID1UUID" maxlength="36" class="viewUuidTextbox" value="<c:out value="${ requestScope.sampleUUID1 }"/>"></input>
 					</td>
 					<td>
-						<input type="radio" name="source2" value="UUID">
+						<c:choose><%--
+							--%><c:when test="${ requestScope.compare && requestScope.source2 == "UUID" }"><%--
+								--%><input type="radio" name="source2" value="UUID" checked><%--
+							--%></c:when><%--
+							--%><c:otherwise><%--
+								--%><input type="radio" name="source2" value="UUID"><%--
+							--%></c:otherwise><%--
+						--%></c:choose>
 					</td>
 					<td class="viewOptionsTd">
 						UUID
 						<br/>
-						<input type="text" name="UUID2UUID" maxlength="36" style="display: inline-block;"></input>
+						<c:choose><%--
+							--%><c:when test="${ requestScope.compare }"><%--
+								--%><input type="text" name="UUID2UUID" maxlength="36" class="viewUuidTextbox" value="<c:out value="${ requestScope.sampleUUID2 }"/>"></input><%--
+							--%></c:when><%--
+							--%><c:otherwise><%--
+								--%><input type="text" name="UUID2UUID" maxlength="36" class="viewUuidTextbox"></input><%--
+							--%></c:otherwise><%--
+						--%></c:choose>
 					</td>
 				</tr>
 				<tr>
@@ -104,7 +132,14 @@
 			</table>
 		</form>
 	</div>
-<common:displayFingerprint uniquenessBean="${ uniquenessBean1 }" chrsBean="${ chrsBean1 }"/>
+<c:choose>
+	<c:when test="${ requestScope.compare }">
+		<common:compareFingerprints uniquenessBean1="${ uniquenessBean1 }" chrsBean1="${ chrsBean1 }" uniquenessBean2="${ uniquenessBean2 }" chrsBean2="${ chrsBean2 }"/>
+	</c:when>
+	<c:otherwise>
+		<common:displayFingerprint uniquenessBean="${ uniquenessBean1 }" chrsBean="${ chrsBean1 }"/>
+	</c:otherwise>
+</c:choose>
 <%@include file="footer.jsp" %>
 </body>
 </html>

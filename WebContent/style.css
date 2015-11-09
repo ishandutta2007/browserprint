@@ -130,3 +130,7 @@ td.viewOptionsButtonTd{
 	border:1px solid black;
 	padding:0px;
 }
+
+input.viewUuidTextbox{
+	display: inline-block;
+}

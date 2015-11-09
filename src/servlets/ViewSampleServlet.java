@@ -149,15 +149,10 @@ public class ViewSampleServlet extends HttpServlet {
 						} else {
 							throw new ServletException("No sample associated with given sampleUUID2: " + sampleUUID2);
 						}
-						
-						// Forward to the history display page.
-						request.getRequestDispatcher("/WEB-INF/compareSample.jsp").forward(request, response);
-						return;
+						request.setAttribute("compare", true);
 					}
-					else{
-						request.getRequestDispatcher("/WEB-INF/viewSampleDisplay.jsp").forward(request, response);
-						return;
-					}
+					request.getRequestDispatcher("/WEB-INF/viewSampleDisplay.jsp").forward(request, response);
+					return;
 				} catch (SQLException ex) {
 					// Database error.
 					throw new ServletException(ex);
