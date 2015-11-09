@@ -52,7 +52,7 @@ public class TestServlet extends HttpServlet {
 			 * Do a full fingerprinting.
 			 * Will perform javascript fingerprinting then submit fingerprint via a POST request.
 			 */
-			request.getRequestDispatcher("/WEB-INF/JsTest.jsp").forward(request, response);
+			request.getRequestDispatcher("/WEB-INF/jsTest.jsp").forward(request, response);
 			return;
 		}
 	}
