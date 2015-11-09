@@ -58,7 +58,7 @@
 					</td>
 					<td class="viewOptionsTd">
 						My history
-						<br/>
+						<br>
 						<select name="UUID1history" id="historySelector1" class="historySelect">
 							<c:choose><%--
 								--%><c:when test="${ requestScope.source1 == "history" }"><%--
@@ -85,7 +85,7 @@
 					</td>
 					<td class="viewOptionsTd">
 						My history
-						<br/>
+						<br>
 						<select name="UUID2history" id="historySelector2" class="historySelect">
 							<c:choose><%--
 								--%><c:when test="${ requestScope.compare && requestScope.source2 == "history" }"><%--
@@ -114,8 +114,8 @@
 					</td>
 					<td class="viewOptionsTd">
 						UUID
-						<br/>
-						<input type="text" id="UuidTextbox1" name="UUID1UUID" maxlength="36" class="viewUuidTextbox" value="<c:out value="${ requestScope.sampleUUID1 }"/>"></input>
+						<br>
+						<input type="text" id="UuidTextbox1" name="UUID1UUID" maxlength="36" class="viewUuidTextbox" value="<c:out value="${ requestScope.sampleUUID1 }"/>">
 					</td>
 					<td>
 						<c:choose><%--
@@ -129,25 +129,25 @@
 					</td>
 					<td class="viewOptionsTd">
 						UUID
-						<br/>
+						<br>
 						<c:choose><%--
 							--%><c:when test="${ requestScope.compare }"><%--
-								--%><input type="text" id="UuidTextbox2" name="UUID2UUID" maxlength="36" class="viewUuidTextbox" value="<c:out value="${ requestScope.sampleUUID2 }"/>"></input><%--
+								--%><input type="text" id="UuidTextbox2" name="UUID2UUID" maxlength="36" class="viewUuidTextbox" value="<c:out value="${ requestScope.sampleUUID2 }"/>"><%--
 							--%></c:when><%--
 							--%><c:otherwise><%--
-								--%><input type="text" id="UuidTextbox2" name="UUID2UUID" maxlength="36" class="viewUuidTextbox"></input><%--
+								--%><input type="text" id="UuidTextbox2" name="UUID2UUID" maxlength="36" class="viewUuidTextbox"><%--
 							--%></c:otherwise><%--
 						--%></c:choose>
 					</td>
 				</tr>
 				<tr>
 					<td></td>
-					<td class="viewOptionsButtonTd"><input type="submit" name="action" value="View" class="sampleViewButton"/></td>
+					<td class="viewOptionsButtonTd"><input type="submit" name="action" value="View" class="sampleViewButton"></td>
 				</tr>
 				<tr>
 					<td></td>
 					<td colspan="4" class="viewOptionsButtonTd">
-						<input type="submit" name="action" value="Compare" class="sampleViewButton"/>
+						<input type="submit" name="action" value="Compare" class="sampleViewButton">
 					</td>
 				</tr>
 			</table>

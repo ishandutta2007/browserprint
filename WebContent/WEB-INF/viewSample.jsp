@@ -41,7 +41,7 @@
 					<td><input type="radio" id="sourceRadioHistory1" name="source1" value="history" checked></td>
 					<td class="viewOptionsTd">
 						My history
-						<br/>
+						<br>
 						<select name="UUID1history" id="historySelector1" class="historySelect"><%--
 							--%><common:historyOptions historyListBean="${ historyListBean }" />
 						</select>
@@ -54,13 +54,13 @@
 					<td><input type="radio" id="sourceRadioUUID1" name="source1" value="UUID"></td>
 					<td class="viewOptionsTd">
 						UUID
-						<br/>
-						<input type="text" name="UUID1UUID" id="UuidTextbox1" class="viewUuidTextbox" maxlength="36" style="display: inline-block;"></input>
+						<br>
+						<input type="text" name="UUID1UUID" id="UuidTextbox1" class="viewUuidTextbox" maxlength="36" style="display: inline-block;">
 					</td>
 				</tr>
 				<tr>
 					<td></td>
-					<td class="viewOptionsButtonTd"><input type="submit" name="action" value="View" class="sampleViewButton"/></td>
+					<td class="viewOptionsButtonTd"><input type="submit" name="action" value="View" class="sampleViewButton"></td>
 				</tr>
 			</table>
 		</form>
