@@ -40,7 +40,7 @@
 				<tr>
 					<td><input type="radio" id="sourceRadioHistory1" name="source1" value="history" checked></td>
 					<td class="viewOptionsTd">
-						History
+						My history
 						<br/>
 						<select name="UUID1history" id="historySelector1" class="historySelect"><%--
 							--%><common:historyOptions historyListBean="${ historyListBean }" />

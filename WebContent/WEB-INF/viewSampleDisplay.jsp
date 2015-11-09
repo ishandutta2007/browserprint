@@ -57,7 +57,7 @@
 						--%></c:choose>
 					</td>
 					<td class="viewOptionsTd">
-						History
+						My history
 						<br/>
 						<select name="UUID1history" id="historySelector1" class="historySelect">
 							<c:choose><%--
@@ -84,7 +84,7 @@
 						--%></c:choose>
 					</td>
 					<td class="viewOptionsTd">
-						History
+						My history
 						<br/>
 						<select name="UUID2history" id="historySelector2" class="historySelect">
 							<c:choose><%--
