@@ -6,6 +6,7 @@ import java.sql.SQLException;
 
 import beans.StatisticsBean;
 import datastructures.Fingerprint;
+import eu.bitwalker.useragentutils.Browser;
 import eu.bitwalker.useragentutils.UserAgent;
 
 public class StatisticsDAO {
@@ -22,7 +23,12 @@ public class StatisticsDAO {
 			
 			UserAgent ua = new UserAgent(fingerprint.getUser_agent());
 			insertStatistics.setString(2, ua.getBrowser().getGroup().toString());
-			insertStatistics.setString(3, ua.getBrowserVersion().getMajorVersion());
+			if(ua.getBrowser().getGroup().equals(Browser.UNKNOWN)){
+				insertStatistics.setString(3, "Unknown");
+			}
+			else{
+				insertStatistics.setString(3, ua.getBrowserVersion().getMajorVersion());
+			}
 			insertStatistics.setString(4, ua.getOperatingSystem().getGroup().toString());
 			insertStatistics.setString(5, ua.getOperatingSystem().getName());
 			
