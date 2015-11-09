@@ -8,3 +8,23 @@ function fixDates(selectorID){
 		}
 	});
 }
+
+function onClickHistory1(){
+	$("#historySelector1").prop('disabled', false);
+	$("#UuidTextbox1").prop('disabled', true);
+}
+
+function onClickUUID1(){
+	$("#UuidTextbox1").prop('disabled', false);
+	$("#historySelector1").prop('disabled', true);
+}
+
+function onClickHistory2(){
+	$("#historySelector2").prop('disabled', false);
+	$("#UuidTextbox2").prop('disabled', true);
+}
+
+function onClickUUID2(){
+	$("#UuidTextbox2").prop('disabled', false);
+	$("#historySelector2").prop('disabled', true);
+}

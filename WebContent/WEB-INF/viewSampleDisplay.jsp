@@ -15,6 +15,27 @@
 	<script type="text/javascript" src="scripts/jquery-1.11.2.min.js"></script>
 	<script type="text/javascript" src="scripts/jquery-dateFormat.min.js"></script>
 	<script type="text/javascript" src="scripts/view.js"></script>
+	<script type="text/javascript">
+	$(function(){
+		$("#sourceRadioHistory1").click(onClickHistory1);
+		$("#sourceRadioUUID1").click(onClickUUID1);
+		if($("#sourceRadioHistory1").is(":checked")){
+			onClickHistory1();
+		}
+		else{
+			onClickUUID1();
+		}
+		
+		$("#sourceRadioHistory2").click(onClickHistory2);
+		$("#sourceRadioUUID2").click(onClickUUID2);
+		if($("#sourceRadioHistory2").is(":checked")){
+			onClickHistory2();
+		}
+		else{
+			onClickUUID2();
+		}
+	});
+	</script>
 </head>
 <body>
 <%@include file="header.html" %>
@@ -28,10 +49,10 @@
 					<td>
 						<c:choose><%--
 							--%><c:when test="${ requestScope.source1 == "history" }"><%--
-								--%><input type="radio" name="source1" value="history" checked><%--
+								--%><input type="radio" id="sourceRadioHistory1" name="source1" value="history" checked><%--
 							--%></c:when><%--
 							--%><c:otherwise><%--
-								--%><input type="radio" name="source1" value="history"><%--
+								--%><input type="radio" id="sourceRadioHistory1" name="source1" value="history"><%--
 							--%></c:otherwise><%--
 						--%></c:choose>
 					</td>
@@ -55,10 +76,10 @@
 					<td>
 						<c:choose><%--
 							--%><c:when test="${ !requestScope.compare || requestScope.source2 == "history" }"><%--
-								--%><input type="radio" name="source2" value="history" checked><%--
+								--%><input type="radio" id="sourceRadioHistory2" name="source2" value="history" checked><%--
 							--%></c:when><%--
 							--%><c:otherwise><%--
-								--%><input type="radio" name="source2" value="history"><%--
+								--%><input type="radio" id="sourceRadioHistory2" name="source2" value="history"><%--
 							--%></c:otherwise><%--
 						--%></c:choose>
 					</td>
@@ -84,25 +105,25 @@
 					<td>
 						<c:choose><%--
 							--%><c:when test="${ requestScope.source1 == "UUID" }"><%--
-								--%><input type="radio" name="source1" value="UUID" checked><%--
+								--%><input type="radio" id="sourceRadioUUID1" name="source1" value="UUID" checked><%--
 							--%></c:when><%--
 							--%><c:otherwise><%--
-								--%><input type="radio" name="source1" value="UUID"><%--
+								--%><input type="radio" id="sourceRadioUUID1" name="source1" value="UUID"><%--
 							--%></c:otherwise><%--
 						--%></c:choose>
 					</td>
 					<td class="viewOptionsTd">
 						UUID
 						<br/>
-						<input type="text" name="UUID1UUID" maxlength="36" class="viewUuidTextbox" value="<c:out value="${ requestScope.sampleUUID1 }"/>"></input>
+						<input type="text" id="UuidTextbox1" name="UUID1UUID" maxlength="36" class="viewUuidTextbox" value="<c:out value="${ requestScope.sampleUUID1 }"/>"></input>
 					</td>
 					<td>
 						<c:choose><%--
 							--%><c:when test="${ requestScope.compare && requestScope.source2 == "UUID" }"><%--
-								--%><input type="radio" name="source2" value="UUID" checked><%--
+								--%><input type="radio" id="sourceRadioUUID2" name="source2" value="UUID" checked><%--
 							--%></c:when><%--
 							--%><c:otherwise><%--
-								--%><input type="radio" name="source2" value="UUID"><%--
+								--%><input type="radio" id="sourceRadioUUID2" name="source2" value="UUID"><%--
 							--%></c:otherwise><%--
 						--%></c:choose>
 					</td>
@@ -111,10 +132,10 @@
 						<br/>
 						<c:choose><%--
 							--%><c:when test="${ requestScope.compare }"><%--
-								--%><input type="text" name="UUID2UUID" maxlength="36" class="viewUuidTextbox" value="<c:out value="${ requestScope.sampleUUID2 }"/>"></input><%--
+								--%><input type="text" id="UuidTextbox2" name="UUID2UUID" maxlength="36" class="viewUuidTextbox" value="<c:out value="${ requestScope.sampleUUID2 }"/>"></input><%--
 							--%></c:when><%--
 							--%><c:otherwise><%--
-								--%><input type="text" name="UUID2UUID" maxlength="36" class="viewUuidTextbox"></input><%--
+								--%><input type="text" id="UuidTextbox2" name="UUID2UUID" maxlength="36" class="viewUuidTextbox"></input><%--
 							--%></c:otherwise><%--
 						--%></c:choose>
 					</td>

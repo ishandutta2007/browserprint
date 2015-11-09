@@ -13,6 +13,18 @@
 	<script type="text/javascript" src="scripts/jquery-1.11.2.min.js"></script>
 	<script type="text/javascript" src="scripts/jquery-dateFormat.min.js"></script>
 	<script type="text/javascript" src="scripts/view.js"></script>
+	<script type="text/javascript">
+	$(function(){
+		$("#sourceRadioHistory1").click(onClickHistory1);
+		$("#sourceRadioUUID1").click(onClickUUID1);
+		if($("#sourceRadioHistory1").is(":checked")){
+			onClickHistory1();
+		}
+		else{
+			onClickUUID1();
+		}
+	});
+	</script>
 </head>
 <body>
 <%@include file="header.html" %>
@@ -26,7 +38,7 @@
 		<form action="view" method="get">
 			<table class="viewOptionsTable">
 				<tr>
-					<td><input type="radio" name="source1" value="history" checked></td>
+					<td><input type="radio" id="sourceRadioHistory1" name="source1" value="history" checked></td>
 					<td class="viewOptionsTd">
 						History
 						<br/>
@@ -39,11 +51,11 @@
 					</td>
 				</tr>
 				<tr>
-					<td><input type="radio" name="source1" value="UUID"></td>
+					<td><input type="radio" id="sourceRadioUUID1" name="source1" value="UUID"></td>
 					<td class="viewOptionsTd">
 						UUID
 						<br/>
-						<input type="text" name="UUID1UUID" maxlength="36" style="display: inline-block;"></input>
+						<input type="text" name="UUID1UUID" id="UuidTextbox1" class="viewUuidTextbox" maxlength="36" style="display: inline-block;"></input>
 					</td>
 				</tr>
 				<tr>
