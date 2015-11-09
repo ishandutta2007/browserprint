@@ -716,7 +716,7 @@ public class FingerprintDAO {
 		rs.next();
 		int count = rs.getInt(1);
 		rs.close();
-
+		chrbean.setNumOccurrences(count);
 		chrbean.setInX(((double) num_samples) / ((double) count));
 		chrbean.setBits(Math.abs(Math.log(chrbean.getInX()) / Math.log(2)));
 
@@ -757,6 +757,7 @@ public class FingerprintDAO {
 		rs.next();
 		int count = rs.getInt(1);
 		rs.close();
+		chrbean.setNumOccurrences(count);
 		chrbean.setInX(((double) num_samples) / ((double) count));
 		chrbean.setBits(Math.abs(Math.log(chrbean.getInX()) / Math.log(2)));
 
@@ -797,6 +798,7 @@ public class FingerprintDAO {
 		rs.next();
 		int count = rs.getInt(1);
 		rs.close();
+		chrbean.setNumOccurrences(count);
 		chrbean.setInX(((double) num_samples) / ((double) count));
 		chrbean.setBits(Math.abs(Math.log(chrbean.getInX()) / Math.log(2)));
 
@@ -837,6 +839,7 @@ public class FingerprintDAO {
 		rs.next();
 		int count = rs.getInt(1);
 		rs.close();
+		chrbean.setNumOccurrences(count);
 		chrbean.setInX(((double) num_samples) / ((double) count));
 		chrbean.setBits(Math.abs(Math.log(chrbean.getInX()) / Math.log(2)));
 

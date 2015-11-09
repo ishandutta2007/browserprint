@@ -7,6 +7,7 @@ public class CharacteristicBean implements Serializable{
 	
 	private String name;
 	private String nameHoverText;
+	private int numOccurrences;
 	private double bits;
 	private double inX;
 	private String value;
@@ -14,6 +15,7 @@ public class CharacteristicBean implements Serializable{
 	public CharacteristicBean(){
 		name = "";
 		nameHoverText = "";
+		numOccurrences = 0;
 		bits = 0;
 		inX = 0;
 		value = "";
@@ -33,6 +35,14 @@ public class CharacteristicBean implements Serializable{
 
 	public void setNameHoverText(String nameHoverText) {
 		this.nameHoverText = nameHoverText;
+	}
+
+	public int getNumOccurrences() {
+		return numOccurrences;
+	}
+
+	public void setNumOccurrences(int numOccurrences) {
+		this.numOccurrences = numOccurrences;
 	}
 
 	public double getBits() {
