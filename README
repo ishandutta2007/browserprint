@@ -2,10 +2,11 @@ An open-source version of the EFF's Panopticlick. Is currently in beta. Basicall
 
 # Installation
 Here we give a quick overview of one way the project can be deployed.
-You need to have Apache Tomcat and MySQL installed for this to work.
+You need to have Apache Tomcat and MariaDB installed for this to work.
 
-  * Start MySQL.
-  * Run the create.sql file found in the src directory through MySQL.
+  * Start MariaDB.
+  * (optional but recommended) [Configure your database to support UTF-8](http://stackoverflow.com/a/3513812)
+  * Run the create.sql file found in the src directory through MariaDB.
   * Copy the file browserprint.war to your Tomcat webapps directory.
   * Start Tomcat (`<`TomcatDirectory`>`/bin/startup.sh). The .war file will be automatically unpacked by Tomcat.
   * Stop Tomcat (`<`TomcatDirectory`>`/bin/shutdown.sh).
