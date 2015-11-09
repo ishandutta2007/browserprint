@@ -131,6 +131,7 @@ public class FingerprintDAO {
 		uniquenessbean.setNum_samples(sampleCount);
 		uniquenessbean.setInX(((double) sampleCount) / ((double) sampleOccurrences));
 		uniquenessbean.setBits(Math.abs(Math.log(uniquenessbean.getInX()) / Math.log(2)));
+		uniquenessbean.setNum_occurrences(sampleOccurrences);
 
 		/*
 		 * Get each characteristic.
