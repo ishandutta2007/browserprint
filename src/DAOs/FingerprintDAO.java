@@ -29,7 +29,7 @@ public class FingerprintDAO {
 	private static final String insertSampleStr = "INSERT INTO `Samples`(`SampleUUID`, `IP`, `TimeStamp`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `LanguageFlash`, `Fonts`, `CharSizes`, `CookiesEnabled`, `SuperCookie`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `AdsBlocked`, `Canvas`, `WebGLVendor`, `WebGLRenderer`) VALUES(?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 	private static final String getSampleCountStr = "SELECT COUNT(*) FROM `Samples`;";
 	private static final String selectSampleStr = "SELECT `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `LanguageFlash`, `Fonts`, `CharSizes`, `CookiesEnabled`, `SuperCookie`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `AdsBlocked`, `Canvas`, `WebGLVendor`, `WebGLRenderer` FROM `Samples` WHERE `SampleUUID` = ?;";
-	private static final String selectSampleSetIDHistory = "SELECT `SampleUUID`, `Timestamp` FROM `SampleSets` INNER JOIN `Samples` USING (`SampleID`) WHERE `SampleSetID` = ?;";
+	private static final String selectSampleSetIDHistory = "SELECT `SampleUUID`, `Timestamp` FROM `SampleSets` INNER JOIN `Samples` USING (`SampleID`) WHERE `SampleSetID` = ? ORDER BY `Timestamp` DESC;";
 
 	private static final String NO_JAVASCRIPT = "No JavaScript";
 	private static final String NOT_SUPPORTED = "Not supported";
