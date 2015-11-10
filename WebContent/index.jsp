@@ -33,7 +33,7 @@
 	</p>
 	<div id="testLink">
 		<p>
-			<a id="test_link" href="Test"><img src="images/fingerprint.click.png" alt="Fingerprint me button"></a>
+			<a id="test_link" href="test"><img src="images/fingerprint.click.png" alt="Fingerprint me button"></a>
 		</p>
 	</div>
 	<p>

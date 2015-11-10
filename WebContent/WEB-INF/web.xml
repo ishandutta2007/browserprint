@@ -23,7 +23,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>TestServlet</servlet-name>
-    <url-pattern>/Test</url-pattern>
+    <url-pattern>/test</url-pattern>
   </servlet-mapping>
   <servlet>
     <display-name>StatisticsServlet</display-name>
