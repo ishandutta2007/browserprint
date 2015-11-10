@@ -57,3 +57,11 @@
     <param-name>devEmail</param-name>
     <param-value>example@example.com</param-value>
   </context-param>
+  <!--
+	The base URL of the website.
+	For instance if the site is http://browserprint.info then this will be browserprint.info.
+  -->
+  <context-param>
+  	<param-name>websiteBaseURL</param-name>
+  	<param-value>localhost:8080/browserprint</param-value>
+  </context-param>

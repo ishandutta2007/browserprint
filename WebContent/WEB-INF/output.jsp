@@ -12,6 +12,7 @@
 	<title>Browserprint</title>
 	<meta name="robots" content="noindex" >
 	<link type="text/css" href="style.css" rel="stylesheet">
+	<script type="text/javascript" src="scripts/jquery-1.11.2.min.js"></script>
 </head>
 <body>
 <%@include file="header.html" %>
@@ -20,8 +21,16 @@
 	</p>
 	<common:uniquenessText uniquenessBean="${ uniquenessBean }"/>
 	<p>
-		Your fingerprint&apos;s UUID is <c:out value="${ requestScope.sampleUUID }"></c:out>;
-		you can share this to show others your fingerprint.
+		Your fingerprint&apos;s UUID is <c:out value="${ requestScope.sampleUUID }"></c:out>;<br>
+		you can share this to show others your fingerprint and let them compare it against their own.<br>
+		Alternatively you can share your fingerprint using this URL:<br>
+		<input type="text" id="UrlTextbox" size="80" value="http://${ initParam['websiteBaseURL'] }/view?source1=UUID&UUID1UUID=${ requestScope.sampleUUID }">
+		<script type="text/javascript">
+		$("#UrlTextbox").click(function(){
+		    $(this).focus();
+		    $(this).select();
+		});
+		</script>
 	</p>
 <common:displayFingerprint chrsBean="${ chrsBean }"/>
 <%@include file="footer.jsp" %>
