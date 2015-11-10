@@ -21,10 +21,10 @@
 	</p>
 	<common:uniquenessText uniquenessBean="${ uniquenessBean }"/>
 	<p>
-		Your fingerprint&apos;s UUID is <c:out value="${ requestScope.sampleUUID }"></c:out>;<br>
+		Your fingerprint&#39;s UUID is <c:out value="${ requestScope.sampleUUID }"></c:out>;<br>
 		you can share this to show others your fingerprint and let them compare it against their own.<br>
 		Alternatively you can share your fingerprint using this URL:<br>
-		<input type="text" id="UrlTextbox" size="80" value="http://${ initParam['websiteBaseURL'] }/view?source1=UUID&UUID1UUID=${ requestScope.sampleUUID }">
+		<input type="text" id="UrlTextbox" size="80" value="<c:out value="http://${ initParam['websiteBaseURL'] }/view?source1=UUID&UUID1UUID=${ requestScope.sampleUUID }"></c:out>">
 		<script type="text/javascript">
 		$("#UrlTextbox").click(function(){
 		    $(this).focus();
