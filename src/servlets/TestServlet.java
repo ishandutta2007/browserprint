@@ -121,7 +121,8 @@ public class TestServlet extends HttpServlet {
 	private void serveRequest(HttpServletRequest request, HttpServletResponse response, Fingerprint fingerprint) throws ServletException, IOException {
 		CharacteristicsBean chrsBean = new CharacteristicsBean();
 		UniquenessBean uniquenessBean = new UniquenessBean();
-		FingerprintDAO.processFingerprint(fingerprint, chrsBean, uniquenessBean);
+		String sampleUUID = FingerprintDAO.processFingerprint(fingerprint, chrsBean, uniquenessBean);
+		request.setAttribute("sampleUUID", sampleUUID);
 		request.setAttribute("chrsBean", chrsBean);
 		request.setAttribute("uniquenessBean", uniquenessBean);
 

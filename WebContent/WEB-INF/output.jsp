@@ -18,7 +18,12 @@
 	<p>
 		<a href=".">Back</a>
 	</p>
-<common:displayFingerprint uniquenessBean="${ uniquenessBean }" chrsBean="${ chrsBean }"/>
+	<common:uniquenessText uniquenessBean="${ uniquenessBean }"/>
+	<p>
+		Your fingerprint&apos;s UUID is <c:out value="${ requestScope.sampleUUID }"></c:out>;
+		you can share this to show others your fingerprint.
+	</p>
+<common:displayFingerprint chrsBean="${ chrsBean }"/>
 <%@include file="footer.jsp" %>
 </body>
 </html>

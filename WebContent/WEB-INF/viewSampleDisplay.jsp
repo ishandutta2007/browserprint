@@ -158,7 +158,8 @@
 		<common:compareFingerprints uniquenessBean1="${ uniquenessBean1 }" chrsBean1="${ chrsBean1 }" uniquenessBean2="${ uniquenessBean2 }" chrsBean2="${ chrsBean2 }"/>
 	</c:when>
 	<c:otherwise>
-		<common:displayFingerprint uniquenessBean="${ uniquenessBean1 }" chrsBean="${ chrsBean1 }"/>
+		<common:uniquenessText uniquenessBean="${ uniquenessBean1 }"/>
+		<common:displayFingerprint chrsBean="${ chrsBean1 }"/>
 	</c:otherwise>
 </c:choose>
 <%@include file="footer.jsp" %>

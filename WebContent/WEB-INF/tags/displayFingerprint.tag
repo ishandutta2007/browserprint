@@ -3,9 +3,7 @@
 --%><%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%><%--
 --%><%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%><%--
 --%><%@taglib prefix="common" tagdir="/WEB-INF/tags"%><%--
---%><%@attribute name="chrsBean" required="true" type="beans.CharacteristicsBean" rtexprvalue="true"%><%--
---%><%@attribute name="uniquenessBean" required="true" type="beans.UniquenessBean" rtexprvalue="true"%><%--
---%><common:uniquenessText uniquenessBean="${ uniquenessBean }"/>
+--%><%@attribute name="chrsBean" required="true" type="beans.CharacteristicsBean" rtexprvalue="true"%>
 <table id="characteristics">
 	<tr>
 		<th>Browser Characteristic</th>
