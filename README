@@ -1,4 +1,4 @@
-An open-source version of the EFF's Panopticlick. Is currently in beta. Basically functional but has room for improvement.
+An open-source browser fingerprinting suite, inspired by the EFF's Panopticlick. Is currently in functional but still under development.
 
 # Installation
 Here we give a quick overview of one way the project can be deployed.
