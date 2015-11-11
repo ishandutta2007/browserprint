@@ -6,7 +6,7 @@ USE `browserprint`;
  * REMEMBER TO INCREMENT THE DEFAULT VAULE OF `BrowserprintVersion` IF YOU CHANGE THIS.
  */
 CREATE TABLE `Samples` (
-  `BrowserprintVersion` SMALLINT UNSIGNED NOT NULL DEFAULT 4,
+  `BrowserprintVersion` SMALLINT UNSIGNED NOT NULL DEFAULT 5,
   `IP` TEXT NOT NULL,
   `TimeStamp` DATETIME NOT NULL,
   `SampleUUID` CHAR(36) NOT NULL,
@@ -23,7 +23,9 @@ CREATE TABLE `Samples` (
   `Fonts` TEXT,
   `CharSizes` TEXT,
   `CookiesEnabled` BOOL NOT NULL,
-  `SuperCookie` TEXT,
+  `SuperCookieLocalStorage` BOOL,
+  `SuperCookieSessionStorage` BOOL,
+  `SuperCookieUserData` BOOL,
   `DoNotTrack` TEXT,
   `ClockDifference` BIGINT,
   `DateTime` TEXT,

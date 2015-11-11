@@ -75,7 +75,36 @@ public class TestServlet extends HttpServlet {
 		fingerprint.setLanguageFlash(request.getParameter("LanguageFlash"));
 		fingerprint.setFonts(request.getParameter("Fonts"));
 		fingerprint.setCharSizes(request.getParameter("CharSizes"));
-		fingerprint.setSuperCookie(request.getParameter("SuperCookie"));
+		{
+			String val = request.getParameter("SuperCookieLocalStorage");
+			if (val != null) {
+				if (val.equals("1")) {
+					fingerprint.setSuperCookieLocalStorage(true);
+				} else if (val.equals("0")) {
+					fingerprint.setSuperCookieLocalStorage(false);
+				}
+			}
+		}
+		{
+			String val = request.getParameter("SuperCookieSessionStorage");
+			if (val != null) {
+				if (val.equals("1")) {
+					fingerprint.setSuperCookieSessionStorage(true);
+				} else if (val.equals("0")) {
+					fingerprint.setSuperCookieSessionStorage(false);
+				}
+			}
+		}
+		{
+			String val = request.getParameter("SuperCookieUserData");
+			if (val != null) {
+				if (val.equals("1")) {
+					fingerprint.setSuperCookieUserData(true);
+				} else if (val.equals("0")) {
+					fingerprint.setSuperCookieUserData(false);
+				}
+			}
+		}
 		{
 			long ourTime = new Date().getTime();
 			long theirTime;
@@ -93,11 +122,11 @@ public class TestServlet extends HttpServlet {
 		fingerprint.setDateTime(request.getParameter("DateTime"));
 		fingerprint.setMathTan(request.getParameter("MathTan"));
 		{
-			String adsBlocked = request.getParameter("AdsBlocked");
-			if (adsBlocked != null) {
-				if (adsBlocked.equals("1")) {
+			String val = request.getParameter("AdsBlocked");
+			if (val != null) {
+				if (val.equals("1")) {
 					fingerprint.setAdsBlocked(true);
-				} else if (adsBlocked.equals("0")) {
+				} else if (val.equals("0")) {
 					fingerprint.setAdsBlocked(false);
 				}
 			}

@@ -19,7 +19,9 @@ public class Fingerprint {
 
 	private boolean cookiesEnabled;
 
-	private String superCookie;
+	private Boolean superCookieLocalStorage;
+	private Boolean superCookieSessionStorage;
+	private Boolean superCookieUserData;
 	private String doNotTrack;
 
 	private Long clockDifference;
@@ -50,7 +52,9 @@ public class Fingerprint {
 		fonts = null;
 		charSizes = null;
 		cookiesEnabled = false;
-		superCookie = null;
+		superCookieLocalStorage = null;
+		superCookieSessionStorage = null;
+		superCookieUserData = null;
 		doNotTrack = null;
 		clockDifference = null;
 		dateTime = null;
@@ -167,12 +171,28 @@ public class Fingerprint {
 		this.cookiesEnabled = cookiesEnabled;
 	}
 
-	public String getSuperCookie() {
-		return superCookie;
+	public Boolean getSuperCookieLocalStorage() {
+		return superCookieLocalStorage;
 	}
 
-	public void setSuperCookie(String superCookie) {
-		this.superCookie = superCookie;
+	public void setSuperCookieLocalStorage(Boolean superCookieLocalStorage) {
+		this.superCookieLocalStorage = superCookieLocalStorage;
+	}
+
+	public Boolean getSuperCookieSessionStorage() {
+		return superCookieSessionStorage;
+	}
+
+	public void setSuperCookieSessionStorage(Boolean superCookieSessionStorage) {
+		this.superCookieSessionStorage = superCookieSessionStorage;
+	}
+
+	public Boolean getSuperCookieUserData() {
+		return superCookieUserData;
+	}
+
+	public void setSuperCookieUserData(Boolean superCookieUserData) {
+		this.superCookieUserData = superCookieUserData;
 	}
 
 	public String getDoNotTrack() {

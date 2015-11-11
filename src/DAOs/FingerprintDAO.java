@@ -27,9 +27,9 @@ import beans.UniquenessBean;
 import datastructures.Fingerprint;
 
 public class FingerprintDAO {
-	private static final String insertSampleStr = "INSERT INTO `Samples`(`SampleUUID`, `IP`, `TimeStamp`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `LanguageFlash`, `Fonts`, `CharSizes`, `CookiesEnabled`, `SuperCookie`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `AdsBlocked`, `Canvas`, `WebGLVendor`, `WebGLRenderer`) VALUES(?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+	private static final String insertSampleStr = "INSERT INTO `Samples`(`SampleUUID`, `IP`, `TimeStamp`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `LanguageFlash`, `Fonts`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `AdsBlocked`, `Canvas`, `WebGLVendor`, `WebGLRenderer`) VALUES(?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 	private static final String getSampleCountStr = "SELECT COUNT(*) FROM `Samples`;";
-	private static final String selectSampleStr = "SELECT `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `LanguageFlash`, `Fonts`, `CharSizes`, `CookiesEnabled`, `SuperCookie`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `AdsBlocked`, `Canvas`, `WebGLVendor`, `WebGLRenderer` FROM `Samples` WHERE `SampleUUID` = ?;";
+	private static final String selectSampleStr = "SELECT `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `LanguageFlash`, `Fonts`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `AdsBlocked`, `Canvas`, `WebGLVendor`, `WebGLRenderer` FROM `Samples` WHERE `SampleUUID` = ?;";
 	private static final String selectSampleSetIDHistory = "SELECT `SampleUUID`, `Timestamp` FROM `SampleSets` INNER JOIN `Samples` USING (`SampleID`) WHERE `SampleSetID` = ? ORDER BY `Timestamp` DESC;";
 
 	private static final String NO_JAVASCRIPT = "No JavaScript";
@@ -157,7 +157,8 @@ public class FingerprintDAO {
 		{
 			CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "AcceptHeaders", fingerprint.getAccept_headers());
 			bean.setName("HTTP_ACCEPT Headers");
-			bean.setNameHoverText("The concatenation of three headers from the HTTP request:" + " The Accept request header, the Accept-Encoding request header, and the Accept-Language request header.");
+			bean.setNameHoverText("The concatenation of three headers from the HTTP request:"
+			+ " The Accept request header, the Accept-Encoding request header, and the Accept-Language request header.");
 			characteristics.add(bean);
 		}
 		{
@@ -193,7 +194,8 @@ public class FingerprintDAO {
 		{
 			CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "ScreenDetailsFlash", fingerprint.getScreenDetailsFlash());
 			bean.setName("Screen Size (Flash)");
-			bean.setNameHoverText("The resolution of the client's monitor(s)." + " Different from the other screen size test in that this number can be the cumulative resolution of the monitors in multiple monitor set ups.");
+			bean.setNameHoverText("The resolution of the client's monitor(s)."
+			+ " Different from the other screen size test in that this number can be the cumulative resolution of the monitors in multiple monitor set ups.");
 			characteristics.add(bean);
 		}
 		{
@@ -224,9 +226,10 @@ public class FingerprintDAO {
 			characteristics.add(bean);
 		}
 		{
-			CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "SuperCookie", fingerprint.getSuperCookie());
+			CharacteristicBean bean = getSuperCookieCharacteristicBean(conn, sampleCount, fingerprint);
 			bean.setName("Limited supercookie test");
-			bean.setNameHoverText("Three tests of whether DOM storage is supported (and enabled) in the client's web browser." + " Tests for localStorage, sessionStorage, and Internet Explorer's userData.");
+			bean.setNameHoverText("Three tests of whether DOM storage is supported (and enabled) in the client's web browser."
+			+ " Tests for localStorage, sessionStorage, and Internet Explorer's userData.");
 			characteristics.add(bean);
 		}
 		{
@@ -241,7 +244,8 @@ public class FingerprintDAO {
 		{
 			CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "ClockDifference", fingerprint.getClockDifference());
 			bean.setName("Client/server time difference (minutes)");
-			bean.setNameHoverText("The approximate amount of difference between the time on the client's computer and the clock on the server." + " i.e., the clock on the client's computer is 5 minutes ahead of the clock on the server.");
+			bean.setNameHoverText("The approximate amount of difference between the time on the client's computer and the clock on the server."
+			+ " i.e., the clock on the client's computer is 5 minutes ahead of the clock on the server.");
 			characteristics.add(bean);
 		}
 		{
@@ -253,19 +257,23 @@ public class FingerprintDAO {
 		{
 			CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "MathTan", fingerprint.getMathTan());
 			bean.setName("Math/Tan function");
-			bean.setNameHoverText("The same math functions run on different platforms and browsers can produce different results." + " In particular we are interested in the output of Math.tan(-1e300), which has been observed to produce different values depending on operating system." + " For instance on a 64bit Linux machine it produces the value -1.4214488238747245 and on a Windows machine it produces the value -4.987183803371025.");
+			bean.setNameHoverText("The same math functions run on different platforms and browsers can produce different results."
+			+ " In particular we are interested in the output of Math.tan(-1e300), which has been observed to produce different values depending on operating system."
+					+ " For instance on a 64bit Linux machine it produces the value -1.4214488238747245 and on a Windows machine it produces the value -4.987183803371025.");
 			characteristics.add(bean);
 		}
 		{
 			CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "UsingTor", fingerprint.isUsingTor());
 			bean.setName("Using Tor?");
-			bean.setNameHoverText("Checks whether a client's request came from a Tor exit node, and hence whether they're using Tor." + " It does so by performing a TorDNSEL request for each client.");
+			bean.setNameHoverText("Checks whether a client's request came from a Tor exit node, and hence whether they're using Tor."
+			+ " It does so by performing a TorDNSEL request for each client.");
 			characteristics.add(bean);
 		}
 		{
 			CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "AdsBlocked", fingerprint.getAdsBlocked());
 			bean.setName("Ads blocked?");
-			bean.setNameHoverText("Checks whether ad blocking software is installed." + " It does so by attempting to display an ad and checking whether it was successful.");
+			bean.setNameHoverText("Checks whether ad blocking software is installed."
+			+ " It does so by attempting to display an ad and checking whether it was successful.");
 			characteristics.add(bean);
 		}
 		{
@@ -274,7 +282,8 @@ public class FingerprintDAO {
 			if (bean.getValue().equals(NO_JAVASCRIPT) == false && bean.getValue().equals(NOT_SUPPORTED) == false) {
 				bean.setValue("<img width=\"400\" height=\"60\" alt=\"A HTML5 canvas test\" src=\"" + bean.getValue() + "\">");
 			}
-			bean.setNameHoverText("Rendering of a specific picture with the HTML5 Canvas element following a fixed set of instructions." + " The picture presents some slight noticeable variations depending on the OS and the browser used.");
+			bean.setNameHoverText("Rendering of a specific picture with the HTML5 Canvas element following a fixed set of instructions."
+			+ " The picture presents some slight noticeable variations depending on the OS and the browser used.");
 			characteristics.add(bean);
 		}
 		{
@@ -332,7 +341,23 @@ public class FingerprintDAO {
 		++index;
 		insertSample.setBoolean(index, fingerprint.isCookiesEnabled());
 		++index;
-		insertSample.setString(index, fingerprint.getSuperCookie());
+		if(fingerprint.getSuperCookieLocalStorage() != null){
+			insertSample.setBoolean(index, fingerprint.getSuperCookieLocalStorage());
+		} else {
+			insertSample.setNull(index, java.sql.Types.BOOLEAN);
+		}
+		++index;
+		if(fingerprint.getSuperCookieSessionStorage() != null){
+			insertSample.setBoolean(index, fingerprint.getSuperCookieSessionStorage());
+		} else {
+			insertSample.setNull(index, java.sql.Types.BOOLEAN);
+		}
+		++index;
+		if(fingerprint.getSuperCookieUserData() != null){
+			insertSample.setBoolean(index, fingerprint.getSuperCookieUserData());
+		} else {
+			insertSample.setNull(index, java.sql.Types.BOOLEAN);
+		}
 		++index;
 		insertSample.setString(index, fingerprint.getDoNotTrack());
 		++index;
@@ -463,7 +488,31 @@ public class FingerprintDAO {
 		/*
 		 * We have seen this user before. Check if their fingerprint has changed.
 		 */
-		String query = "SELECT `Samples`.`SampleID`, `Samples`.`SampleUUID` FROM `SampleSets` INNER JOIN `Samples` ON `SampleSets`.`SampleID` = `Samples`.`SampleID` WHERE `SampleSetID` = ?" + " AND `UserAgent`" + (fingerprint.getUser_agent() == null ? " IS NULL" : " = ?") + " AND `AcceptHeaders`" + (fingerprint.getAccept_headers() == null ? " IS NULL" : " = ?") + " AND `Platform`" + (fingerprint.getPlatform() == null ? " IS NULL" : " = ?") + " AND `PlatformFlash`" + (fingerprint.getPlatformFlash() == null ? " IS NULL" : " = ?") + " AND `PluginDetails`" + (fingerprint.getPluginDetails() == null ? " IS NULL" : " = ?") + " AND `TimeZone`" + (fingerprint.getTimeZone() == null ? " IS NULL" : " = ?") + " AND `ScreenDetails`" + (fingerprint.getScreenDetails() == null ? " IS NULL" : " = ?") + " AND `ScreenDetailsFlash`" + (fingerprint.getScreenDetailsFlash() == null ? " IS NULL" : " = ?") + " AND `LanguageFlash`" + (fingerprint.getLanguageFlash() == null ? " IS NULL" : " = ?") + " AND `Fonts`" + (fingerprint.getFonts() == null ? " IS NULL" : " = ?") + " AND `CharSizes`" + (fingerprint.getCharSizes() == null ? " IS NULL" : " = ?") + " AND `CookiesEnabled` = ?" + " AND `SuperCookie`" + (fingerprint.getSuperCookie() == null ? " IS NULL" : " = ?") + " AND `DoNotTrack`" + (fingerprint.getDoNotTrack() == null ? " IS NULL" : " = ?") + " AND `ClockDifference`" + (fingerprint.getClockDifference() == null ? " IS NULL" : " = ?") + " AND `DateTime`" + (fingerprint.getDateTime() == null ? " IS NULL" : " = ?") + " AND `MathTan`" + (fingerprint.getMathTan() == null ? " IS NULL" : " = ?") + " AND `UsingTor` = ?" + " AND `AdsBlocked`" + (fingerprint.getAdsBlocked() == null ? " IS NULL" : " = ?") + " AND `Canvas`" + (fingerprint.getCanvas() == null ? " IS NULL" : " = ?") + " AND `WebGLVendor`" + (fingerprint.getWebGLVendor() == null ? " IS NULL" : " = ?") + " AND `WebGLRenderer`" + (fingerprint.getWebGLRenderer() == null ? " IS NULL" : " = ?") + ";";
+		String query = "SELECT `Samples`.`SampleID`, `Samples`.`SampleUUID` FROM `SampleSets` INNER JOIN `Samples` ON `SampleSets`.`SampleID` = `Samples`.`SampleID` WHERE `SampleSetID` = ?"
+		 + " AND `UserAgent`" + (fingerprint.getUser_agent() == null ? " IS NULL" : " = ?")
+		 + " AND `AcceptHeaders`" + (fingerprint.getAccept_headers() == null ? " IS NULL" : " = ?")
+		 + " AND `Platform`" + (fingerprint.getPlatform() == null ? " IS NULL" : " = ?")
+		 + " AND `PlatformFlash`" + (fingerprint.getPlatformFlash() == null ? " IS NULL" : " = ?")
+		 + " AND `PluginDetails`" + (fingerprint.getPluginDetails() == null ? " IS NULL" : " = ?")
+		 + " AND `TimeZone`" + (fingerprint.getTimeZone() == null ? " IS NULL" : " = ?")
+		 + " AND `ScreenDetails`" + (fingerprint.getScreenDetails() == null ? " IS NULL" : " = ?")
+		 + " AND `ScreenDetailsFlash`" + (fingerprint.getScreenDetailsFlash() == null ? " IS NULL" : " = ?")
+		 + " AND `LanguageFlash`" + (fingerprint.getLanguageFlash() == null ? " IS NULL" : " = ?")
+		 + " AND `Fonts`" + (fingerprint.getFonts() == null ? " IS NULL" : " = ?") + " AND `CharSizes`"
+		 + (fingerprint.getCharSizes() == null ? " IS NULL" : " = ?")
+		 + " AND `CookiesEnabled` = ?"
+		 + " AND `SuperCookieLocalStorage`" + (fingerprint.getSuperCookieLocalStorage() == null ? " IS NULL" : " = ?")
+		 + " AND `SuperCookieSessionStorage`" + (fingerprint.getSuperCookieSessionStorage() == null ? " IS NULL" : " = ?")
+		 + " AND `SuperCookieUserData`" + (fingerprint.getSuperCookieUserData() == null ? " IS NULL" : " = ?")
+		 + " AND `DoNotTrack`" + (fingerprint.getDoNotTrack() == null ? " IS NULL" : " = ?")
+		 + " AND `ClockDifference`" + (fingerprint.getClockDifference() == null ? " IS NULL" : " = ?")
+		 + " AND `DateTime`" + (fingerprint.getDateTime() == null ? " IS NULL" : " = ?")
+		 + " AND `MathTan`" + (fingerprint.getMathTan() == null ? " IS NULL" : " = ?")
+		 + " AND `UsingTor` = ?"
+		 + " AND `AdsBlocked`" + (fingerprint.getAdsBlocked() == null ? " IS NULL" : " = ?")
+		 + " AND `Canvas`" + (fingerprint.getCanvas() == null ? " IS NULL" : " = ?")
+		 + " AND `WebGLVendor`" + (fingerprint.getWebGLVendor() == null ? " IS NULL" : " = ?")
+		 + " AND `WebGLRenderer`" + (fingerprint.getWebGLRenderer() == null ? " IS NULL" : " = ?") + ";";
 		PreparedStatement checkExists = conn.prepareStatement(query);
 
 		int index = 1;
@@ -516,8 +565,16 @@ public class FingerprintDAO {
 		}
 		checkExists.setBoolean(index, fingerprint.isCookiesEnabled());
 		++index;
-		if (fingerprint.getSuperCookie() != null) {
-			checkExists.setString(index, fingerprint.getSuperCookie());
+		if (fingerprint.getSuperCookieLocalStorage() != null) {
+			checkExists.setBoolean(index, fingerprint.getSuperCookieLocalStorage());
+			++index;
+		}
+		if (fingerprint.getSuperCookieSessionStorage() != null) {
+			checkExists.setBoolean(index, fingerprint.getSuperCookieSessionStorage());
+			++index;
+		}
+		if (fingerprint.getSuperCookieUserData() != null) {
+			checkExists.setBoolean(index, fingerprint.getSuperCookieUserData());
 			++index;
 		}
 		if (fingerprint.getDoNotTrack() != null) {
@@ -594,7 +651,31 @@ public class FingerprintDAO {
 		/*
 		 * We have seen this user before. Check if their fingerprint has changed.
 		 */
-		String query = "SELECT COUNT(*) FROM `Samples` WHERE" + " `UserAgent`" + (fingerprint.getUser_agent() == null ? " IS NULL" : " = ?") + " AND `AcceptHeaders`" + (fingerprint.getAccept_headers() == null ? " IS NULL" : " = ?") + " AND `Platform`" + (fingerprint.getPlatform() == null ? " IS NULL" : " = ?") + " AND `PlatformFlash`" + (fingerprint.getPlatformFlash() == null ? " IS NULL" : " = ?") + " AND `PluginDetails`" + (fingerprint.getPluginDetails() == null ? " IS NULL" : " = ?") + " AND `TimeZone`" + (fingerprint.getTimeZone() == null ? " IS NULL" : " = ?") + " AND `ScreenDetails`" + (fingerprint.getScreenDetails() == null ? " IS NULL" : " = ?") + " AND `ScreenDetailsFlash`" + (fingerprint.getScreenDetailsFlash() == null ? " IS NULL" : " = ?") + " AND `LanguageFlash`" + (fingerprint.getLanguageFlash() == null ? " IS NULL" : " = ?") + " AND `Fonts`" + (fingerprint.getFonts() == null ? " IS NULL" : " = ?") + " AND `CharSizes`" + (fingerprint.getCharSizes() == null ? " IS NULL" : " = ?") + " AND `CookiesEnabled` = ?" + " AND `SuperCookie`" + (fingerprint.getSuperCookie() == null ? " IS NULL" : " = ?") + " AND `DoNotTrack`" + (fingerprint.getDoNotTrack() == null ? " IS NULL" : " = ?") + " AND `ClockDifference`" + (fingerprint.getClockDifference() == null ? " IS NULL" : " = ?") + " AND `DateTime`" + (fingerprint.getDateTime() == null ? " IS NULL" : " = ?") + " AND `MathTan`" + (fingerprint.getMathTan() == null ? " IS NULL" : " = ?") + "" + " AND `UsingTor` = ?" + " AND `AdsBlocked`" + (fingerprint.getAdsBlocked() == null ? " IS NULL" : " = ?") + " AND `Canvas`" + (fingerprint.getCanvas() == null ? " IS NULL" : " = ?") + " AND `WebGLVendor`" + (fingerprint.getWebGLVendor() == null ? " IS NULL" : " = ?") + " AND `WebGLRenderer`" + (fingerprint.getWebGLRenderer() == null ? " IS NULL" : " = ?") + ";";
+		String query = "SELECT COUNT(*) FROM `Samples` WHERE"
+		+ " `UserAgent`" + (fingerprint.getUser_agent() == null ? " IS NULL" : " = ?")
+		+ " AND `AcceptHeaders`" + (fingerprint.getAccept_headers() == null ? " IS NULL" : " = ?")
+		+ " AND `Platform`" + (fingerprint.getPlatform() == null ? " IS NULL" : " = ?")
+		+ " AND `PlatformFlash`" + (fingerprint.getPlatformFlash() == null ? " IS NULL" : " = ?")
+		+ " AND `PluginDetails`" + (fingerprint.getPluginDetails() == null ? " IS NULL" : " = ?")
+		+ " AND `TimeZone`" + (fingerprint.getTimeZone() == null ? " IS NULL" : " = ?")
+		+ " AND `ScreenDetails`" + (fingerprint.getScreenDetails() == null ? " IS NULL" : " = ?")
+		+ " AND `ScreenDetailsFlash`" + (fingerprint.getScreenDetailsFlash() == null ? " IS NULL" : " = ?")
+		+ " AND `LanguageFlash`" + (fingerprint.getLanguageFlash() == null ? " IS NULL" : " = ?")
+		+ " AND `Fonts`" + (fingerprint.getFonts() == null ? " IS NULL" : " = ?")
+		+ " AND `CharSizes`" + (fingerprint.getCharSizes() == null ? " IS NULL" : " = ?")
+		+ " AND `CookiesEnabled` = ?"
+		+ " AND `SuperCookieLocalStorage`" + (fingerprint.getSuperCookieLocalStorage() == null ? " IS NULL" : " = ?")
+		+ " AND `SuperCookieSessionStorage`" + (fingerprint.getSuperCookieSessionStorage() == null ? " IS NULL" : " = ?")
+		+ " AND `SuperCookieUserData`" + (fingerprint.getSuperCookieUserData() == null ? " IS NULL" : " = ?")
+		+ " AND `DoNotTrack`" + (fingerprint.getDoNotTrack() == null ? " IS NULL" : " = ?")
+		+ " AND `ClockDifference`" + (fingerprint.getClockDifference() == null ? " IS NULL" : " = ?")
+		+ " AND `DateTime`" + (fingerprint.getDateTime() == null ? " IS NULL" : " = ?")
+		+ " AND `MathTan`" + (fingerprint.getMathTan() == null ? " IS NULL" : " = ?")
+		+ " AND `UsingTor` = ?"
+		+ " AND `AdsBlocked`" + (fingerprint.getAdsBlocked() == null ? " IS NULL" : " = ?")
+		+ " AND `Canvas`" + (fingerprint.getCanvas() == null ? " IS NULL" : " = ?")
+		+ " AND `WebGLVendor`" + (fingerprint.getWebGLVendor() == null ? " IS NULL" : " = ?")
+		+ " AND `WebGLRenderer`" + (fingerprint.getWebGLRenderer() == null ? " IS NULL" : " = ?") + ";";
 		PreparedStatement checkExists = conn.prepareStatement(query);
 
 		int index = 1;
@@ -644,8 +725,16 @@ public class FingerprintDAO {
 		}
 		checkExists.setBoolean(index, fingerprint.isCookiesEnabled());
 		++index;
-		if (fingerprint.getSuperCookie() != null) {
-			checkExists.setString(index, fingerprint.getSuperCookie());
+		if (fingerprint.getSuperCookieLocalStorage() != null) {
+			checkExists.setBoolean(index, fingerprint.getSuperCookieLocalStorage());
+			++index;
+		}
+		if (fingerprint.getSuperCookieSessionStorage() != null) {
+			checkExists.setBoolean(index, fingerprint.getSuperCookieSessionStorage());
+			++index;
+		}
+		if (fingerprint.getSuperCookieUserData() != null) {
+			checkExists.setBoolean(index, fingerprint.getSuperCookieUserData());
 			++index;
 		}
 		if (fingerprint.getDoNotTrack() != null) {
@@ -859,6 +948,91 @@ public class FingerprintDAO {
 
 		return chrbean;
 	}
+	
+	/**
+	 * Create the cookies enabled CharacteristicBean.
+	 * 
+	 * @param conn
+	 *            A connection to the database.
+	 * @param num_samples
+	 *            The number of samples in the database.
+	 * @param value
+	 *            The value of this sample.
+	 * @return
+	 * @throws SQLException
+	 */
+	private static CharacteristicBean getSuperCookieCharacteristicBean(Connection conn, int num_samples, Fingerprint fingerprint) throws SQLException {
+		CharacteristicBean chrbean = new CharacteristicBean();
+
+		PreparedStatement getCount;
+		String querystr = "SELECT COUNT(*) FROM `Samples` WHERE"
+		+ " `SuperCookieLocalStorage`" + (fingerprint.getSuperCookieLocalStorage() == null ? " IS NULL": " = ?")
+		+ " AND `SuperCookieSessionStorage`" + (fingerprint.getSuperCookieSessionStorage() == null ? " IS NULL": " = ?")
+		+ " AND`SuperCookieUserData`" + (fingerprint.getSuperCookieUserData() == null ? " IS NULL": " = ?");
+		getCount = conn.prepareStatement(querystr);
+		
+		int index = 1;
+		
+		String superCookieStr = "DOM localStorage: ";
+		if(fingerprint.getSuperCookieLocalStorage() == null && fingerprint.getSuperCookieSessionStorage() == null && fingerprint.getSuperCookieUserData() == null){
+			superCookieStr = NO_JAVASCRIPT;
+		}
+		else{
+			if (fingerprint.getSuperCookieLocalStorage() != null) {
+				if (fingerprint.getSuperCookieLocalStorage()) {
+					superCookieStr += "Yes";
+				} else {
+					superCookieStr += "No";
+				}
+				getCount.setBoolean(index, fingerprint.getSuperCookieLocalStorage());
+				++index;
+			}
+			else{
+				superCookieStr += "NoJS";
+			}
+			superCookieStr += ", ";
+			
+			superCookieStr += "DOM sessionStorage: ";
+			if (fingerprint.getSuperCookieSessionStorage() != null) {
+				if (fingerprint.getSuperCookieSessionStorage()) {
+					superCookieStr += "Yes";
+				} else {
+					superCookieStr += "No";
+				}
+				getCount.setBoolean(index, fingerprint.getSuperCookieSessionStorage());
+				++index;
+			}
+			else{
+				superCookieStr += "NoJS";
+			}
+			superCookieStr += ", ";
+			
+			superCookieStr += "IE userData: ";
+			if (fingerprint.getSuperCookieUserData() != null) {
+				if (fingerprint.getSuperCookieUserData()) {
+					superCookieStr += "Yes";
+				} else {
+					superCookieStr += "No";
+				}
+				getCount.setBoolean(index, fingerprint.getSuperCookieUserData());
+				++index;
+			}
+			else{
+				superCookieStr += "NoJS";
+			}
+		}
+		chrbean.setValue(superCookieStr);
+
+		ResultSet rs = getCount.executeQuery();
+		rs.next();
+		int count = rs.getInt(1);
+		rs.close();
+		chrbean.setNumOccurrences(count);
+		chrbean.setInX(((double) num_samples) / ((double) count));
+		chrbean.setBits(Math.abs(Math.log(chrbean.getInX()) / Math.log(2)));
+
+		return chrbean;
+	}
 
 	public static HistoryListBean getSampleSetIDsHistory(String sampleSetID, ServletContext context) throws ServletException {
 		HistoryListBean history = new HistoryListBean();
@@ -952,8 +1126,23 @@ public class FingerprintDAO {
 		// CookiesEnabled
 		fingerprint.setCookiesEnabled(rs.getBoolean(index));
 		++index;
-		// SuperCookie
-		fingerprint.setSuperCookie(rs.getString(index));
+		// SuperCookieLocalStorage
+		fingerprint.setSuperCookieLocalStorage(rs.getBoolean(index));
+		if (rs.wasNull()) {
+			fingerprint.setSuperCookieLocalStorage(null);
+		}
+		++index;
+		// SuperCookieSessionStorage
+		fingerprint.setSuperCookieSessionStorage(rs.getBoolean(index));
+		if (rs.wasNull()) {
+			fingerprint.setSuperCookieSessionStorage(null);
+		}
+		++index;
+		// SuperCookieUserData
+		fingerprint.setSuperCookieUserData(rs.getBoolean(index));
+		if (rs.wasNull()) {
+			fingerprint.setSuperCookieUserData(null);
+		}
 		++index;
 		// DoNotTrack
 		fingerprint.setDoNotTrack(rs.getString(index));

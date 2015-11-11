@@ -144,13 +144,29 @@
 	    		name: 'CharSizes',
 	    		value: getCharacterSizes()
 			}).appendTo('#formdiv');
-			
-			//SuperCookie
+
+			//SuperCookieLocalStorage
 			$('<input>').attr({
 	    		type: 'hidden',
-	    		id: 'SuperCookie',
-	    		name: 'SuperCookie',
-	    		value: getSuperCookie()
+	    		id: 'SuperCookieLocalStorage',
+	    		name: 'SuperCookieLocalStorage',
+	    		value: getSuperCookieLocalStorage()
+			}).appendTo('#formdiv');
+			
+			//SuperCookieSessionStorage
+			$('<input>').attr({
+	    		type: 'hidden',
+	    		id: 'SuperCookieSessionStorage',
+	    		name: 'SuperCookieSessionStorage',
+	    		value: getSuperCookieSessionStorage()
+			}).appendTo('#formdiv');
+			
+			//SuperCookieUserData
+			$('<input>').attr({
+	    		type: 'hidden',
+	    		id: 'SuperCookieUserData',
+	    		name: 'SuperCookieUserData',
+	    		value: getSuperCookieUserData()
 			}).appendTo('#formdiv');
 			
 			//DateTime

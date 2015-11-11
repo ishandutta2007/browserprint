@@ -76,55 +76,48 @@ function getTimeZone() {
 	}
 }
 
-function getSuperCookie() {
+function getSuperCookieLocalStorage() {
 	try {
-		var test = "";
-
-		test += "DOM localStorage: ";
-		try {
-			if ('localStorage' in window && window['localStorage'] !== null) {
-				test += "Yes";
-			} else {
-				test += "No";
-			}
-		} catch (ex) {
-			test += "No";
+		if ('localStorage' in window && window['localStorage'] !== null) {
+			return "1";
+		} else {
+			return "0";
 		}
-		test += ", ";
+	} catch (ex) {
+		return "0";
+	}
+}
 
-		test += "DOM sessionStorage: ";
-		try {
-			if ('sessionStorage' in window && window['sessionStorage'] !== null) {
-				test += "Yes";
-			} else {
-				test += "No";
-			}
-		} catch (ex) {
-			test += "No";
+function getSuperCookieSessionStorage() {
+	try {
+		if ('sessionStorage' in window && window['sessionStorage'] !== null) {
+			return "1";
+		} else {
+			return "0";
 		}
-		test += ", ";
-
-		test += "IE userData: ";
-		var persistDiv = $('<div id="tmpDiv" style="behavior:url(#default#userdata)"></div>');
-		persistDiv.appendTo(document.body);
-		try {
-			tmpDiv.setAttribute("remember", "original value");
-			tmpDiv.save("oXMLStore");
-			tmpDiv.setAttribute("remember", "overwritten");
-			tmpDiv.load("oXMLStore");
-			if ((tmpDiv.getAttribute("remember")) == "original value") {
-				test += "Yes";
-			} else {
-				test += "No";
-			}
-		} catch (ex) {
-			test += "No";
-		}
-	} catch (e) {
-		return "Error";
+	} catch (ex) {
+		return "0";
 	}
 
 	return test;
+}
+
+function getSuperCookieUserData() {
+	try {
+		var persistDiv = $('<div id="tmpDiv" style="behavior:url(#default#userdata)"></div>');
+		persistDiv.appendTo(document.body);
+		tmpDiv.setAttribute("remember", "original value");
+		tmpDiv.save("oXMLStore");
+		tmpDiv.setAttribute("remember", "overwritten");
+		tmpDiv.load("oXMLStore");
+		if ((tmpDiv.getAttribute("remember")) == "original value") {
+			return "1";
+		} else {
+			return "0";
+		}
+	} catch (ex) {
+		return "0";
+	}
 }
 
 function getTime() {
