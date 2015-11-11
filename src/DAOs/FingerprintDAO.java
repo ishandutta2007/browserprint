@@ -482,7 +482,7 @@ public class FingerprintDAO {
 			/*
 			 * We know we haven't seen this sample before because there's no SampleSetID.
 			 */
-			return null;
+			return new ImmutablePair<Integer, String>(null, null);
 		}
 
 		/*
