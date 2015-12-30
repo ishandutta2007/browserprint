@@ -29,7 +29,7 @@ import datastructures.Fingerprint;
 public class FingerprintDAO {
 	private static final String insertSampleStr = "INSERT INTO `Samples`(`SampleUUID`, `IP`, `TimeStamp`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `LanguageFlash`, `Fonts`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `AdsBlocked`, `Canvas`, `WebGLVendor`, `WebGLRenderer`) VALUES(?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 	private static final String getSampleCountStr = "SELECT COUNT(*) FROM `Samples`;";
-	private static final String selectSampleStr = "SELECT `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `LanguageFlash`, `Fonts`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `AdsBlocked`, `Canvas`, `WebGLVendor`, `WebGLRenderer` FROM `Samples` WHERE `SampleUUID` = ?;";
+	private static final String selectSampleStr = "SELECT `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `LanguageFlash`, `Fonts`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `AdsBlocked`, `WebGLVendor`, `WebGLRenderer` FROM `Samples` WHERE `SampleUUID` = ?;";
 	private static final String selectSampleSetIDHistory = "SELECT `SampleUUID`, `Timestamp` FROM `SampleSets` INNER JOIN `Samples` USING (`SampleID`) WHERE `SampleSetID` = ? ORDER BY `Timestamp` DESC;";
 
 	private static final String NO_JAVASCRIPT = "No JavaScript";
@@ -276,7 +276,7 @@ public class FingerprintDAO {
 			+ " It does so by attempting to display an ad and checking whether it was successful.");
 			characteristics.add(bean);
 		}
-		{
+		/*{
 			CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "Canvas", fingerprint.getCanvas());
 			bean.setName("Canvas");
 			if (bean.getValue().equals(NO_JAVASCRIPT) == false && bean.getValue().equals(NOT_SUPPORTED) == false) {
@@ -285,7 +285,7 @@ public class FingerprintDAO {
 			bean.setNameHoverText("Rendering of a specific picture with the HTML5 Canvas element following a fixed set of instructions."
 			+ " The picture presents some slight noticeable variations depending on the OS and the browser used.");
 			characteristics.add(bean);
-		}
+		}*/
 		{
 			CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "WebGLVendor", fingerprint.getWebGLVendor());
 			bean.setName("WebGL Vendor");
@@ -510,7 +510,7 @@ public class FingerprintDAO {
 		 + " AND `MathTan`" + (fingerprint.getMathTan() == null ? " IS NULL" : " = ?")
 		 + " AND `UsingTor` = ?"
 		 + " AND `AdsBlocked`" + (fingerprint.getAdsBlocked() == null ? " IS NULL" : " = ?")
-		 + " AND `Canvas`" + (fingerprint.getCanvas() == null ? " IS NULL" : " = ?")
+		 /*+ " AND `Canvas`" + (fingerprint.getCanvas() == null ? " IS NULL" : " = ?")*/
 		 + " AND `WebGLVendor`" + (fingerprint.getWebGLVendor() == null ? " IS NULL" : " = ?")
 		 + " AND `WebGLRenderer`" + (fingerprint.getWebGLRenderer() == null ? " IS NULL" : " = ?") + ";";
 		PreparedStatement checkExists = conn.prepareStatement(query);
@@ -599,10 +599,10 @@ public class FingerprintDAO {
 			checkExists.setBoolean(index, fingerprint.getAdsBlocked());
 			++index;
 		}
-		if (fingerprint.getCanvas() != null) {
+		/*if (fingerprint.getCanvas() != null) {
 			checkExists.setString(index, fingerprint.getCanvas());
 			++index;
-		}
+		}*/
 		if (fingerprint.getWebGLVendor() != null) {
 			checkExists.setString(index, fingerprint.getWebGLVendor());
 			++index;
@@ -673,7 +673,7 @@ public class FingerprintDAO {
 		+ " AND `MathTan`" + (fingerprint.getMathTan() == null ? " IS NULL" : " = ?")
 		+ " AND `UsingTor` = ?"
 		+ " AND `AdsBlocked`" + (fingerprint.getAdsBlocked() == null ? " IS NULL" : " = ?")
-		+ " AND `Canvas`" + (fingerprint.getCanvas() == null ? " IS NULL" : " = ?")
+		/*+ " AND `Canvas`" + (fingerprint.getCanvas() == null ? " IS NULL" : " = ?")*/
 		+ " AND `WebGLVendor`" + (fingerprint.getWebGLVendor() == null ? " IS NULL" : " = ?")
 		+ " AND `WebGLRenderer`" + (fingerprint.getWebGLRenderer() == null ? " IS NULL" : " = ?") + ";";
 		PreparedStatement checkExists = conn.prepareStatement(query);
@@ -759,10 +759,10 @@ public class FingerprintDAO {
 			checkExists.setBoolean(index, fingerprint.getAdsBlocked());
 			++index;
 		}
-		if (fingerprint.getCanvas() != null) {
+		/*if (fingerprint.getCanvas() != null) {
 			checkExists.setString(index, fingerprint.getCanvas());
 			++index;
-		}
+		}*/
 		if (fingerprint.getWebGLVendor() != null) {
 			checkExists.setString(index, fingerprint.getWebGLVendor());
 			++index;
@@ -1169,8 +1169,8 @@ public class FingerprintDAO {
 		}
 		++index;
 		// Canvas
-		fingerprint.setCanvas(rs.getString(index));
-		++index;
+		/*fingerprint.setCanvas(rs.getString(index));
+		++index;*/
 		// WebGLVendor
 		fingerprint.setWebGLVendor(rs.getString(index));
 		++index;
