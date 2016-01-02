@@ -27,9 +27,9 @@ import beans.UniquenessBean;
 import datastructures.Fingerprint;
 
 public class FingerprintDAO {
-	private static final String insertSampleStr = "INSERT INTO `Samples`(`SampleUUID`, `IP`, `TimeStamp`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `LanguageFlash`, `Fonts`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `AdsBlocked`, `Canvas`, `WebGLVendor`, `WebGLRenderer`) VALUES(?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+	private static final String insertSampleStr = "INSERT INTO `Samples`(`SampleUUID`, `IP`, `TimeStamp`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `LanguageFlash`, `Fonts`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlocked`, `Canvas`, `WebGLVendor`, `WebGLRenderer`) VALUES(?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 	private static final String getSampleCountStr = "SELECT COUNT(*) FROM `Samples`;";
-	private static final String selectSampleStr = "SELECT `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `LanguageFlash`, `Fonts`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `AdsBlocked`, `WebGLVendor`, `WebGLRenderer` FROM `Samples` WHERE `SampleUUID` = ?;";
+	private static final String selectSampleStr = "SELECT `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `LanguageFlash`, `Fonts`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlocked`, `WebGLVendor`, `WebGLRenderer` FROM `Samples` WHERE `SampleUUID` = ?;";
 	private static final String selectSampleSetIDHistory = "SELECT `SampleUUID`, `Timestamp` FROM `SampleSets` INNER JOIN `Samples` USING (`SampleID`) WHERE `SampleSetID` = ? ORDER BY `Timestamp` DESC;";
 
 	private static final String NO_JAVASCRIPT = "No JavaScript";
@@ -270,6 +270,15 @@ public class FingerprintDAO {
 			characteristics.add(bean);
 		}
 		{
+			CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "TbbVersion", fingerprint.getTbbVersion());
+			bean.setName("TBB version");
+			if (bean.getValue().equals("")) {
+				bean.setValue("No Tor Browser Bundle version detected");
+			}
+			bean.setNameHoverText("The version of the Tor Browser Bundle (TBB) you are using (if you're using the TBB).");
+			characteristics.add(bean);
+		}
+		{
 			CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "AdsBlocked", fingerprint.getAdsBlocked());
 			bean.setName("Ads blocked?");
 			bean.setNameHoverText("Checks whether ad blocking software is installed."
@@ -372,6 +381,8 @@ public class FingerprintDAO {
 		insertSample.setString(index, fingerprint.getMathTan());
 		++index;
 		insertSample.setBoolean(index, fingerprint.isUsingTor());
+		++index;
+		insertSample.setString(index, fingerprint.getTbbVersion());
 		++index;
 		if (fingerprint.getAdsBlocked() != null) {
 			insertSample.setBoolean(index, fingerprint.getAdsBlocked());
@@ -509,6 +520,7 @@ public class FingerprintDAO {
 		 + " AND `DateTime`" + (fingerprint.getDateTime() == null ? " IS NULL" : " = ?")
 		 + " AND `MathTan`" + (fingerprint.getMathTan() == null ? " IS NULL" : " = ?")
 		 + " AND `UsingTor` = ?"
+		 + " AND `TbbVersion`" + (fingerprint.getTbbVersion() == null ? " IS NULL" : " = ?")
 		 + " AND `AdsBlocked`" + (fingerprint.getAdsBlocked() == null ? " IS NULL" : " = ?")
 		 /*+ " AND `Canvas`" + (fingerprint.getCanvas() == null ? " IS NULL" : " = ?")*/
 		 + " AND `WebGLVendor`" + (fingerprint.getWebGLVendor() == null ? " IS NULL" : " = ?")
@@ -595,6 +607,10 @@ public class FingerprintDAO {
 		}
 		checkExists.setBoolean(index, fingerprint.isUsingTor());
 		++index;
+		if (fingerprint.getTbbVersion() != null) {
+			checkExists.setString(index, fingerprint.getTbbVersion());
+			++index;
+		}
 		if (fingerprint.getAdsBlocked() != null) {
 			checkExists.setBoolean(index, fingerprint.getAdsBlocked());
 			++index;
@@ -672,6 +688,7 @@ public class FingerprintDAO {
 		+ " AND `DateTime`" + (fingerprint.getDateTime() == null ? " IS NULL" : " = ?")
 		+ " AND `MathTan`" + (fingerprint.getMathTan() == null ? " IS NULL" : " = ?")
 		+ " AND `UsingTor` = ?"
+		+ " AND `TbbVersion`" + (fingerprint.getTbbVersion() == null ? " IS NULL" : " = ?")
 		+ " AND `AdsBlocked`" + (fingerprint.getAdsBlocked() == null ? " IS NULL" : " = ?")
 		/*+ " AND `Canvas`" + (fingerprint.getCanvas() == null ? " IS NULL" : " = ?")*/
 		+ " AND `WebGLVendor`" + (fingerprint.getWebGLVendor() == null ? " IS NULL" : " = ?")
@@ -755,6 +772,10 @@ public class FingerprintDAO {
 		}
 		checkExists.setBoolean(index, fingerprint.isUsingTor());
 		++index;
+		if (fingerprint.getTbbVersion() != null) {
+			checkExists.setString(index, fingerprint.getTbbVersion());
+			++index;
+		}
 		if (fingerprint.getAdsBlocked() != null) {
 			checkExists.setBoolean(index, fingerprint.getAdsBlocked());
 			++index;
@@ -1161,6 +1182,9 @@ public class FingerprintDAO {
 		++index;
 		// UsingTor
 		fingerprint.setUsingTor(rs.getBoolean(index));
+		++index;
+		// TbbVersion
+		fingerprint.setTbbVersion(rs.getString(index));
 		++index;
 		// AdsBlocked
 		fingerprint.setAdsBlocked(rs.getBoolean(index));

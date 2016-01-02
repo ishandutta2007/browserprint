@@ -121,6 +121,7 @@ public class TestServlet extends HttpServlet {
 		}
 		fingerprint.setDateTime(request.getParameter("DateTime"));
 		fingerprint.setMathTan(request.getParameter("MathTan"));
+		fingerprint.setTbbVersion(request.getParameter("TbbVersion"));
 		{
 			String val = request.getParameter("AdsBlocked");
 			if (val != null) {

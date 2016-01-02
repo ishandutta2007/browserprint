@@ -30,6 +30,7 @@ public class Fingerprint {
 	private String mathTan;
 
 	private boolean usingTor;
+	private String tbbVersion;
 	private String ipAddress;
 	
 	private Boolean adsBlocked;
@@ -60,6 +61,7 @@ public class Fingerprint {
 		dateTime = null;
 		mathTan = null;
 		usingTor = false;
+		tbbVersion = null;
 		ipAddress = null;
 		adsBlocked = null;
 		canvas = null;
@@ -233,6 +235,14 @@ public class Fingerprint {
 
 	public void setUsingTor(boolean usingTor) {
 		this.usingTor = usingTor;
+	}
+
+	public String getTbbVersion() {
+		return tbbVersion;
+	}
+
+	public void setTbbVersion(String tbbVersion) {
+		this.tbbVersion = tbbVersion;
 	}
 
 	public String getIpAddress() {

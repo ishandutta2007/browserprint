@@ -185,6 +185,14 @@
 	    		value: getMathTan()
 			}).appendTo('#formdiv');
 			
+			//TbbVersion
+			$('<input>').attr({
+	    		type: 'hidden',
+	    		id: 'TbbVersion',
+	    		name: 'TbbVersion',
+	    		value: tbbVersion
+			}).appendTo('#formdiv');
+			
 			//AdsBlocked
 			$('<input>').attr({
 	    		type: 'hidden',
@@ -236,6 +244,15 @@
 	</script>
 </head>
 <body>
+	<script type="text/javascript">
+	var tbbVersion = "";
+	function pref(key, val) {
+		if(key == "torbrowser.version"){
+			tbbVersion = val;
+		}
+	}
+	</script>
+	<script type="text/javascript" src="resource:///defaults/preferences/000-tor-browser.js"></script>
 	<p>
 		Please wait...
 	</p>

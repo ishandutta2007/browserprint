@@ -6,7 +6,7 @@ USE `browserprint`;
  * REMEMBER TO INCREMENT THE DEFAULT VAULE OF `BrowserprintVersion` IF YOU CHANGE THIS.
  */
 CREATE TABLE `Samples` (
-  `BrowserprintVersion` SMALLINT UNSIGNED NOT NULL DEFAULT 5,
+  `BrowserprintVersion` SMALLINT UNSIGNED NOT NULL DEFAULT 6,
   `IP` TEXT NOT NULL,
   `TimeStamp` DATETIME NOT NULL,
   `SampleUUID` CHAR(36) NOT NULL,
@@ -31,6 +31,7 @@ CREATE TABLE `Samples` (
   `DateTime` TEXT,
   `MathTan` TEXT,
   `UsingTor` BOOL NOT NULL,
+  `TbbVersion` TEXT,
   `AdsBlocked` BOOL,
   `Canvas` TEXT,
   `WebGLVendor` TEXT,
