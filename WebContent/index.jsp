@@ -5,17 +5,6 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Browserprint</title>
-<script type="text/javascript" src="scripts/jquery-1.11.2.min.js"></script>
-<script type="text/javascript">
-	/*
-	 * Script that adds js_enabled=true to the end of the test_link.
-	 * This is how we know that Javascript is enabled.
-	 */
-	$(function() {
-		var test_link = $("#test_link");
-		test_link.attr("href", test_link.attr("href") + "?js_enabled=true");
-	});
-</script>
 <link type="text/css" href="style.css" rel="stylesheet">
 </head>
 <body>
@@ -33,7 +22,7 @@
 	</p>
 	<div id="testLink">
 		<p>
-			<a id="test_link" href="test"><img src="images/fingerprint.click.png" alt="Fingerprint me button"></a>
+			<a id="test_link" href="testRedirect"><img src="images/fingerprint.click.png" alt="Fingerprint me button"></a>
 		</p>
 	</div>
 	<p>

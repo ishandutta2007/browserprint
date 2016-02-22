@@ -61,6 +61,15 @@
     <servlet-name>ViewSampleServlet</servlet-name>
     <url-pattern>/view</url-pattern>
   </servlet-mapping>
+    <servlet>
+    <display-name>TestRedirectPage</display-name>
+    <servlet-name>TestRedirectPage</servlet-name>
+    <jsp-file>/WEB-INF/testRedirect.jsp</jsp-file>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>TestRedirectPage</servlet-name>
+    <url-pattern>/testRedirect</url-pattern>
+  </servlet-mapping>
   <filter>
     <filter-name>UTF8Filter</filter-name>
     <filter-class>filters.UTF8Filter</filter-class>
