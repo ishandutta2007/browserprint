@@ -61,7 +61,7 @@
     <servlet-name>ViewSampleServlet</servlet-name>
     <url-pattern>/view</url-pattern>
   </servlet-mapping>
-    <servlet>
+  <servlet>
     <display-name>TestRedirectPage</display-name>
     <servlet-name>TestRedirectPage</servlet-name>
     <jsp-file>/WEB-INF/testRedirect.jsp</jsp-file>
@@ -69,6 +69,15 @@
   <servlet-mapping>
     <servlet-name>TestRedirectPage</servlet-name>
     <url-pattern>/testRedirect</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <display-name>CaptchaServlet</display-name>
+    <servlet-name>CaptchaServlet</servlet-name>
+    <servlet-class>servlets.CaptchaServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>CaptchaServlet</servlet-name>
+    <url-pattern>/captcha</url-pattern>
   </servlet-mapping>
   <filter>
     <filter-name>UTF8Filter</filter-name>
@@ -113,7 +122,11 @@
     <param-value>tD66BSHWU@gmail.com</param-value>
   </context-param>
   <context-param>
-  	<param-name>websiteBaseURL</param-name>
-  	<param-value>localhost:8080/browserprint</param-value>
+    <param-name>websiteBaseURL</param-name>
+    <param-value>localhost:8080/browserprint</param-value>
+  </context-param>
+  <context-param>
+    <param-name>CaptchaEncryptionPassword</param-name>
+    <param-value>thisIsAnExampleCaptchaEncryptionPassword</param-value>
   </context-param>
 </web-app>
