@@ -36,6 +36,16 @@ public class TestServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.getRequestDispatcher("/index.jsp").forward(request, response);
+	}
+	
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String show_fingerprint = request.getParameter("show_fingerprint");
+		if(show_fingerprint != null){
+			show_js_fingerprint(request, response);
+			return;
+		}
+		
 		String js_enabled = request.getParameter("js_enabled");
 		if (js_enabled == null) {
 			/*
@@ -60,7 +70,7 @@ public class TestServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void show_js_fingerprint(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Fingerprint fingerprint = getBasicFingerprint(request);
 
 		/*

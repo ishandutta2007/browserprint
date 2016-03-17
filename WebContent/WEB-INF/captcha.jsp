@@ -1,5 +1,7 @@
 <%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%><%-- These comments are to prevent excess whitespace in the output.
 --%><%@page session="false"%><%--
+--%><%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%><%--
+--%><jsp:useBean id="platesBean" class="beans.PlatesBean" scope="request" /><%--
 --%><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
@@ -16,13 +18,19 @@ $(window).load(function(){
 <body>
 	<p>
 		Please type the numbers in to the box and click continue.
+		Some circles may not contain numbers.
 	</p>
 	<p>
 		The purpose of this is to confirm that you're human.
-	</p>
-	<form id="captchaForm" action="test" method="get">
-		<input type="text" name="UUID1UUID" id="UuidTextbox1" class="viewUuidTextbox" maxlength="36" style="display: inline-block;"></br>
-		<input type="submit" name="action" value="Continue" class="sampleViewButton">
+	</p><%--
+	--%><c:forEach var="plate" items="${ platesBean.plates }"><%--
+		--%><img src="images/captcha/${ plate }.gif" height="150" width="150"/><%--
+	--%></c:forEach>
+	<form id="captchaForm" action="test" method="POST">
+		<br/>
+		<input type="hidden" id="encryptedCaptcha" value="${ platesBean.platesEncrypted }">
+		<input type="text" name="UUID1UUID" id="UuidTextbox1" class="viewUuidTextbox" maxlength="36" style="display: inline-block;"><br/>
+		<input type="submit" value="Continue">
 	</form>
 </body>
 </html>

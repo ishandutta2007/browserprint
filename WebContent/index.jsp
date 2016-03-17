@@ -22,7 +22,7 @@
 	</p>
 	<div id="testLink">
 		<p>
-			<a id="test_link" href="testRedirect"><img src="images/fingerprint.click.png" alt="Fingerprint me button"></a>
+			<a id="test_link" href="captcha"><img src="images/fingerprint.click.png" alt="Fingerprint me button"></a>
 		</p>
 	</div>
 	<p>

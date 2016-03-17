@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import beans.PlatesBean;
 import util.Encryption;
 
 /**
@@ -47,8 +48,7 @@ public class CaptchaServlet extends HttpServlet {
 		String password = this.getServletContext().getInitParameter("CaptchaEncryptionPassword");
 		String encStr = Encryption.encryptIntegers(plates, password);
 		
-		request.setAttribute("plates", plates);
-		request.setAttribute("encryptedPlates", encStr);
+		request.setAttribute("platesBean", new PlatesBean(plates, encStr));
 		
 		request.getRequestDispatcher("/WEB-INF/captcha.jsp").forward(request, response);
 	}

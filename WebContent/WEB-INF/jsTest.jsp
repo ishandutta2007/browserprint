@@ -256,7 +256,7 @@
 	<p>
 		Please wait...
 	</p>
-	<form id="detailsForm" action="test?js_enabled=true" method="POST">
+	<form id="detailsForm" action="test?show_fingerprint=true" method="POST">
 		<div id="formdiv">
 		</div>
 	</form>
