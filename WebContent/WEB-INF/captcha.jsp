@@ -32,8 +32,8 @@ $(window).load(function(){
 		<img src="images/captcha/${ plate }.gif" height="150" width="150"/><%--
 		--%></c:forEach>
 		<form id="captchaForm" action="test" method="POST">
-			<input type="hidden" id="encryptedCaptcha" value="${ platesBean.platesEncrypted }">
-			<input type="text" name="UUID1UUID" id="UuidTextbox1" class="viewUuidTextbox" maxlength="36" style="display: inline-block;"><br/>
+			<input type="hidden" name="encryptedCaptcha" value="${ platesBean.platesEncrypted }">
+			<input type="text" name="captchaAnswer"><br/>
 			<input type="submit" value="Continue">
 		</form>
 	</div>

@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%><%-- These comments are to prevent excess whitespace in the output.
 --%><%@page session="false"%><%--
+--%><%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%><%--
 --%><!DOCTYPE html>
 <html>
 <head>
@@ -259,6 +260,8 @@
 	<form id="detailsForm" action="test" method="POST">
 		<div id="formdiv">
 			<input type="hidden" name="show_fingerprint" value="true">
+			<input type="hidden" name="encryptedCaptcha" value="<c:out value='${ param.encryptedCaptcha }'/>">
+			<input type="hidden" name="captchaAnswer" value="<c:out value='${ param.captchaAnswer }'/>">
 		</div>
 	</form>
 	<!-- Flash for detecting fonts and other things. -->
