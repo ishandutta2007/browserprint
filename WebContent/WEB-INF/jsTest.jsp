@@ -256,8 +256,9 @@
 	<p>
 		Please wait...
 	</p>
-	<form id="detailsForm" action="test?show_fingerprint=true" method="POST">
+	<form id="detailsForm" action="test" method="POST">
 		<div id="formdiv">
+			<input type="hidden" name="show_fingerprint" value="true">
 		</div>
 	</form>
 	<!-- Flash for detecting fonts and other things. -->

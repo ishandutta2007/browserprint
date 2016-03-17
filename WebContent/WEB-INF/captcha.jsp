@@ -11,7 +11,11 @@
 <script type="text/javascript" src="scripts/jquery-1.11.2.min.js"></script>
 <script type="text/javascript">
 $(window).load(function(){
-	$('#captchaForm').attr('action', 'test?js_enabled=true');
+	$('<input>').attr({
+		type: 'hidden',
+		name: 'js_enabled',
+		value: 'true'
+	}).appendTo('#captchaForm');
 });
 </script>
 </head>
@@ -22,15 +26,16 @@ $(window).load(function(){
 	</p>
 	<p>
 		The purpose of this is to confirm that you're human.
-	</p><%--
-	--%><c:forEach var="plate" items="${ platesBean.plates }"><%--
-		--%><img src="images/captcha/${ plate }.gif" height="150" width="150"/><%--
-	--%></c:forEach>
-	<form id="captchaForm" action="test" method="POST">
-		<br/>
-		<input type="hidden" id="encryptedCaptcha" value="${ platesBean.platesEncrypted }">
-		<input type="text" name="UUID1UUID" id="UuidTextbox1" class="viewUuidTextbox" maxlength="36" style="display: inline-block;"><br/>
-		<input type="submit" value="Continue">
-	</form>
+	</p>
+	<div><%--
+		--%><c:forEach var="plate" items="${ platesBean.plates }">
+		<img src="images/captcha/${ plate }.gif" height="150" width="150"/><%--
+		--%></c:forEach>
+		<form id="captchaForm" action="test" method="POST">
+			<input type="hidden" id="encryptedCaptcha" value="${ platesBean.platesEncrypted }">
+			<input type="text" name="UUID1UUID" id="UuidTextbox1" class="viewUuidTextbox" maxlength="36" style="display: inline-block;"><br/>
+			<input type="submit" value="Continue">
+		</form>
+	</div>
 </body>
 </html>
