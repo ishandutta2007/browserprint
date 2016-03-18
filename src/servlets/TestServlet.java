@@ -16,6 +16,8 @@ import DAOs.FingerprintDAO;
 import beans.CharacteristicsBean;
 import beans.UniquenessBean;
 import datastructures.Fingerprint;
+import datastructures.PlatesCaptcha;
+import util.Encryption;
 import util.SampleIDs;
 import util.TorCheck;
 
@@ -38,16 +40,32 @@ public class TestServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.getRequestDispatcher("/index.jsp").forward(request, response);
 	}
-	
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		final String CAPTCHA_ERROR_MSG = "Captcha was incorrect. Try again.";
 		String show_fingerprint = request.getParameter("show_fingerprint");
-		if(show_fingerprint != null){
+		if (show_fingerprint != null) {
+			Integer captchaResult = checkCaptcha(request);
+			if(captchaResult == null){
+				//Captcha was wrong, send it back.
+				request.setAttribute("error", CAPTCHA_ERROR_MSG);
+				request.getRequestDispatcher("/captcha").forward(request, response);
+				return;
+			}
 			show_js_fingerprint(request, response);
 			return;
 		}
-		
+
 		String js_enabled = request.getParameter("js_enabled");
 		if (js_enabled == null) {
+			Integer captchaResult = checkCaptcha(request);
+			if(captchaResult == null){
+				//Captcha was wrong, send it back.
+				request.setAttribute("error", CAPTCHA_ERROR_MSG);
+				request.getRequestDispatcher("/captcha").forward(request, response);
+				return;
+			}
+			
 			/*
 			 * The non-JS version of the page.
 			 * Perform just a basic fingerprinting.
@@ -67,10 +85,48 @@ public class TestServlet extends HttpServlet {
 		}
 	}
 
+	private Integer checkCaptcha(HttpServletRequest request) throws ServletException  {
+		String encryptedCaptcha = request.getParameter("encryptedCaptcha");
+		String password = this.getServletContext().getInitParameter("CaptchaEncryptionPassword");
+		int plates[] = Encryption.decryptIntegers(encryptedCaptcha, password);
+
+		int captchaAnswers[];
+		{
+			String tmp = request.getParameter("captchaAnswer");
+			if (tmp == null) {
+				//No captcha answer.
+				return null;
+			} else {
+				String captchaParts[] = tmp.split(" ");
+				if(captchaParts.length != 2 && captchaParts.length != 3){
+					//Too few or too many numbers.
+					return null;
+				}
+				captchaAnswers = new int[captchaParts.length];
+				try {
+					for (int i = 0; i < captchaAnswers.length; ++i) {
+						captchaAnswers[i] = Integer.parseInt(captchaParts[i]);
+					}
+				} catch (NumberFormatException ex) {
+					//Captcha was invalid.
+					return null;
+				}
+			}
+		}
+		
+		PlatesCaptcha captcha = new PlatesCaptcha(plates, captchaAnswers);
+		if(captcha.isValid() == false){
+			return null;
+		}
+		else{
+			return captcha.getEyesight();
+		}
+	}
+
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void show_js_fingerprint(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	private void show_js_fingerprint(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Fingerprint fingerprint = getBasicFingerprint(request);
 
 		/*

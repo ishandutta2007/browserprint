@@ -5,19 +5,20 @@
 --%><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Browserprint</title>
-<meta name="robots" content="noindex" >
-<script type="text/javascript" src="scripts/jquery-1.11.2.min.js"></script>
-<script type="text/javascript">
-$(window).load(function(){
-	$('<input>').attr({
-		type: 'hidden',
-		name: 'js_enabled',
-		value: 'true'
-	}).appendTo('#captchaForm');
-});
-</script>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Browserprint</title>
+	<meta name="robots" content="noindex" >
+	<link type="text/css" href="style.css" rel="stylesheet">
+	<script type="text/javascript" src="scripts/jquery-1.11.2.min.js"></script>
+	<script type="text/javascript">
+	$(window).load(function(){
+		$('<input>').attr({
+			type: 'hidden',
+			name: 'js_enabled',
+			value: 'true'
+		}).appendTo('#captchaForm');
+	});
+	</script>
 </head>
 <body>
 	<p>
@@ -26,7 +27,12 @@ $(window).load(function(){
 	</p>
 	<p>
 		The purpose of this is to confirm that you're human.
+	</p><%--
+	--%><c:if test="${ requestScope.error != null }">
+	<p class="error">
+		<c:out value="${ requestScope.error }"></c:out>
 	</p>
+	</c:if>
 	<div><%--
 		--%><c:forEach var="plate" items="${ platesBean.plates }">
 		<img src="images/captcha/${ plate }.gif" height="150" width="150"/><%--

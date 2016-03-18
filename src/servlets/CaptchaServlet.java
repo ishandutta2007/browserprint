@@ -36,11 +36,11 @@ public class CaptchaServlet extends HttpServlet {
 		/*
 		 * Calculate which random plates we'll show.
 		 */
-		int plates[] = new int[4];
+		int plates[] = new int[3];
 		plates[0] = rand.nextInt(6) + 2;
 		plates[1] = rand.nextInt(6) + 8;
-		plates[2] = rand.nextInt(2) + 14;
-		plates[3] = rand.nextInt(2) + 16;
+		//plates[2] = rand.nextInt(2) + 14;
+		plates[2] = rand.nextInt(2) + 16;
 		
 		/*
 		 * Encrypt which plates we'll show so it can't be changed by the client.
