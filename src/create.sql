@@ -36,6 +36,7 @@ CREATE TABLE `Samples` (
   `Canvas` TEXT,
   `WebGLVendor` TEXT,
   `WebGLRenderer` TEXT,
+  `ColourVision` INTEGER NOT NULL,
   PRIMARY KEY(`SampleUUID`),
   KEY(`SampleID`)
 )

@@ -52,7 +52,7 @@ public class TestServlet extends HttpServlet {
 				request.getRequestDispatcher("/captcha").forward(request, response);
 				return;
 			}
-			show_js_fingerprint(request, response);
+			show_js_fingerprint(request, response, captchaResult);
 			return;
 		}
 
@@ -72,6 +72,7 @@ public class TestServlet extends HttpServlet {
 			 * None of the characteristics that require javascript.
 			 */
 			Fingerprint fingerprint = getBasicFingerprint(request);
+			fingerprint.setColourVision(captchaResult);
 			serveRequest(request, response, fingerprint);
 			return;
 		} else {
@@ -126,8 +127,9 @@ public class TestServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	private void show_js_fingerprint(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	private void show_js_fingerprint(HttpServletRequest request, HttpServletResponse response, Integer captchaResult) throws ServletException, IOException {
 		Fingerprint fingerprint = getBasicFingerprint(request);
+		fingerprint.setColourVision(captchaResult);
 
 		/*
 		 * Extract the rest of the fingerprint from the POST details.

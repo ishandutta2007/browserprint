@@ -25,11 +25,12 @@ import beans.HistoryBean;
 import beans.HistoryListBean;
 import beans.UniquenessBean;
 import datastructures.Fingerprint;
+import datastructures.PlatesCaptcha;
 
 public class FingerprintDAO {
-	private static final String insertSampleStr = "INSERT INTO `Samples`(`SampleUUID`, `IP`, `TimeStamp`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `LanguageFlash`, `Fonts`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlocked`, `Canvas`, `WebGLVendor`, `WebGLRenderer`) VALUES(?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+	private static final String insertSampleStr = "INSERT INTO `Samples`(`SampleUUID`, `IP`, `TimeStamp`, `ColourVision`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `LanguageFlash`, `Fonts`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlocked`, `Canvas`, `WebGLVendor`, `WebGLRenderer`) VALUES(?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 	private static final String getSampleCountStr = "SELECT COUNT(*) FROM `Samples`;";
-	private static final String selectSampleStr = "SELECT `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `LanguageFlash`, `Fonts`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlocked`, `WebGLVendor`, `WebGLRenderer` FROM `Samples` WHERE `SampleUUID` = ?;";
+	private static final String selectSampleStr = "SELECT `ColourVision`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `LanguageFlash`, `Fonts`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlocked`, `WebGLVendor`, `WebGLRenderer` FROM `Samples` WHERE `SampleUUID` = ?;";
 	private static final String selectSampleSetIDHistory = "SELECT `SampleUUID`, `Timestamp` FROM `SampleSets` INNER JOIN `Samples` USING (`SampleID`) WHERE `SampleSetID` = ? ORDER BY `Timestamp` DESC;";
 
 	private static final String NO_JAVASCRIPT = "No JavaScript";
@@ -148,6 +149,32 @@ public class FingerprintDAO {
 		 * Get each characteristic.
 		 */
 		ArrayList<CharacteristicBean> characteristics = chrsbean.getCharacteristics();
+		{
+			CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "ColourVision", fingerprint.getColourVision());
+			bean.setName("Colour Vision");
+			bean.setNameHoverText("Whether you have any issues seeing colour (note: this isn't necessarily correct and should be taken with a grain of salt).");
+			
+			String colourVisionStr = "";
+			if(fingerprint.getColourVision() == 0){
+				colourVisionStr = "No colour vision issues detected.";
+			}
+			else{
+				if((fingerprint.getColourVision() & PlatesCaptcha.RED_GREEN) != 0){
+					colourVisionStr += "Red-green deficiency. ";
+				}
+				if((fingerprint.getColourVision() & PlatesCaptcha.PROTANOPIA) != 0){
+					colourVisionStr += "Protanopia. ";
+				}
+				if((fingerprint.getColourVision() & PlatesCaptcha.DEUTERANOMALIA) != 0){
+					colourVisionStr += "Deuteranomalia.";
+				}
+				if(fingerprint.getColourVision() == PlatesCaptcha.UNKNOWN_COLOURBLINDNESS){
+					colourVisionStr += "Unknown colour blindness.";
+				}
+			}
+			bean.setValue(colourVisionStr);
+			characteristics.add(bean);
+		}
 		{
 			CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "UserAgent", fingerprint.getUser_agent());
 			bean.setName("User Agent");
@@ -321,6 +348,8 @@ public class FingerprintDAO {
 		PreparedStatement insertSample = conn.prepareStatement(insertSampleStr, Statement.RETURN_GENERATED_KEYS);
 		int index = 2;
 		insertSample.setString(index, fingerprint.getIpAddress());
+		++index;
+		insertSample.setInt(index, fingerprint.getColourVision());
 		++index;
 		insertSample.setString(index, fingerprint.getUser_agent());
 		++index;
@@ -500,6 +529,7 @@ public class FingerprintDAO {
 		 * We have seen this user before. Check if their fingerprint has changed.
 		 */
 		String query = "SELECT `Samples`.`SampleID`, `Samples`.`SampleUUID` FROM `SampleSets` INNER JOIN `Samples` ON `SampleSets`.`SampleID` = `Samples`.`SampleID` WHERE `SampleSetID` = ?"
+		 + " AND `ColourVision` = ?"
 		 + " AND `UserAgent`" + (fingerprint.getUser_agent() == null ? " IS NULL" : " = ?")
 		 + " AND `AcceptHeaders`" + (fingerprint.getAccept_headers() == null ? " IS NULL" : " = ?")
 		 + " AND `Platform`" + (fingerprint.getPlatform() == null ? " IS NULL" : " = ?")
@@ -531,6 +561,10 @@ public class FingerprintDAO {
 		checkExists.setString(index, fingerprint.getSampleSetID());
 		++index;
 
+		if (fingerprint.getColourVision() != null) {
+			checkExists.setInt(index, fingerprint.getColourVision());
+			++index;
+		}
 		if (fingerprint.getUser_agent() != null) {
 			checkExists.setString(index, fingerprint.getUser_agent());
 			++index;
@@ -668,7 +702,8 @@ public class FingerprintDAO {
 		 * We have seen this user before. Check if their fingerprint has changed.
 		 */
 		String query = "SELECT COUNT(*) FROM `Samples` WHERE"
-		+ " `UserAgent`" + (fingerprint.getUser_agent() == null ? " IS NULL" : " = ?")
+		+ " `ColourVision` = ?"
+		+ " AND `UserAgent`" + (fingerprint.getUser_agent() == null ? " IS NULL" : " = ?")
 		+ " AND `AcceptHeaders`" + (fingerprint.getAccept_headers() == null ? " IS NULL" : " = ?")
 		+ " AND `Platform`" + (fingerprint.getPlatform() == null ? " IS NULL" : " = ?")
 		+ " AND `PlatformFlash`" + (fingerprint.getPlatformFlash() == null ? " IS NULL" : " = ?")
@@ -696,6 +731,10 @@ public class FingerprintDAO {
 		PreparedStatement checkExists = conn.prepareStatement(query);
 
 		int index = 1;
+		if (fingerprint.getColourVision() != null) {
+			checkExists.setInt(index, fingerprint.getColourVision());
+			++index;
+		}
 		if (fingerprint.getUser_agent() != null) {
 			checkExists.setString(index, fingerprint.getUser_agent());
 			++index;
@@ -1111,6 +1150,9 @@ public class FingerprintDAO {
 		Fingerprint fingerprint = new Fingerprint();
 
 		int index = 1;
+		// ColourVision
+		fingerprint.setColourVision(rs.getInt(index));
+		++index;
 		// UserAgent
 		fingerprint.setUser_agent(rs.getString(index));
 		++index;
