@@ -1,9 +1,6 @@
 # Supported Tests
 Browserprint implements the following tests:
 
-### IndexedDB Enabled Test
-Detects whether the browser supports IndexedDB, a database embedded within the browser.
-
 ### Colour Vision
 Whether you have any issues seeing colour (note: this isn't necessarily correct and should be taken with a grain of salt).
 
@@ -49,6 +46,9 @@ Whether cookies are enabled.
 ### Limited supercookie test
 Three tests of whether DOM storage is supported (and enabled) in the client's web browser.
 Tests for localStorage, sessionStorage, and Internet Explorer's userData.
+
+### IndexedDB Enabled Test
+Detects whether the browser supports IndexedDB, a database embedded within the browser.
 
 ### Do Not Track header
 The value of the DNT (Do Not Track) header from the HTTP request.
