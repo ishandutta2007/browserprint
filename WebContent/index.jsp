@@ -27,7 +27,7 @@
 	</div>
 	<p>
 		Browserprint is a free open source project designed to provide the same and better functionality as the <a href="https://panopticlick.eff.org/">original Panopticlick</a>.
-		Several of the tests are based on publicly available code from <a href="https://amiunique.org/">Am I unique?</a>.
+		Several of the tests are based on publicly available code from <a href="https://amiunique.org/">Am I unique?</a> and <a href="https://github.com/Valve/fingerprintjs2">Github user Valve's Fingerprintjs2</a>.
 	</p>
 </div>
 <%@include file="/WEB-INF/footer.jsp" %>

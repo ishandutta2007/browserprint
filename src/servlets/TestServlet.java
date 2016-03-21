@@ -174,6 +174,16 @@ public class TestServlet extends HttpServlet {
 			}
 		}
 		{
+			String val = request.getParameter("IndexedDBEnabled");
+			if (val != null) {
+				if (val.equals("1")) {
+					fingerprint.setIndexedDBEnabled(true);
+				} else if (val.equals("0")) {
+					fingerprint.setIndexedDBEnabled(false);
+				}
+			}
+		}
+		{
 			long ourTime = new Date().getTime();
 			long theirTime;
 			try {

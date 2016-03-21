@@ -26,6 +26,7 @@ CREATE TABLE `Samples` (
   `SuperCookieLocalStorage` BOOL,
   `SuperCookieSessionStorage` BOOL,
   `SuperCookieUserData` BOOL,
+  `IndexedDBEnabled` BOOL,
   `DoNotTrack` TEXT,
   `ClockDifference` BIGINT,
   `DateTime` TEXT,

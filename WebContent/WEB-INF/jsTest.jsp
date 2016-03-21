@@ -170,6 +170,14 @@
 	    		value: getSuperCookieUserData()
 			}).appendTo('#formdiv');
 			
+			//IndexedDBEnabled
+			$('<input>').attr({
+	    		type: 'hidden',
+	    		id: 'IndexedDBEnabled',
+	    		name: 'IndexedDBEnabled',
+	    		value: getIndexedDBEnabled()
+			}).appendTo('#formdiv');
+			
 			//DateTime
 			$('<input>').attr({
 	    		type: 'hidden',

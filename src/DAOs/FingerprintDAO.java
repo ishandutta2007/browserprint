@@ -28,9 +28,9 @@ import datastructures.Fingerprint;
 import datastructures.PlatesCaptcha;
 
 public class FingerprintDAO {
-	private static final String insertSampleStr = "INSERT INTO `Samples`(`SampleUUID`, `IP`, `TimeStamp`, `ColourVision`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `LanguageFlash`, `Fonts`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlocked`, `Canvas`, `WebGLVendor`, `WebGLRenderer`) VALUES(?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+	private static final String insertSampleStr = "INSERT INTO `Samples`(`SampleUUID`, `IP`, `TimeStamp`, `ColourVision`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `LanguageFlash`, `Fonts`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `IndexedDBEnabled`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlocked`, `Canvas`, `WebGLVendor`, `WebGLRenderer`) VALUES(?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 	private static final String getSampleCountStr = "SELECT COUNT(*) FROM `Samples`;";
-	private static final String selectSampleStr = "SELECT `ColourVision`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `LanguageFlash`, `Fonts`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlocked`, `WebGLVendor`, `WebGLRenderer` FROM `Samples` WHERE `SampleUUID` = ?;";
+	private static final String selectSampleStr = "SELECT `ColourVision`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `LanguageFlash`, `Fonts`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `IndexedDBEnabled`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlocked`, `WebGLVendor`, `WebGLRenderer` FROM `Samples` WHERE `SampleUUID` = ?;";
 	private static final String selectSampleSetIDHistory = "SELECT `SampleUUID`, `Timestamp` FROM `SampleSets` INNER JOIN `Samples` USING (`SampleID`) WHERE `SampleSetID` = ? ORDER BY `Timestamp` DESC;";
 
 	private static final String NO_JAVASCRIPT = "No JavaScript";
@@ -260,6 +260,12 @@ public class FingerprintDAO {
 			characteristics.add(bean);
 		}
 		{
+			CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "IndexedDBEnabled", fingerprint.getIndexedDBEnabled());
+			bean.setName("Does the browser support IndexedDB?");
+			bean.setNameHoverText("Detects whether the browser supports IndexedDB, a database embedded within the browser.");
+			characteristics.add(bean);
+		}
+		{
 			CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "DoNotTrack", fingerprint.getDoNotTrack());
 			if (bean.getValue().equals(NO_JAVASCRIPT)) {
 				bean.setValue("No preference");
@@ -393,6 +399,12 @@ public class FingerprintDAO {
 		++index;
 		if(fingerprint.getSuperCookieUserData() != null){
 			insertSample.setBoolean(index, fingerprint.getSuperCookieUserData());
+		} else {
+			insertSample.setNull(index, java.sql.Types.BOOLEAN);
+		}
+		++index;
+		if(fingerprint.getIndexedDBEnabled() != null){
+			insertSample.setBoolean(index, fingerprint.getIndexedDBEnabled());
 		} else {
 			insertSample.setNull(index, java.sql.Types.BOOLEAN);
 		}
@@ -545,6 +557,7 @@ public class FingerprintDAO {
 		 + " AND `SuperCookieLocalStorage`" + (fingerprint.getSuperCookieLocalStorage() == null ? " IS NULL" : " = ?")
 		 + " AND `SuperCookieSessionStorage`" + (fingerprint.getSuperCookieSessionStorage() == null ? " IS NULL" : " = ?")
 		 + " AND `SuperCookieUserData`" + (fingerprint.getSuperCookieUserData() == null ? " IS NULL" : " = ?")
+		 + " AND `IndexedDBEnabled`" + (fingerprint.getIndexedDBEnabled() == null ? " IS NULL" : " = ?")
 		 + " AND `DoNotTrack`" + (fingerprint.getDoNotTrack() == null ? " IS NULL" : " = ?")
 		 + " AND `ClockDifference`" + (fingerprint.getClockDifference() == null ? " IS NULL" : " = ?")
 		 + " AND `DateTime`" + (fingerprint.getDateTime() == null ? " IS NULL" : " = ?")
@@ -621,6 +634,10 @@ public class FingerprintDAO {
 		}
 		if (fingerprint.getSuperCookieUserData() != null) {
 			checkExists.setBoolean(index, fingerprint.getSuperCookieUserData());
+			++index;
+		}
+		if (fingerprint.getIndexedDBEnabled() != null) {
+			checkExists.setBoolean(index, fingerprint.getIndexedDBEnabled());
 			++index;
 		}
 		if (fingerprint.getDoNotTrack() != null) {
@@ -718,6 +735,7 @@ public class FingerprintDAO {
 		+ " AND `SuperCookieLocalStorage`" + (fingerprint.getSuperCookieLocalStorage() == null ? " IS NULL" : " = ?")
 		+ " AND `SuperCookieSessionStorage`" + (fingerprint.getSuperCookieSessionStorage() == null ? " IS NULL" : " = ?")
 		+ " AND `SuperCookieUserData`" + (fingerprint.getSuperCookieUserData() == null ? " IS NULL" : " = ?")
+		+ " AND `IndexedDBEnabled`" + (fingerprint.getIndexedDBEnabled() == null ? " IS NULL" : " = ?")
 		+ " AND `DoNotTrack`" + (fingerprint.getDoNotTrack() == null ? " IS NULL" : " = ?")
 		+ " AND `ClockDifference`" + (fingerprint.getClockDifference() == null ? " IS NULL" : " = ?")
 		+ " AND `DateTime`" + (fingerprint.getDateTime() == null ? " IS NULL" : " = ?")
@@ -791,6 +809,10 @@ public class FingerprintDAO {
 		}
 		if (fingerprint.getSuperCookieUserData() != null) {
 			checkExists.setBoolean(index, fingerprint.getSuperCookieUserData());
+			++index;
+		}
+		if (fingerprint.getIndexedDBEnabled() != null) {
+			checkExists.setBoolean(index, fingerprint.getIndexedDBEnabled());
 			++index;
 		}
 		if (fingerprint.getDoNotTrack() != null) {
@@ -1205,6 +1227,12 @@ public class FingerprintDAO {
 		fingerprint.setSuperCookieUserData(rs.getBoolean(index));
 		if (rs.wasNull()) {
 			fingerprint.setSuperCookieUserData(null);
+		}
+		++index;
+		// IndexedDBEnabled
+		fingerprint.setIndexedDBEnabled(rs.getBoolean(index));
+		if (rs.wasNull()) {
+			fingerprint.setIndexedDBEnabled(null);
 		}
 		++index;
 		// DoNotTrack

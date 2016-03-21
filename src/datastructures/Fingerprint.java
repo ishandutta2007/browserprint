@@ -24,6 +24,7 @@ public class Fingerprint {
 	private Boolean superCookieLocalStorage;
 	private Boolean superCookieSessionStorage;
 	private Boolean superCookieUserData;
+	private Boolean indexedDBEnabled;
 	private String doNotTrack;
 
 	private Long clockDifference;
@@ -59,6 +60,7 @@ public class Fingerprint {
 		superCookieLocalStorage = null;
 		superCookieSessionStorage = null;
 		superCookieUserData = null;
+		indexedDBEnabled = null;
 		doNotTrack = null;
 		clockDifference = null;
 		dateTime = null;
@@ -206,6 +208,14 @@ public class Fingerprint {
 
 	public void setSuperCookieUserData(Boolean superCookieUserData) {
 		this.superCookieUserData = superCookieUserData;
+	}
+	
+	public Boolean getIndexedDBEnabled() {
+		return indexedDBEnabled;
+	}
+
+	public void setIndexedDBEnabled(Boolean indexedDBEnabled) {
+		this.indexedDBEnabled = indexedDBEnabled;
 	}
 
 	public String getDoNotTrack() {

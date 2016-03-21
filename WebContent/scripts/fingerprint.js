@@ -120,6 +120,20 @@ function getSuperCookieUserData() {
 	}
 }
 
+function getIndexedDBEnabled() {
+	try {
+		if (!!window.indexedDB) {
+			return "1";
+		} else {
+			return "0";
+		}
+	} catch (ex) {
+		return "0";
+	}
+
+	return test;
+}
+
 function getTime() {
 	try {
 		var time = new Date().getTime();
