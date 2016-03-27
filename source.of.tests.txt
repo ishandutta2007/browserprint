@@ -1,0 +1,73 @@
+### Colour Vision
+Me.
+
+### User Agent
+Panopticlick.
+
+### HTTP\_ACCEPT Headers
+Panopticlick.
+
+### Platform (JavaScript)
+Panopticlick.
+
+### Platform (Flash)
+AmIUnique.
+
+### Browser Plugin Details
+Panopticlick.
+
+### Time Zone
+Panopticlick.
+
+### Screen Size and Color Depth
+Panopticlick.
+
+### Screen Size (Flash)
+AmIUnique.
+
+### Language (Flash)
+AmIUnique.
+
+### System Fonts
+Panopticlick.
+
+### Character Sizes
+https://www.bamsoftware.com/talks/fc15-fontfp/fontfp.html
+Paper: https://www.bamsoftware.com/papers/fontfp.pdf
+
+### Are Cookies Enabled?
+Panopticlick.
+
+### Limited supercookie test
+Panopticlick.
+
+### IndexedDB Enabled Test
+Valve github.
+
+### Do Not Track header
+Me.
+
+### Client/server time difference (minutes)
+https://trac.torproject.org/projects/tor/ticket/2940
+
+### Date/Time format test
+https://trac.torproject.org/projects/tor/ticket/15473
+
+### Math / Tan function
+https://trac.torproject.org/projects/tor/ticket/13018
+
+### Using Tor?
+Me.
+
+### Blocking Ads?
+Me.
+
+### Canvas
+AmIUnique?
+Valve github
+
+### WebGL Vendor
+AmIUnique?
+
+### WebGL Renderer
+AmIUnique?
