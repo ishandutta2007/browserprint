@@ -21,6 +21,7 @@ CREATE TABLE `Samples` (
   `ScreenDetailsFlash` TEXT,
   `LanguageFlash` TEXT,
   `Fonts` TEXT,
+  `FontsJS_CSS` TEXT,
   `CharSizes` TEXT,
   `CookiesEnabled` BOOL NOT NULL,
   `SuperCookieLocalStorage` BOOL,

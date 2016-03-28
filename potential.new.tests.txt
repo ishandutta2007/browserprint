@@ -2,9 +2,7 @@
 https://trac.torproject.org/projects/tor/ticket/18500
 http://jcarlosnorte.com/security/2016/03/06/advanced-tor-browser-fingerprinting.html
 May be a replacement for window size.
-
-### Fonts via CSS
-Valve github.
+Varies based on whether window is windowed or not.
 
 ### HTML 5 support
 https://trac.torproject.org/projects/tor/ticket/13543

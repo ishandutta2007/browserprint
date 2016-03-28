@@ -117,7 +117,7 @@
 				}).appendTo('#formdiv');
 			}
 			
-			//Fonts
+			//Fonts Flash
 			{
 				var val;
 				try{
@@ -125,7 +125,7 @@
 						val = 'No Flash';
 					}
 					else{
-						val = getFonts(flash);
+						val = getFontsFlash(flash);
 					}
 				}catch(e){
 					val = 'Flash disabled';
@@ -137,6 +137,14 @@
 			   		value: val
 				}).appendTo('#formdiv');
 			}
+			
+			//Fonts JavaScript/CSS
+			$('<input>').attr({
+	    		type: 'hidden',
+	    		id: 'FontsJS_CSS',
+	    		name: 'FontsJS_CSS',
+	    		value: getFontsJavaScriptCSS()
+			}).appendTo('#formdiv');
 			
 			//CharSizes
 			$('<input>').attr({

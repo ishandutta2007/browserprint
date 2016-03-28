@@ -142,6 +142,7 @@ public class TestServlet extends HttpServlet {
 		fingerprint.setScreenDetailsFlash(request.getParameter("ScreenDetailsFlash"));
 		fingerprint.setLanguageFlash(request.getParameter("LanguageFlash"));
 		fingerprint.setFonts(request.getParameter("Fonts"));
+		fingerprint.setFontsJS_CSS(request.getParameter("FontsJS_CSS"));
 		fingerprint.setCharSizes(request.getParameter("CharSizes"));
 		{
 			String val = request.getParameter("SuperCookieLocalStorage");

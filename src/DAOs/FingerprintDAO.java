@@ -28,9 +28,9 @@ import datastructures.Fingerprint;
 import datastructures.PlatesCaptcha;
 
 public class FingerprintDAO {
-	private static final String insertSampleStr = "INSERT INTO `Samples`(`SampleUUID`, `IP`, `TimeStamp`, `ColourVision`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `LanguageFlash`, `Fonts`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `IndexedDBEnabled`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlocked`, `Canvas`, `WebGLVendor`, `WebGLRenderer`) VALUES(?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+	private static final String insertSampleStr = "INSERT INTO `Samples`(`SampleUUID`, `IP`, `TimeStamp`, `ColourVision`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `LanguageFlash`, `Fonts`, `FontsJS_CSS`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `IndexedDBEnabled`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlocked`, `Canvas`, `WebGLVendor`, `WebGLRenderer`) VALUES(?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 	private static final String getSampleCountStr = "SELECT COUNT(*) FROM `Samples`;";
-	private static final String selectSampleStr = "SELECT `ColourVision`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `LanguageFlash`, `Fonts`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `IndexedDBEnabled`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlocked`, `WebGLVendor`, `WebGLRenderer` FROM `Samples` WHERE `SampleUUID` = ?;";
+	private static final String selectSampleStr = "SELECT `ColourVision`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `LanguageFlash`, `Fonts`, `FontsJS_CSS`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `IndexedDBEnabled`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlocked`, `WebGLVendor`, `WebGLRenderer` FROM `Samples` WHERE `SampleUUID` = ?;";
 	private static final String selectSampleSetIDHistory = "SELECT `SampleUUID`, `Timestamp` FROM `SampleSets` INNER JOIN `Samples` USING (`SampleID`) WHERE `SampleSetID` = ? ORDER BY `Timestamp` DESC;";
 
 	private static final String NO_JAVASCRIPT = "No JavaScript";
@@ -236,8 +236,17 @@ public class FingerprintDAO {
 			if (bean.getValue().equals("")) {
 				bean.setValue("No fonts detected");
 			}
-			bean.setName("System Fonts");
+			bean.setName("System Fonts (Flash)");
 			bean.setNameHoverText("The fonts installed on the client's machine, detected using Flash.");
+			characteristics.add(bean);
+		}
+		{
+			CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "FontsJS_CSS", fingerprint.getFontsJS_CSS());
+			if (bean.getValue().equals("")) {
+				bean.setValue("No fonts detected");
+			}
+			bean.setName("System Fonts (JS/CSS)");
+			bean.setNameHoverText("The fonts installed on the client's machine, detected using JavaScript. Fonts list may be incomplete.");
 			characteristics.add(bean);
 		}
 		{
@@ -380,6 +389,8 @@ public class FingerprintDAO {
 		insertSample.setString(index, fingerprint.getLanguageFlash());
 		++index;
 		insertSample.setString(index, fingerprint.getFonts());
+		++index;
+		insertSample.setString(index, fingerprint.getFontsJS_CSS());
 		++index;
 		insertSample.setString(index, fingerprint.getCharSizes());
 		++index;
@@ -551,8 +562,9 @@ public class FingerprintDAO {
 		 + " AND `ScreenDetails`" + (fingerprint.getScreenDetails() == null ? " IS NULL" : " = ?")
 		 + " AND `ScreenDetailsFlash`" + (fingerprint.getScreenDetailsFlash() == null ? " IS NULL" : " = ?")
 		 + " AND `LanguageFlash`" + (fingerprint.getLanguageFlash() == null ? " IS NULL" : " = ?")
-		 + " AND `Fonts`" + (fingerprint.getFonts() == null ? " IS NULL" : " = ?") + " AND `CharSizes`"
-		 + (fingerprint.getCharSizes() == null ? " IS NULL" : " = ?")
+		 + " AND `Fonts`" + (fingerprint.getFonts() == null ? " IS NULL" : " = ?")
+		 + " AND `FontsJS_CSS`" + (fingerprint.getFontsJS_CSS() == null ? " IS NULL" : " = ?")
+		 + " AND `CharSizes`" + (fingerprint.getCharSizes() == null ? " IS NULL" : " = ?")
 		 + " AND `CookiesEnabled` = ?"
 		 + " AND `SuperCookieLocalStorage`" + (fingerprint.getSuperCookieLocalStorage() == null ? " IS NULL" : " = ?")
 		 + " AND `SuperCookieSessionStorage`" + (fingerprint.getSuperCookieSessionStorage() == null ? " IS NULL" : " = ?")
@@ -616,6 +628,10 @@ public class FingerprintDAO {
 		}
 		if (fingerprint.getFonts() != null) {
 			checkExists.setString(index, fingerprint.getFonts());
+			++index;
+		}
+		if (fingerprint.getFontsJS_CSS() != null) {
+			checkExists.setString(index, fingerprint.getFontsJS_CSS());
 			++index;
 		}
 		if (fingerprint.getCharSizes() != null) {
@@ -730,6 +746,7 @@ public class FingerprintDAO {
 		+ " AND `ScreenDetailsFlash`" + (fingerprint.getScreenDetailsFlash() == null ? " IS NULL" : " = ?")
 		+ " AND `LanguageFlash`" + (fingerprint.getLanguageFlash() == null ? " IS NULL" : " = ?")
 		+ " AND `Fonts`" + (fingerprint.getFonts() == null ? " IS NULL" : " = ?")
+		+ " AND `FontsJS_CSS`" + (fingerprint.getFontsJS_CSS() == null ? " IS NULL" : " = ?")
 		+ " AND `CharSizes`" + (fingerprint.getCharSizes() == null ? " IS NULL" : " = ?")
 		+ " AND `CookiesEnabled` = ?"
 		+ " AND `SuperCookieLocalStorage`" + (fingerprint.getSuperCookieLocalStorage() == null ? " IS NULL" : " = ?")
@@ -791,6 +808,10 @@ public class FingerprintDAO {
 		}
 		if (fingerprint.getFonts() != null) {
 			checkExists.setString(index, fingerprint.getFonts());
+			++index;
+		}
+		if (fingerprint.getFontsJS_CSS() != null) {
+			checkExists.setString(index, fingerprint.getFontsJS_CSS());
 			++index;
 		}
 		if (fingerprint.getCharSizes() != null) {
@@ -1204,6 +1225,9 @@ public class FingerprintDAO {
 		++index;
 		// Fonts
 		fingerprint.setFonts(rs.getString(index));
+		++index;
+		// FontsJS_CSS
+		fingerprint.setFontsJS_CSS(rs.getString(index));
 		++index;
 		// CharSizes
 		fingerprint.setCharSizes(rs.getString(index));
