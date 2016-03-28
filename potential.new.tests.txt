@@ -1,0 +1,19 @@
+### getClientRects
+https://trac.torproject.org/projects/tor/ticket/18500
+http://jcarlosnorte.com/security/2016/03/06/advanced-tor-browser-fingerprinting.html
+May be a replacement for window size.
+
+### Fonts via CSS
+Valve github.
+
+### HTML 5 support
+https://trac.torproject.org/projects/tor/ticket/13543
+https://html5test.com/
+
+### Enumerate Media Devices
+https://trac.torproject.org/projects/tor/ticket/16328
+https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/enumerateDevices
+
+### Keyboard Event CAPTCHA
+https://trac.torproject.org/projects/tor/ticket/16678
+https://trac.torproject.org/projects/tor/ticket/15646
