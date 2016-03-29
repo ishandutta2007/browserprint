@@ -87,3 +87,6 @@ Name of the WebGL Vendor. Some browsers give the full name of the underlying gra
 
 ### WebGL Renderer
 Name of the WebGL Renderer. Some browsers give the full name of the underlying graphics driver.
+
+### Touch Support
+Primative touch screen detection.
