@@ -42,6 +42,10 @@ public class Fingerprint {
 	private String canvas;
 	private String webGLVendor;
 	private String webGLRenderer;
+	
+	private Integer touchPoints;
+	private Boolean touchEvent;
+	private Boolean touchStart;
 
 	public Fingerprint() {
 		sampleSetID = null;
@@ -74,6 +78,9 @@ public class Fingerprint {
 		canvas = null;
 		webGLVendor = null;
 		webGLRenderer = null;
+		touchPoints = null;
+		touchEvent = null;
+		touchStart = null;
 	}
 
 	public String getSampleSetID() {
@@ -314,5 +321,29 @@ public class Fingerprint {
 
 	public void setWebGLRenderer(String webGLRenderer) {
 		this.webGLRenderer = webGLRenderer;
+	}
+
+	public Integer getTouchPoints() {
+		return touchPoints;
+	}
+
+	public void setTouchPoints(Integer touchPoints) {
+		this.touchPoints = touchPoints;
+	}
+
+	public Boolean getTouchEvent() {
+		return touchEvent;
+	}
+
+	public void setTouchEvent(Boolean touchEvent) {
+		this.touchEvent = touchEvent;
+	}
+
+	public Boolean getTouchStart() {
+		return touchStart;
+	}
+
+	public void setTouchStart(Boolean touchStart) {
+		this.touchStart = touchStart;
 	}
 }

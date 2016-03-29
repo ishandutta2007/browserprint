@@ -28,9 +28,9 @@ import datastructures.Fingerprint;
 import datastructures.PlatesCaptcha;
 
 public class FingerprintDAO {
-	private static final String insertSampleStr = "INSERT INTO `Samples`(`SampleUUID`, `IP`, `TimeStamp`, `ColourVision`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `LanguageFlash`, `Fonts`, `FontsJS_CSS`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `IndexedDBEnabled`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlocked`, `Canvas`, `WebGLVendor`, `WebGLRenderer`) VALUES(?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+	private static final String insertSampleStr = "INSERT INTO `Samples`(`SampleUUID`, `IP`, `TimeStamp`, `ColourVision`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `LanguageFlash`, `Fonts`, `FontsJS_CSS`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `IndexedDBEnabled`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlocked`, `Canvas`, `WebGLVendor`, `WebGLRenderer`, `TouchPoints`, `TouchEvent`, `TouchStart`) VALUES(?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 	private static final String getSampleCountStr = "SELECT COUNT(*) FROM `Samples`;";
-	private static final String selectSampleStr = "SELECT `ColourVision`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `LanguageFlash`, `Fonts`, `FontsJS_CSS`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `IndexedDBEnabled`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlocked`, `WebGLVendor`, `WebGLRenderer` FROM `Samples` WHERE `SampleUUID` = ?;";
+	private static final String selectSampleStr = "SELECT `ColourVision`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `LanguageFlash`, `Fonts`, `FontsJS_CSS`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `IndexedDBEnabled`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlocked`, `WebGLVendor`, `WebGLRenderer`, `TouchPoints`, `TouchEvent`, `TouchStart` FROM `Samples` WHERE `SampleUUID` = ?;";
 	private static final String selectSampleSetIDHistory = "SELECT `SampleUUID`, `Timestamp` FROM `SampleSets` INNER JOIN `Samples` USING (`SampleID`) WHERE `SampleSetID` = ? ORDER BY `Timestamp` DESC;";
 
 	private static final String NO_JAVASCRIPT = "No JavaScript";
@@ -349,6 +349,12 @@ public class FingerprintDAO {
 			bean.setNameHoverText("Name of the WebGL Renderer. Some browsers give the full name of the underlying graphics driver.");
 			characteristics.add(bean);
 		}
+		{
+			CharacteristicBean bean = getTouchCharacteristicBean(conn, sampleCount, fingerprint);
+			bean.setName("Touch Support");
+			bean.setNameHoverText("Primative touch screen detection.");
+			characteristics.add(bean);
+		}
 	}
 
 	/**
@@ -447,6 +453,24 @@ public class FingerprintDAO {
 		insertSample.setString(index, fingerprint.getWebGLVendor());
 		++index;
 		insertSample.setString(index, fingerprint.getWebGLRenderer());
+		++index;
+		if (fingerprint.getTouchPoints() != null) {
+			insertSample.setLong(index, fingerprint.getTouchPoints());
+		} else {
+			insertSample.setNull(index, java.sql.Types.BIGINT);
+		}
+		++index;
+		if (fingerprint.getTouchEvent() != null) {
+			insertSample.setBoolean(index, fingerprint.getTouchEvent());
+		} else {
+			insertSample.setNull(index, java.sql.Types.BOOLEAN);
+		}
+		++index;
+		if (fingerprint.getTouchStart() != null) {
+			insertSample.setBoolean(index, fingerprint.getTouchStart());
+		} else {
+			insertSample.setNull(index, java.sql.Types.BOOLEAN);
+		}
 
 		/*
 		 * Try to insert with a different random UUID until a unique one is found.
@@ -579,7 +603,10 @@ public class FingerprintDAO {
 		 + " AND `AdsBlocked`" + (fingerprint.getAdsBlocked() == null ? " IS NULL" : " = ?")
 		 /*+ " AND `Canvas`" + (fingerprint.getCanvas() == null ? " IS NULL" : " = ?")*/
 		 + " AND `WebGLVendor`" + (fingerprint.getWebGLVendor() == null ? " IS NULL" : " = ?")
-		 + " AND `WebGLRenderer`" + (fingerprint.getWebGLRenderer() == null ? " IS NULL" : " = ?") + ";";
+		 + " AND `WebGLRenderer`" + (fingerprint.getWebGLRenderer() == null ? " IS NULL" : " = ?")
+		 + " AND `TouchPoints`" + (fingerprint.getTouchPoints() == null ? " IS NULL" : " = ?")
+		 + " AND `TouchEvent`" + (fingerprint.getTouchEvent() == null ? " IS NULL" : " = ?")
+		 + " AND `TouchStart`" + (fingerprint.getTouchStart() == null ? " IS NULL" : " = ?") + ";";
 		PreparedStatement checkExists = conn.prepareStatement(query);
 
 		int index = 1;
@@ -694,6 +721,18 @@ public class FingerprintDAO {
 			checkExists.setString(index, fingerprint.getWebGLRenderer());
 			++index;
 		}
+		if (fingerprint.getTouchPoints() != null) {
+			checkExists.setInt(index, fingerprint.getTouchPoints());
+			++index;
+		}
+		if (fingerprint.getTouchEvent() != null) {
+			checkExists.setBoolean(index, fingerprint.getTouchEvent());
+			++index;
+		}
+		if (fingerprint.getTouchStart() != null) {
+			checkExists.setBoolean(index, fingerprint.getTouchStart());
+			++index;
+		}
 
 		ResultSet rs = checkExists.executeQuery();
 
@@ -762,7 +801,10 @@ public class FingerprintDAO {
 		+ " AND `AdsBlocked`" + (fingerprint.getAdsBlocked() == null ? " IS NULL" : " = ?")
 		/*+ " AND `Canvas`" + (fingerprint.getCanvas() == null ? " IS NULL" : " = ?")*/
 		+ " AND `WebGLVendor`" + (fingerprint.getWebGLVendor() == null ? " IS NULL" : " = ?")
-		+ " AND `WebGLRenderer`" + (fingerprint.getWebGLRenderer() == null ? " IS NULL" : " = ?") + ";";
+		+ " AND `WebGLRenderer`" + (fingerprint.getWebGLRenderer() == null ? " IS NULL" : " = ?")
+		+ " AND `TouchPoints`" + (fingerprint.getTouchPoints() == null ? " IS NULL" : " = ?")
+		+ " AND `TouchEvent`" + (fingerprint.getTouchEvent() == null ? " IS NULL" : " = ?")
+		+ " AND `TouchStart`" + (fingerprint.getTouchStart() == null ? " IS NULL" : " = ?")+ ";";
 		PreparedStatement checkExists = conn.prepareStatement(query);
 
 		int index = 1;
@@ -872,6 +914,18 @@ public class FingerprintDAO {
 		}
 		if (fingerprint.getWebGLRenderer() != null) {
 			checkExists.setString(index, fingerprint.getWebGLRenderer());
+			++index;
+		}
+		if (fingerprint.getTouchPoints() != null) {
+			checkExists.setInt(index, fingerprint.getTouchPoints());
+			++index;
+		}
+		if (fingerprint.getTouchEvent() != null) {
+			checkExists.setBoolean(index, fingerprint.getTouchEvent());
+			++index;
+		}
+		if (fingerprint.getTouchStart() != null) {
+			checkExists.setBoolean(index, fingerprint.getTouchStart());
 			++index;
 		}
 
@@ -1053,7 +1107,7 @@ public class FingerprintDAO {
 	}
 	
 	/**
-	 * Create the cookies enabled CharacteristicBean.
+	 * Create the super cookie CharacteristicBean.
 	 * 
 	 * @param conn
 	 *            A connection to the database.
@@ -1071,7 +1125,7 @@ public class FingerprintDAO {
 		String querystr = "SELECT COUNT(*) FROM `Samples` WHERE"
 		+ " `SuperCookieLocalStorage`" + (fingerprint.getSuperCookieLocalStorage() == null ? " IS NULL": " = ?")
 		+ " AND `SuperCookieSessionStorage`" + (fingerprint.getSuperCookieSessionStorage() == null ? " IS NULL": " = ?")
-		+ " AND`SuperCookieUserData`" + (fingerprint.getSuperCookieUserData() == null ? " IS NULL": " = ?");
+		+ " AND `SuperCookieUserData`" + (fingerprint.getSuperCookieUserData() == null ? " IS NULL": " = ?");
 		getCount = conn.prepareStatement(querystr);
 		
 		int index = 1;
@@ -1125,6 +1179,78 @@ public class FingerprintDAO {
 			}
 		}
 		chrbean.setValue(superCookieStr);
+
+		ResultSet rs = getCount.executeQuery();
+		rs.next();
+		int count = rs.getInt(1);
+		rs.close();
+		chrbean.setNumOccurrences(count);
+		chrbean.setInX(((double) num_samples) / ((double) count));
+		chrbean.setBits(Math.abs(Math.log(chrbean.getInX()) / Math.log(2)));
+
+		return chrbean;
+	}
+	
+	/**
+	 * Create the touch CharacteristicBean.
+	 * 
+	 * @param conn
+	 *            A connection to the database.
+	 * @param num_samples
+	 *            The number of samples in the database.
+	 * @param value
+	 *            The value of this sample.
+	 * @return
+	 * @throws SQLException
+	 */
+	private static CharacteristicBean getTouchCharacteristicBean(Connection conn, int num_samples, Fingerprint fingerprint) throws SQLException {
+		CharacteristicBean chrbean = new CharacteristicBean();
+
+		PreparedStatement getCount;
+		String querystr = "SELECT COUNT(*) FROM `Samples` WHERE"
+		+ " `TouchPoints`" + (fingerprint.getTouchPoints() == null ? " IS NULL": " = ?")
+		+ " AND `TouchEvent`" + (fingerprint.getTouchEvent() == null ? " IS NULL": " = ?")
+		+ " AND `TouchStart`" + (fingerprint.getTouchStart() == null ? " IS NULL": " = ?");
+		getCount = conn.prepareStatement(querystr);
+		
+		int index = 1;
+		
+		String touchStr;
+		if(fingerprint.getTouchPoints() == null && fingerprint.getTouchEvent() == null && fingerprint.getTouchStart() == null){
+			touchStr = NO_JAVASCRIPT;
+		}
+		else{
+			touchStr = "Max touchpoints: ";
+			if(fingerprint.getTouchPoints() != null){
+				touchStr += fingerprint.getTouchPoints();
+				getCount.setInt(index, fingerprint.getTouchPoints());
+				++index;
+			}
+			else{
+				touchStr += "NoJS";
+			}
+			
+			touchStr += "; TouchEvent supported: ";
+			if(fingerprint.getTouchEvent() != null){
+				touchStr += fingerprint.getTouchEvent();
+				getCount.setBoolean(index, fingerprint.getTouchEvent());
+				++index;
+			}
+			else{
+				touchStr += "NoJS";
+			}
+			
+			touchStr += "; onTouchStart supported: ";
+			if(fingerprint.getTouchStart() != null){
+				touchStr += fingerprint.getTouchStart();
+				getCount.setBoolean(index, fingerprint.getTouchStart());
+				++index;
+			}
+			else{
+				touchStr += "NoJS";
+			}
+		}
+		chrbean.setValue(touchStr);
 
 		ResultSet rs = getCount.executeQuery();
 		rs.next();
@@ -1294,6 +1420,24 @@ public class FingerprintDAO {
 		++index;
 		// WebGLRenderer
 		fingerprint.setWebGLRenderer(rs.getString(index));
+		++index;
+		// TouchPoints
+		fingerprint.setTouchPoints(rs.getInt(index));
+		if (rs.wasNull()) {
+			fingerprint.setTouchPoints(null);
+		}
+		++index;
+		// TouchEvent
+		fingerprint.setTouchEvent(rs.getBoolean(index));
+		if (rs.wasNull()) {
+			fingerprint.setTouchEvent(null);
+		}
+		++index;
+		// TouchStart
+		fingerprint.setTouchStart(rs.getBoolean(index));
+		if (rs.wasNull()) {
+			fingerprint.setTouchStart(null);
+		}
 		++index;
 
 		rs.close();

@@ -15,3 +15,8 @@ https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/enumerateDevices
 ### Keyboard Event CAPTCHA
 https://trac.torproject.org/projects/tor/ticket/16678
 https://trac.torproject.org/projects/tor/ticket/15646
+
+### Touch screen detection
+Done by valve github.
+Done by new Panopticlick.
+

@@ -39,6 +39,9 @@ CREATE TABLE `Samples` (
   `WebGLVendor` TEXT,
   `WebGLRenderer` TEXT,
   `ColourVision` INTEGER NOT NULL,
+  `TouchPoints` INTEGER,
+  `TouchEvent` BOOL,
+  `TouchStart` BOOL,
   PRIMARY KEY(`SampleUUID`),
   KEY(`SampleID`)
 )

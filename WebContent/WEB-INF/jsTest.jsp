@@ -18,6 +18,7 @@
 	</script>
 	<script type="text/javascript" src="scripts/PluginDetect.js"></script>
 	<script type="text/javascript" src="scripts/fingerprint.js"></script>
+	<script type="text/javascript" src="scripts/fingerprint.valve.js"></script>
 	<script type="text/javascript">
 		$(window).load(function(){
 			var flash = $("#OSData")[0];
@@ -240,6 +241,31 @@
 	    		id: 'WebGLRenderer',
 	    		name: 'WebGLRenderer',
 	    		value: getWebGLRenderer()
+			}).appendTo('#formdiv');
+			
+			var touch = getTouchSupport();
+			//Touch Max Touch Points
+			$('<input>').attr({
+	    		type: 'hidden',
+	    		id: 'TouchPoints',
+	    		name: 'TouchPoints',
+	    		value: touch[0]
+			}).appendTo('#formdiv');
+			
+			//Touch Event
+			$('<input>').attr({
+	    		type: 'hidden',
+	    		id: 'TouchEvent',
+	    		name: 'TouchEvent',
+	    		value: touch[1]
+			}).appendTo('#formdiv');
+			
+			//Touch Start
+			$('<input>').attr({
+	    		type: 'hidden',
+	    		id: 'TouchStart',
+	    		name: 'TouchStart',
+	    		value: touch[2]
 			}).appendTo('#formdiv');
 			
 			//Submit the page.

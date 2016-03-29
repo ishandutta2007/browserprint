@@ -214,7 +214,34 @@ public class TestServlet extends HttpServlet {
 		fingerprint.setCanvas(request.getParameter("Canvas"));
 		fingerprint.setWebGLVendor(request.getParameter("WebGLVendor"));
 		fingerprint.setWebGLRenderer(request.getParameter("WebGLRenderer"));
-
+		{
+			try {
+				fingerprint.setTouchPoints(Integer.parseInt(request.getParameter("TouchPoints")));
+			} catch (NumberFormatException ex) {
+				fingerprint.setTouchPoints(null);
+			}
+		}
+		{
+			String val = request.getParameter("TouchEvent");
+			if (val != null) {
+				if (val.equals("1")) {
+					fingerprint.setTouchEvent(true);
+				} else if (val.equals("0")) {
+					fingerprint.setTouchEvent(false);
+				}
+			}
+		}
+		{
+			String val = request.getParameter("TouchStart");
+			if (val != null) {
+				if (val.equals("1")) {
+					fingerprint.setTouchStart(true);
+				} else if (val.equals("0")) {
+					fingerprint.setTouchStart(false);
+				}
+			}
+		}
+		
 		serveRequest(request, response, fingerprint);
 	}
 
