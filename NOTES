@@ -1,0 +1,3 @@
+"CAPTCHA" has a major flaw where it's vulnerable to replays.
+Consider including a timestamp or identifier or something.
+Low priority since the CAPTCHA isn't really there to stop bots.
