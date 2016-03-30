@@ -18,10 +18,11 @@
 	<h3>Fingerprint data</h3>
 	<p>
 		We collect the results of all the fingerprint tests.
-		This includes:
+		This may include:
 	</p>
 	<ul>
 		<li>Whether JavaScript is enabled or not.</li>
+		<li>The results of a rough colour blindness test.</li>
 		<li>The User-Agent header of the HTTP request for the page.</li>
 		<li>The Accept header, the Accept-Encoding header, and the Accept-Language header from the HTTP request for the page.</li>
 		<li>The name of the platform the browser is running on, detected using JavaScript and flash.</li>
@@ -29,18 +30,21 @@
 		<li>The time-zone configured on your machine, as detected using JavaScript.</li>
 		<li>The screen size and colour depth of the monitor displaying the client's web browser, as detected using JavaScript and flash.</li>
 		<li>The language of the client's browser, as detected using Flash.</li>
-		<li>The fonts installed on the client's machine, detected using Flash.</li>
+		<li>The fonts installed on the client's machine, detected using Flash and JavaScript.</li>
 		<li>The heights and widths of a set of Unicode characters rendered in various styles (e.g. sans-serif).</li>
 		<li>Whether cookies are enabled, detected by creating a cookie and then retrieving it.</li>
 		<li>Whether localStorage, sessionStorage, and Internet Explorer's userData are available in the browser, detected using JavaScript.</li>
+		<li>Whether the browser supports IndexedDB, a database embedded within the browser.</li>
 		<li>The value of the DNT (Do Not Track) header from the HTTP request for the page.</li>
 		<li>The difference between the client and the server's clocks, in minutes, detected using JavaScript.</li>
 		<li>The value returned by the JavaScript function toLocaleString() called on the UNIX epoch.</li>
 		<li>The output of the JavaScript Math.tan(-1e300).</li>
 		<li>Whether the client is thought to be using Tor or not. Detected by performing a TorDNSEL request.</li>
+		<li>Whether ads are blocked by the browser.</li>
 		<li>An image created by the client's browser using a HTML5 canvas.</li>
 		<li>The name of the WebGL vendor of the client's browser; this may be the name of the client's graphics card.</li>
 		<li>The name of the WebGL renderer of the client's browser; this may be the name of the client's underlying graphics driver.</li>
+		<li>Information about touch screen support by the system.</li>
 	</ul>
 	
 	<h3>Cookies</h3>
