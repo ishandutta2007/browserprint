@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
+import java.util.Enumeration;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -299,9 +300,29 @@ public class TestServlet extends HttpServlet {
 		}
 		fingerprint.setSampleSetID(SampleIDs.getSampleSetID(request, getServletContext()));
 
+		fingerprint.setAllHeaders(getAllHeadersString(request));
+		
 		return fingerprint;
 	}
 
+	/**
+	 * Get all the HTTP headers from the request so that they can be saved.
+	 * @param request
+	 * @return
+	 */
+	private String getAllHeadersString(HttpServletRequest request) {
+		String headers = null;
+		
+		Enumeration<String> en = request.getHeaderNames();
+		while(en.hasMoreElements()){
+			String headerName = en.nextElement();
+			String header = request.getHeader(headerName);
+			headers += headerName + ": " + header + "\n";
+		}
+		
+		return headers;
+	}
+	
 	/**
 	 * Get the User-Agent string of a request.
 	 * 

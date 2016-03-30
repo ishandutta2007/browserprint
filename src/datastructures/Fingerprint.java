@@ -4,6 +4,8 @@ package datastructures;
 public class Fingerprint {
 	private String sampleSetID;
 	
+	private String allHeaders;
+	
 	private Integer colourVision;
 	
 	private String user_agent;
@@ -49,6 +51,7 @@ public class Fingerprint {
 
 	public Fingerprint() {
 		sampleSetID = null;
+		allHeaders = null;
 		colourVision = null;
 		user_agent = null;
 		accept_headers = null;
@@ -82,13 +85,21 @@ public class Fingerprint {
 		touchEvent = null;
 		touchStart = null;
 	}
-
+	
 	public String getSampleSetID() {
 		return sampleSetID;
 	}
 
 	public void setSampleSetID(String sampleSetID) {
 		this.sampleSetID = sampleSetID;
+	}
+	
+	public String getAllHeaders() {
+		return allHeaders;
+	}
+
+	public void setAllHeaders(String allHeaders) {
+		this.allHeaders = allHeaders;
 	}
 	
 	public Integer getColourVision() {
