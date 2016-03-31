@@ -12,13 +12,13 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import DAOs.FingerprintDAO;
 import beans.CharacteristicsBean;
 import beans.UniquenessBean;
 import datastructures.Fingerprint;
 import datastructures.PlatesCaptcha;
-import util.Encryption;
 import util.SampleIDs;
 import util.TorCheck;
 
@@ -43,13 +43,11 @@ public class TestServlet extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		final String CAPTCHA_ERROR_MSG = "Captcha was incorrect. Try again.";
 		String show_fingerprint = request.getParameter("show_fingerprint");
 		if (show_fingerprint != null) {
 			Integer captchaResult = checkCaptcha(request);
 			if(captchaResult == null){
 				//Captcha was wrong, send it back.
-				request.setAttribute("error", CAPTCHA_ERROR_MSG);
 				request.getRequestDispatcher("/captcha").forward(request, response);
 				return;
 			}
@@ -62,7 +60,6 @@ public class TestServlet extends HttpServlet {
 			Integer captchaResult = checkCaptcha(request);
 			if(captchaResult == null){
 				//Captcha was wrong, send it back.
-				request.setAttribute("error", CAPTCHA_ERROR_MSG);
 				request.getRequestDispatcher("/captcha").forward(request, response);
 				return;
 			}
@@ -88,20 +85,37 @@ public class TestServlet extends HttpServlet {
 	}
 
 	private Integer checkCaptcha(HttpServletRequest request) throws ServletException  {
-		String encryptedCaptcha = request.getParameter("encryptedCaptcha");
-		String password = this.getServletContext().getInitParameter("CaptchaEncryptionPassword");
-		int plates[] = Encryption.decryptIntegers(encryptedCaptcha, password);
+		final String CAPTCHA_ERROR_MSG = "Unknown CAPTCHA error. Please try again.";
+		final String CAPTCHA_EXPIRED_MSG = "CAPTCHA expired.";
+		final String CAPTCHA_INVALID_MSG = "CAPTCHA was incorrect. Please try again.";
+		
+		HttpSession session = request.getSession(false);
+		if(session == null){
+			request.setAttribute("error", CAPTCHA_EXPIRED_MSG);
+			return null;
+		}
+		
+		int plates[];
+		try{
+			plates = (int[]) session.getAttribute("captcha");
+		}
+		catch(Exception ex){
+			request.setAttribute("error", CAPTCHA_ERROR_MSG);
+			return null;
+		}
 
 		int captchaAnswers[];
 		{
 			String tmp = request.getParameter("captchaAnswer");
 			if (tmp == null) {
 				//No captcha answer.
+				request.setAttribute("error", CAPTCHA_INVALID_MSG);
 				return null;
 			} else {
 				String captchaParts[] = tmp.split(" ");
 				if(captchaParts.length != 2 && captchaParts.length != 3){
 					//Too few or too many numbers.
+					request.setAttribute("error", CAPTCHA_INVALID_MSG);
 					return null;
 				}
 				captchaAnswers = new int[captchaParts.length];
@@ -111,6 +125,7 @@ public class TestServlet extends HttpServlet {
 					}
 				} catch (NumberFormatException ex) {
 					//Captcha was invalid.
+					request.setAttribute("error", CAPTCHA_INVALID_MSG);
 					return null;
 				}
 			}
@@ -118,6 +133,7 @@ public class TestServlet extends HttpServlet {
 		
 		PlatesCaptcha captcha = new PlatesCaptcha(plates, captchaAnswers);
 		if(captcha.isValid() == false){
+			request.setAttribute("error", CAPTCHA_INVALID_MSG);
 			return null;
 		}
 		else{

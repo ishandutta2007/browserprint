@@ -5,18 +5,16 @@ import java.security.SecureRandom;
 import java.util.Random;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import beans.PlatesBean;
-import util.Encryption;
 
 /**
  * Servlet implementation class CaptchaServlet
  */
-@WebServlet("/CaptchaServlet")
 public class CaptchaServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -31,6 +29,8 @@ public class CaptchaServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		
 		Random rand = new SecureRandom();
 		
 		/*
@@ -41,14 +41,11 @@ public class CaptchaServlet extends HttpServlet {
 		plates[1] = rand.nextInt(6) + 8;
 		//plates[2] = rand.nextInt(2) + 14;
 		plates[2] = rand.nextInt(2) + 16;
+			
+		request.setAttribute("platesBean", new PlatesBean(plates));
 		
-		/*
-		 * Encrypt which plates we'll show so it can't be changed by the client.
-		 */
-		String password = this.getServletContext().getInitParameter("CaptchaEncryptionPassword");
-		String encStr = Encryption.encryptIntegers(plates, password);
-		
-		request.setAttribute("platesBean", new PlatesBean(plates, encStr));
+		session.setMaxInactiveInterval(60);//Session invalidates after 60 seconds.
+		session.setAttribute("captcha", plates);
 		
 		request.getRequestDispatcher("/WEB-INF/captcha.jsp").forward(request, response);
 	}

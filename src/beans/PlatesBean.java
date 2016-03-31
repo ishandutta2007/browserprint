@@ -2,16 +2,13 @@ package beans;
 
 public class PlatesBean {
 	private int plates[];
-	private String platesEncrypted;
 
-	public PlatesBean(int plates[], String platesEncrypted){
+	public PlatesBean(int plates[]){
 		this.plates = plates;
-		this.platesEncrypted = platesEncrypted;
 	}
 	
 	public PlatesBean(){
 		plates = null;
-		platesEncrypted = null;
 	}
 	
 	public int[] getPlates() {
@@ -20,13 +17,5 @@ public class PlatesBean {
 
 	public void setPlates(int[] plates) {
 		this.plates = plates;
-	}
-
-	public String getPlatesEncrypted() {
-		return platesEncrypted;
-	}
-
-	public void setPlatesEncrypted(String platesEncrypted) {
-		this.platesEncrypted = platesEncrypted;
 	}
 }

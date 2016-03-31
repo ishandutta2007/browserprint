@@ -37,8 +37,7 @@
 		--%><c:forEach var="plate" items="${ platesBean.plates }">
 		<img src="images/captcha/${ plate }.gif" height="150" width="150"/><%--
 		--%></c:forEach>
-		<form id="captchaForm" action="test" method="POST">
-			<input type="hidden" name="encryptedCaptcha" value="${ platesBean.platesEncrypted }">
+		<form id="captchaForm" action="<c:url value="test"/>" method="POST">
 			<input type="text" name="captchaAnswer"><br/>
 			<input type="submit" value="Continue">
 		</form>

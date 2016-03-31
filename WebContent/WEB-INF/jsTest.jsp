@@ -299,7 +299,7 @@
 	<p>
 		Please wait...
 	</p>
-	<form id="detailsForm" action="test" method="POST">
+	<form id="detailsForm" action="<c:url value="test"/>" method="POST">
 		<div id="formdiv">
 			<input type="hidden" name="show_fingerprint" value="true">
 			<input type="hidden" name="encryptedCaptcha" value="<c:out value='${ param.encryptedCaptcha }'/>">
