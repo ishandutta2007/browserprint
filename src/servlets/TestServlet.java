@@ -98,10 +98,16 @@ public class TestServlet extends HttpServlet {
 		int plates[];
 		try{
 			plates = (int[]) session.getAttribute("captcha");
+			if(plates == null){
+				throw new Exception("No CAPTCHA session attribute.");
+			}
 		}
 		catch(Exception ex){
 			request.setAttribute("error", CAPTCHA_ERROR_MSG);
 			return null;
+		}
+		finally{
+			session.invalidate();
 		}
 
 		int captchaAnswers[];
