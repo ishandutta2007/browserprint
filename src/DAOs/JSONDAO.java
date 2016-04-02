@@ -278,4 +278,52 @@ public class JSONDAO {
 		}
 		return null;
 	}
+	
+	public static final String getAdsBlocked() {
+		Connection conn = null;
+		try {
+			conn = Database.getConnection();
+			conn.setReadOnly(true);
+
+			String query = "SELECT `AdsBlocked`, COUNT(*) FROM `Samples` GROUP BY `AdsBlocked`;";
+			PreparedStatement select = conn.prepareStatement(query);
+
+			ResultSet rs = select.executeQuery();
+
+			JSONObject results = new JSONObject();
+			while (rs.next()) {
+				boolean adsBlocked = rs.getBoolean(1);
+				String adsBlockedStr;
+				if(rs.wasNull()){
+					adsBlockedStr = "No JavaScript";
+				}
+				else if (adsBlocked) {
+					adsBlockedStr = "1";
+				}
+				else {
+					adsBlockedStr = "0";
+				}
+
+				int count = rs.getInt(2);
+				results.put(adsBlockedStr, count);
+			}
+			rs.close();
+			select.close();
+
+			return results.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			// Close the connection
+			// Finally triggers even if we return
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// Ignore
+				}
+			}
+		}
+		return null;
+	}
 }

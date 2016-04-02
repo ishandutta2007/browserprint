@@ -54,6 +54,9 @@ public class JSONServlet extends HttpServlet {
 		else if(chart.equals("language")){
 			out.print(JSONDAO.getLanguages());
 		}
+		else if(chart.equals("adsBlocked")){
+			out.print(JSONDAO.getAdsBlocked());
+		}
 	}
 
 	/**

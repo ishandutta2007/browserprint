@@ -425,4 +425,52 @@ $(function() {
 		});
 
 	});
+	
+	/* Ads blocked */
+	jQuery.getJSON("json?chart=adsBlocked", function(jsonData){
+		var nbTotal = 0;
+		$.each(jsonData, function(key, num) {
+			nbTotal += num;
+		});
+		
+		var dataArray = [];
+		$.each(jsonData, function(key, val){
+			if(key == "1"){
+				name = "Ads blocked";
+			}
+			else if(key == "0"){
+				name = "Ads allowed";
+			}
+			else{
+				name = key;
+			}
+			var per = val*100/nbTotal;
+			dataArray.push({name:name, y:per});
+		});
+		$('#adsBlockedGraph').highcharts({
+			chart: {
+				type: 'pie'
+			},
+			title: {
+				text: 'Percentage of clients with ads blocked'
+			},
+			plotOptions: {
+				series: {
+					dataLabels: {
+						enabled: true,
+						format: '{point.name}: {point.y:.1f}%'
+					}
+				}
+			},
+			tooltip: {
+				headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+				pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
+			},
+			series: [{
+				name: 'Clients',
+				colorByPoint: true,
+				data: dataArray
+			}]
+		});
+	});
 });
