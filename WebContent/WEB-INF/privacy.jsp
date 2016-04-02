@@ -73,14 +73,16 @@
 	
 	<h3>Sharing of data</h3>
 	<p>
-		Fingerprints, aggregated data about fingerprints, and other statistics may be published and shared publicly.
-		For non-Tor clients IP addresses will not be published, however statistics that can be derived from IP address, such as the country of clients may be published.
+		Fingerprints, aggregated data about fingerprints, and other statistics may be published and shared publicly (See: <a href="statistics">Statistics</a>).
+		For non-Tor clients IP addresses will not be collected or published, however statistics that can be derived from IP address, such as the country of clients may be published.
 		For Tor clients the IP address or identity of the Tor exit node being used may be published. 
 		An effort will be made to protect the privacy of clients in situations where their privacy may be threatened.
 	</p>
 	<p>
 		The database of collected data, may be shared with a third party upon request,
 		 provided they have a valid reason (e.g. research) and they agree to abide by our privacy policy.
+		Currently the database has not been shared with anybody.
+		We have received no requests from law enforcement for the database or any other data.
 		We will do our best to prevent theft or misuse of collected data, however, such incidents are still possible.
 	</p>
 	<p>
