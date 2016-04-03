@@ -9,6 +9,47 @@ import java.util.HashMap;
 import org.json.JSONObject;
 
 public class JSONDAO {
+	public static final String getStringResults(String name) {
+		Connection conn = null;
+		try {
+			conn = Database.getConnection();
+			conn.setReadOnly(true);
+
+			String query = "SELECT `" + name + "`, COUNT(*) FROM `Samples` GROUP BY `" + name + "`;";
+			PreparedStatement select = conn.prepareStatement(query);
+
+			ResultSet rs = select.executeQuery();
+
+			JSONObject results = new JSONObject();
+			while (rs.next()) {
+				String key = rs.getString(1);
+				if (rs.wasNull()) {
+					key = "No JavaScript";
+				}
+
+				int count = rs.getInt(2);
+				results.put(key, count);
+			}
+			rs.close();
+			select.close();
+
+			return results.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			// Close the connection
+			// Finally triggers even if we return
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// Ignore
+				}
+			}
+		}
+		return null;
+	}
+	
 	public static final String getPercentageTorUsers() {
 		Connection conn = null;
 		try {
@@ -198,85 +239,11 @@ public class JSONDAO {
 	}
 
 	public static final String getTimezones() {
-		Connection conn = null;
-		try {
-			conn = Database.getConnection();
-			conn.setReadOnly(true);
-
-			String query = "SELECT `TimeZone`, COUNT(*) FROM `Samples` GROUP BY `TimeZone`;";
-			PreparedStatement select = conn.prepareStatement(query);
-
-			ResultSet rs = select.executeQuery();
-
-			JSONObject results = new JSONObject();
-			while (rs.next()) {
-				String timezone = rs.getString(1);
-				if (rs.wasNull()) {
-					timezone = "No JavaScript";
-				}
-
-				int count = rs.getInt(2);
-				results.put(timezone, count);
-			}
-			rs.close();
-			select.close();
-
-			return results.toString();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			// Close the connection
-			// Finally triggers even if we return
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-					// Ignore
-				}
-			}
-		}
-		return null;
+		return getStringResults("TimeZone");
 	}
 	
-	public static final String getLanguages() {
-		Connection conn = null;
-		try {
-			conn = Database.getConnection();
-			conn.setReadOnly(true);
-
-			String query = "SELECT `LanguageFlash`, COUNT(*) FROM `Samples` GROUP BY `LanguageFlash`;";
-			PreparedStatement select = conn.prepareStatement(query);
-
-			ResultSet rs = select.executeQuery();
-
-			JSONObject results = new JSONObject();
-			while (rs.next()) {
-				String language = rs.getString(1);
-				if (rs.wasNull()) {
-					language = "No JavaScript";
-				}
-
-				int count = rs.getInt(2);
-				results.put(language, count);
-			}
-			rs.close();
-			select.close();
-
-			return results.toString();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			// Close the connection
-			// Finally triggers even if we return
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-					// Ignore
-				}
-			}
-		}
-		return null;
+	public static final String getLanguages() {	
+		return getStringResults("LanguageFlash");
 	}
 	
 	public static final String getAdsBlocked() {
@@ -328,43 +295,6 @@ public class JSONDAO {
 	}
 	
 	public static final String getScreenDetails() {
-		Connection conn = null;
-		try {
-			conn = Database.getConnection();
-			conn.setReadOnly(true);
-
-			String query = "SELECT `ScreenDetails`, COUNT(*) FROM `Samples` GROUP BY `ScreenDetails`;";
-			PreparedStatement select = conn.prepareStatement(query);
-
-			ResultSet rs = select.executeQuery();
-
-			JSONObject results = new JSONObject();
-			while (rs.next()) {
-				String screenDetails = rs.getString(1);
-				if (rs.wasNull()) {
-					screenDetails = "No JavaScript";
-				}
-
-				int count = rs.getInt(2);
-				results.put(screenDetails, count);
-			}
-			rs.close();
-			select.close();
-
-			return results.toString();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			// Close the connection
-			// Finally triggers even if we return
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-					// Ignore
-				}
-			}
-		}
-		return null;
+		return getStringResults("ScreenDetails");
 	}
 }
