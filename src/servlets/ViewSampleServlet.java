@@ -66,6 +66,9 @@ public class ViewSampleServlet extends HttpServlet {
 			else{
 				throw new ServletException("Unknown inputType1.");
 			}
+			if(sampleUUID1 != null){
+				sampleUUID1 = sampleUUID1.trim();
+			}
 			request.setAttribute("sampleUUID1", sampleUUID1);
 		}
 		
@@ -120,6 +123,9 @@ public class ViewSampleServlet extends HttpServlet {
 				}
 				else{
 					throw new ServletException("Unknown inputType2.");
+				}
+				if(sampleUUID2 != null){
+					sampleUUID2 = sampleUUID2.trim();
 				}
 				request.setAttribute("sampleUUID2", sampleUUID2);
 			}

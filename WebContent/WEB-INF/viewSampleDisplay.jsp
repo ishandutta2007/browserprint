@@ -115,7 +115,7 @@
 					<td class="viewOptionsTd">
 						UUID
 						<br>
-						<input type="text" id="UuidTextbox1" name="UUID1UUID" maxlength="36" class="viewUuidTextbox" value="<c:out value="${ requestScope.sampleUUID1 }"/>">
+						<input type="text" id="UuidTextbox1" name="UUID1UUID" class="viewUuidTextbox" value="<c:out value="${ requestScope.sampleUUID1 }"/>">
 					</td>
 					<td>
 						<c:choose><%--
@@ -132,10 +132,10 @@
 						<br>
 						<c:choose><%--
 							--%><c:when test="${ requestScope.compare }"><%--
-								--%><input type="text" id="UuidTextbox2" name="UUID2UUID" maxlength="36" class="viewUuidTextbox" value="<c:out value="${ requestScope.sampleUUID2 }"/>"><%--
+								--%><input type="text" id="UuidTextbox2" name="UUID2UUID" class="viewUuidTextbox" value="<c:out value="${ requestScope.sampleUUID2 }"/>"><%--
 							--%></c:when><%--
 							--%><c:otherwise><%--
-								--%><input type="text" id="UuidTextbox2" name="UUID2UUID" maxlength="36" class="viewUuidTextbox"><%--
+								--%><input type="text" id="UuidTextbox2" name="UUID2UUID" class="viewUuidTextbox"><%--
 							--%></c:otherwise><%--
 						--%></c:choose>
 					</td>

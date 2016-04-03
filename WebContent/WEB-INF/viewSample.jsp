@@ -55,7 +55,7 @@
 					<td class="viewOptionsTd">
 						UUID
 						<br>
-						<input type="text" name="UUID1UUID" id="UuidTextbox1" class="viewUuidTextbox" maxlength="36" style="display: inline-block;">
+						<input type="text" name="UUID1UUID" id="UuidTextbox1" class="viewUuidTextbox" style="display: inline-block;">
 					</td>
 				</tr>
 				<tr>
