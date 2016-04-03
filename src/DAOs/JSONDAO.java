@@ -50,30 +50,33 @@ public class JSONDAO {
 		return null;
 	}
 	
-	public static final String getPercentageTorUsers() {
+	public static final String getBooleanResults(String name) {
 		Connection conn = null;
 		try {
 			conn = Database.getConnection();
 			conn.setReadOnly(true);
 
-			String query = "SELECT `UsingTor`, COUNT(*) FROM `Samples` GROUP BY `UsingTor`;";
+			String query = "SELECT `" + name + "`, COUNT(*) FROM `Samples` GROUP BY `" + name + "`;";
 			PreparedStatement select = conn.prepareStatement(query);
 
 			ResultSet rs = select.executeQuery();
 
 			JSONObject results = new JSONObject();
 			while (rs.next()) {
-				boolean usingTor = rs.getBoolean(1);
-				String usingTorStr;
-				if (usingTor) {
-					usingTorStr = "1";
+				boolean key = rs.getBoolean(1);
+				String keyStr;
+				if(rs.wasNull()){
+					keyStr = "No JavaScript";
+				}
+				else if (key) {
+					keyStr = "1";
 				}
 				else {
-					usingTorStr = "0";
+					keyStr = "0";
 				}
 
 				int count = rs.getInt(2);
-				results.put(usingTorStr, count);
+				results.put(keyStr, count);
 			}
 			rs.close();
 			select.close();
@@ -95,49 +98,12 @@ public class JSONDAO {
 		return null;
 	}
 	
-	public static final String getCookiesEnabled() {
-		Connection conn = null;
-		try {
-			conn = Database.getConnection();
-			conn.setReadOnly(true);
-
-			String query = "SELECT `CookiesEnabled`, COUNT(*) FROM `Samples` GROUP BY `CookiesEnabled`;";
-			PreparedStatement select = conn.prepareStatement(query);
-
-			ResultSet rs = select.executeQuery();
-
-			JSONObject results = new JSONObject();
-			while (rs.next()) {
-				boolean cookiesEnabled = rs.getBoolean(1);
-				String cookiesEnabledStr;
-				if (cookiesEnabled) {
-					cookiesEnabledStr = "1";
-				}
-				else {
-					cookiesEnabledStr = "0";
-				}
-
-				int count = rs.getInt(2);
-				results.put(cookiesEnabledStr, count);
-			}
-			rs.close();
-			select.close();
-
-			return results.toString();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			// Close the connection
-			// Finally triggers even if we return
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-					// Ignore
-				}
-			}
-		}
-		return null;
+	public static final String getPercentageTorUsers() {	
+		return getBooleanResults("UsingTor");
+	}
+	
+	public static final String getCookiesEnabled() {		
+		return getBooleanResults("CookiesEnabled");
 	}
 	
 	public static final String getOSBreakdown() {
@@ -247,51 +213,7 @@ public class JSONDAO {
 	}
 	
 	public static final String getAdsBlocked() {
-		Connection conn = null;
-		try {
-			conn = Database.getConnection();
-			conn.setReadOnly(true);
-
-			String query = "SELECT `AdsBlocked`, COUNT(*) FROM `Samples` GROUP BY `AdsBlocked`;";
-			PreparedStatement select = conn.prepareStatement(query);
-
-			ResultSet rs = select.executeQuery();
-
-			JSONObject results = new JSONObject();
-			while (rs.next()) {
-				boolean adsBlocked = rs.getBoolean(1);
-				String adsBlockedStr;
-				if(rs.wasNull()){
-					adsBlockedStr = "No JavaScript";
-				}
-				else if (adsBlocked) {
-					adsBlockedStr = "1";
-				}
-				else {
-					adsBlockedStr = "0";
-				}
-
-				int count = rs.getInt(2);
-				results.put(adsBlockedStr, count);
-			}
-			rs.close();
-			select.close();
-
-			return results.toString();
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			// Close the connection
-			// Finally triggers even if we return
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-					// Ignore
-				}
-			}
-		}
-		return null;
+		return getBooleanResults("AdsBlocked");
 	}
 	
 	public static final String getScreenDetails() {
