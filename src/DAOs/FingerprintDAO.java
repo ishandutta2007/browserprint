@@ -214,7 +214,7 @@ public class FingerprintDAO {
 		}
 		{
 			CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "ScreenDetails", fingerprint.getScreenDetails());
-			bean.setName("Screen Size and Color Depth");
+			bean.setName("Screen Size and Colour Depth");
 			bean.setNameHoverText("The screen size and colour depth of the monitor displaying the client's web browser.");
 			characteristics.add(bean);
 		}
