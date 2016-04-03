@@ -17,14 +17,16 @@
 	<h1>
 		Out of a total of ${ statisticsBean.numSamples } fingerprint samples:
 	</h1>
-	<div id="torUsersGraph" style="height: auto; width: auto"></div>
-	<div id="cookiesGraph" style="height: auto; width: auto"></div>
-	<div id="osGraph" style="height: auto; width: auto"></div>
-	<div id="browserGraph" style="height: auto; width: auto"></div>
-	<div id="timezoneGraph" style="height: auto; width: auto"></div>
-	<div id="languageGraph" style="height: auto; width: auto"></div>
-	<div id="adsBlockedGraph" style="height: auto; width: auto"></div>
-	<div id="screenDetailsGraph" style="height: auto; width: auto"></div>
+	<div id="statisticsDiv">
+		<div id="torUsersGraph" style="height: auto; width: auto; float: left"></div>
+		<div id="cookiesGraph" style="height: auto; width: auto; float:right"></div>
+		<div id="osGraph" style="height: auto; width: auto; float: left"></div>
+		<div id="browserGraph" style="height: auto; width: auto; float:right"></div>
+		<div id="timezoneGraph" style="height: auto; width: auto; float: left"></div>
+		<div id="languageGraph" style="height: auto; width: auto; float:right"></div>
+		<div id="adsBlockedGraph" style="height: auto; width: auto; float: left"></div>
+		<div id="screenDetailsGraph" style="height: auto; width: auto; float:right"></div>
+	</div>
 <%@include file="footer.jsp" %>
 </body>
 </html>

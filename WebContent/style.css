@@ -134,3 +134,9 @@ td.viewOptionsButtonTd{
 input.viewUuidTextbox{
 	display: inline-block;
 }
+
+#statisticsDiv{
+	width: 1200px;
+	margin-left: auto;
+	margin-right: auto;
+}
