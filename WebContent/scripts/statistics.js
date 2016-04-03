@@ -371,7 +371,7 @@ $(function() {
 		});
 	});
 	
-	/* Percentage of Tor Users */
+	/* Languages */
 	jQuery.getJSON("json?chart=language", function(jsonData){
 		var nbTotal = 0;
 		$.each(jsonData, function(key, num) {
@@ -472,5 +472,60 @@ $(function() {
 				data: dataArray
 			}]
 		});
+	});
+	
+	/* ScreenDetails */
+	jQuery.getJSON("json?chart=screenDetails", function(jsonData){
+		var nbTotal = 0;
+		$.each(jsonData, function(key, num) {
+			nbTotal += num;
+		});
+		
+		var dataArray = [];
+		var otherDrillArray = [];
+		var nbOthers = 0;
+		$.each(jsonData, function(key, tab){
+			var per = tab*100/nbTotal;
+			if(per>3){
+				dataArray.push({name:key, y:per});
+			} else {
+				nbOthers += per;
+				otherDrillArray.push({name:key,y:per});
+			}
+		});
+		dataArray.push({name:"Others", drilldown:"Others", y:nbOthers});
+		var dataDrillSeries = [{id:"Others", name:"Other screen sizes and colour depths", data:otherDrillArray}];
+		$('#screenDetailsGraph').highcharts({
+			chart: {
+				type: 'pie'
+			},
+			title: {
+				text: 'Screen sizes and colour depth.'
+			},
+			subtitle: {
+				text: 'As detected using JavaScript.'
+			},
+			plotOptions: {
+				series: {
+					dataLabels: {
+						enabled: true,
+						format: '{point.name}: {point.y:.1f}%'
+					}
+				}
+			},
+			tooltip: {
+				headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+				pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
+			},
+			series: [{
+				name: 'Client languages',
+				colorByPoint: true,
+				data: dataArray
+			}],
+			drilldown: {
+				series: dataDrillSeries
+			}
+		});
+
 	});
 });

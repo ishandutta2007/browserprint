@@ -57,6 +57,9 @@ public class JSONServlet extends HttpServlet {
 		else if(chart.equals("adsBlocked")){
 			out.print(JSONDAO.getAdsBlocked());
 		}
+		else if(chart.equals("screenDetails")){
+			out.print(JSONDAO.getScreenDetails());
+		}
 	}
 
 	/**

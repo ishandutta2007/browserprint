@@ -24,6 +24,7 @@
 	<div id="timezoneGraph" style="height: auto; width: auto"></div>
 	<div id="languageGraph" style="height: auto; width: auto"></div>
 	<div id="adsBlockedGraph" style="height: auto; width: auto"></div>
+	<div id="screenDetailsGraph" style="height: auto; width: auto"></div>
 <%@include file="footer.jsp" %>
 </body>
 </html>

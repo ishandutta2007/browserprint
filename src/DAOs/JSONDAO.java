@@ -326,4 +326,45 @@ public class JSONDAO {
 		}
 		return null;
 	}
+	
+	public static final String getScreenDetails() {
+		Connection conn = null;
+		try {
+			conn = Database.getConnection();
+			conn.setReadOnly(true);
+
+			String query = "SELECT `ScreenDetails`, COUNT(*) FROM `Samples` GROUP BY `ScreenDetails`;";
+			PreparedStatement select = conn.prepareStatement(query);
+
+			ResultSet rs = select.executeQuery();
+
+			JSONObject results = new JSONObject();
+			while (rs.next()) {
+				String screenDetails = rs.getString(1);
+				if (rs.wasNull()) {
+					screenDetails = "No JavaScript";
+				}
+
+				int count = rs.getInt(2);
+				results.put(screenDetails, count);
+			}
+			rs.close();
+			select.close();
+
+			return results.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			// Close the connection
+			// Finally triggers even if we return
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// Ignore
+				}
+			}
+		}
+		return null;
+	}
 }
