@@ -52,6 +52,7 @@
 		This site makes use of cookies.
 		One cookie is set to expire when the browser closes, this is used only to check whether cookies are enabled.
 		Another cookie set to expire after 30 days, for the main purpose of preventing double counting of fingerprints.
+		Additionally a session cookie may be set when submitting a fingerprint, this is used to keep track of which CAPTCHA you were shown on the CAPTCHA page.
 	</p>
 	
 	<h3>IP addresses</h3>
