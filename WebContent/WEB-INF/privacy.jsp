@@ -90,6 +90,12 @@
 		The UUIDs used are so long (122 random bits) that it is very unlikely they can be guessed.
 		Hence it is very unlikely that a fingerprint will be viewed by others on the website without the client disclosing its UUID or URL.
 	</p>
+	
+	<h2>Disclaimer</h2>
+	<p>
+		This privacy policy may change at any time, for instance, when a new test is added we will change the policy to reflect collection of results of the new test.
+		We do not collect contact details of clients so it is impossible for us to notify you of changes.
+	</p>
 </div>
 <%@include file="footer.jsp" %>
 </body>
