@@ -302,7 +302,6 @@
 	<form id="detailsForm" action="<c:url value="test"/>" method="POST">
 		<div id="formdiv">
 			<input type="hidden" name="show_fingerprint" value="true">
-			<input type="hidden" name="encryptedCaptcha" value="<c:out value='${ param.encryptedCaptcha }'/>">
 			<input type="hidden" name="captchaAnswer" value="<c:out value='${ param.captchaAnswer }'/>">
 		</div>
 	</form>
