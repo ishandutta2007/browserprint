@@ -1,7 +1,7 @@
 # Browserprint
 An open-source browser fingerprinting suite, inspired by the EFF's Panopticlick.
 
-# Supported Tests
+## Supported Tests
 Browserprint implements the following tests:
 
 ### Colour Vision
@@ -94,7 +94,7 @@ Name of the WebGL Renderer. Some browsers give the full name of the underlying g
 ### Touch Support
 Primative touch screen detection.
 
-# Installation
+## Installation
 Here we give a quick overview of one way the project can be deployed.
 You need to have Apache Tomcat and MariaDB installed for this to work.
 
@@ -117,6 +117,6 @@ The page can now be accessed at http://localhost:8080/ (assuming default Tomcat 
 
 This project was created using the Eclipse IDE configured to use Tomcat and can be easily set up and modified using them.
 
-## Optional
+### Optional
 * Remove or replace the Creative Commons license on the output of the web application in `WebContent/WEB-INF/footer.jsp`.
   You are only required to retain the MIT license on the code, not the CC license on the web application output.
