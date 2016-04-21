@@ -6,7 +6,7 @@ USE `browserprint`;
  * REMEMBER TO INCREMENT THE DEFAULT VAULE OF `BrowserprintVersion` IF YOU CHANGE THIS.
  */
 CREATE TABLE `Samples` (
-  `BrowserprintVersion` SMALLINT UNSIGNED NOT NULL DEFAULT 8,
+  `BrowserprintVersion` SMALLINT UNSIGNED NOT NULL DEFAULT 9,
   `IP` TEXT NOT NULL,
   `TimeStamp` DATETIME NOT NULL,
   `AllHeaders` TEXT NOT NULL,
@@ -39,7 +39,7 @@ CREATE TABLE `Samples` (
   `Canvas` TEXT,
   `WebGLVendor` TEXT,
   `WebGLRenderer` TEXT,
-  `ColourVision` INTEGER NOT NULL,
+  `ContrastLevel` INTEGER NOT NULL,
   `TouchPoints` INTEGER,
   `TouchEvent` BOOL,
   `TouchStart` BOOL,

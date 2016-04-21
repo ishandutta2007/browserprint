@@ -1,5 +1,8 @@
-### Colour Vision
+### Monitor Contrast Level
 Me.
+
+### Colour Vision
+Me. [Test removed for ethics reasons]
 
 ### User Agent
 Panopticlick.

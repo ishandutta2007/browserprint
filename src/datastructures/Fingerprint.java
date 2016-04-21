@@ -6,7 +6,7 @@ public class Fingerprint {
 	
 	private String allHeaders;
 	
-	private Integer colourVision;
+	private Integer contrastLevel;
 	
 	private String user_agent;
 	private String accept_headers;
@@ -52,7 +52,7 @@ public class Fingerprint {
 	public Fingerprint() {
 		sampleSetID = null;
 		allHeaders = null;
-		colourVision = null;
+		contrastLevel = null;
 		user_agent = null;
 		accept_headers = null;
 		platform = null;
@@ -102,14 +102,14 @@ public class Fingerprint {
 		this.allHeaders = allHeaders;
 	}
 	
-	public Integer getColourVision() {
-		return colourVision;
+	public Integer getContrastLevel() {
+		return contrastLevel;
 	}
 
-	public void setColourVision(Integer colourVision) {
-		this.colourVision = colourVision;
+	public void setContrastLevel(Integer contrastLevel) {
+		this.contrastLevel = contrastLevel;
 	}
-	
+
 	public String getUser_agent() {
 		return user_agent;
 	}

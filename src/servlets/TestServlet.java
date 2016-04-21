@@ -17,8 +17,8 @@ import javax.servlet.http.HttpSession;
 import DAOs.FingerprintDAO;
 import beans.CharacteristicsBean;
 import beans.UniquenessBean;
+import datastructures.ContrastCaptcha;
 import datastructures.Fingerprint;
-import datastructures.PlatesCaptcha;
 import util.SampleIDs;
 import util.TorCheck;
 
@@ -70,7 +70,7 @@ public class TestServlet extends HttpServlet {
 			 * None of the characteristics that require javascript.
 			 */
 			Fingerprint fingerprint = getBasicFingerprint(request);
-			fingerprint.setColourVision(captchaResult);
+			fingerprint.setContrastLevel(captchaResult);
 			serveRequest(request, response, fingerprint);
 			return;
 		} else {
@@ -95,10 +95,10 @@ public class TestServlet extends HttpServlet {
 			return null;
 		}
 		
-		int plates[];
+		ContrastCaptcha captcha;
 		try{
-			plates = (int[]) session.getAttribute("captcha");
-			if(plates == null){
+			captcha = (ContrastCaptcha) session.getAttribute("captcha");
+			if(captcha == null){
 				throw new Exception("No CAPTCHA session attribute.");
 			}
 		}
@@ -110,40 +110,20 @@ public class TestServlet extends HttpServlet {
 			session.invalidate();
 		}
 
-		int captchaAnswers[];
-		{
-			String tmp = request.getParameter("captchaAnswer");
-			if (tmp == null) {
-				//No captcha answer.
-				request.setAttribute("error", CAPTCHA_INVALID_MSG);
-				return null;
-			} else {
-				String captchaParts[] = tmp.split(" ");
-				if(captchaParts.length != 2 && captchaParts.length != 3){
-					//Too few or too many numbers.
-					request.setAttribute("error", CAPTCHA_INVALID_MSG);
-					return null;
-				}
-				captchaAnswers = new int[captchaParts.length];
-				try {
-					for (int i = 0; i < captchaAnswers.length; ++i) {
-						captchaAnswers[i] = Integer.parseInt(captchaParts[i]);
-					}
-				} catch (NumberFormatException ex) {
-					//Captcha was invalid.
-					request.setAttribute("error", CAPTCHA_INVALID_MSG);
-					return null;
-				}
-			}
-		}
-		
-		PlatesCaptcha captcha = new PlatesCaptcha(plates, captchaAnswers);
-		if(captcha.isValid() == false){
+		String captchaAnswer = request.getParameter("captchaAnswer");
+		if (captchaAnswer == null) {
+			//No captcha answer.
 			request.setAttribute("error", CAPTCHA_INVALID_MSG);
 			return null;
-		}
-		else{
-			return captcha.getEyesight();
+		} else {
+			Integer contrastLevel = captcha.isValid(captchaAnswer);
+			if(contrastLevel == null){
+				request.setAttribute("error", CAPTCHA_INVALID_MSG);
+				return null;
+			}
+			else{
+				return contrastLevel; 
+			}
 		}
 	}
 
@@ -152,7 +132,7 @@ public class TestServlet extends HttpServlet {
 	 */
 	private void show_js_fingerprint(HttpServletRequest request, HttpServletResponse response, Integer captchaResult) throws ServletException, IOException {
 		Fingerprint fingerprint = getBasicFingerprint(request);
-		fingerprint.setColourVision(captchaResult);
+		fingerprint.setContrastLevel(captchaResult);
 
 		/*
 		 * Extract the rest of the fingerprint from the POST details.

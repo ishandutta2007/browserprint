@@ -22,7 +22,7 @@
 	</p>
 	<ul>
 		<li>Whether JavaScript is enabled or not.</li>
-		<li>The results of a rough colour blindness test.</li>
+		<li>Whether your monitor has high contrast or not.</li>
 		<li>The User-Agent header of the HTTP request for the page.</li>
 		<li>The Accept header, the Accept-Encoding header, and the Accept-Language header from the HTTP request for the page.</li>
 		<li>The name of the platform the browser is running on, detected using JavaScript and flash.</li>

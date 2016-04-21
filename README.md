@@ -4,8 +4,14 @@ An open-source browser fingerprinting suite, inspired by the EFF's Panopticlick.
 ## Supported Tests
 Browserprint implements the following tests:
 
+### Monitor Contrast Level
+A rough measure of the level of contrast of the monitor the browser is being displayed on.
+Detected using a CAPTCHA with a couple of light grey letters that disappear when a monitor's contrast is sufficiently high.
+
 ### Colour Vision
+[Test removed for ethics reasons. Last in commit 5858dd7]
 Whether you have any issues seeing colour (note: this isn't necessarily correct and should be taken with a grain of salt).
+Detected using a CAPTCHA with colour vision test plates (people with certain types of colour blindness see different numbers).
 
 ### User Agent
 The User-Agent header sent with the HTTP request for the page.

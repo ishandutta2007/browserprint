@@ -1,7 +1,7 @@
 <%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%><%-- These comments are to prevent excess whitespace in the output.
 --%><%@page session="false"%><%--
 --%><%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%><%--
---%><jsp:useBean id="platesBean" class="beans.PlatesBean" scope="request" /><%--
+--%><jsp:useBean id="captchaBean" class="beans.CaptchaBean" scope="request" /><%--
 --%><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
@@ -33,10 +33,8 @@
 		<c:out value="${ requestScope.error }"></c:out>
 	</p>
 	</c:if>
-	<div><%--
-		--%><c:forEach var="plate" items="${ platesBean.plates }">
-		<img src="images/captcha/${ plate }.gif" height="150" width="150"/><%--
-		--%></c:forEach>
+	<div>
+		<img src="${ captchaBean.captchaSrc }"/>
 		<form id="captchaForm" action="<c:url value="test"/>" method="POST">
 			<input type="text" name="captchaAnswer"><br/>
 			<input type="submit" value="Continue">
