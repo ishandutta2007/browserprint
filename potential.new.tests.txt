@@ -1,3 +1,8 @@
+### IQ test (or similar CAPTCHA)
+Present simple puzzles to the user and have them solve them to pass the CAPTCHA.
+Tests would need to scale in difficulty based on how many a user gets right / wrong.
+Probably more unstable than other tests and require more than one instance of the CAPTCHA to get a decent reading.
+
 ### getClientRects
 https://trac.torproject.org/projects/tor/ticket/18500
 http://jcarlosnorte.com/security/2016/03/06/advanced-tor-browser-fingerprinting.html
