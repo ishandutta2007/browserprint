@@ -27,3 +27,6 @@ Firefox only, and only recent versions.
 https://trac.torproject.org/projects/tor/ticket/16678
 https://trac.torproject.org/projects/tor/ticket/15646
 
+### Select Language Test
+Not really a test, you just allow the user to select the language of the website and then based off of that you can potentially learn about additional languages the person knows.
+Limited usefulness because it requires translations of all pages it's used on.
