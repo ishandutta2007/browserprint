@@ -10,6 +10,36 @@
 <body>
 <%@include file="header.html" %>
 <div id="content">
+	<h2>What we will do with this data: ethical use and details of retention.</h2>
+	<p>
+		The fingerprint data collected will be mined for information such as:
+		what browsers are most common,
+		how many browsers are using Tor and
+		what version, and what the most effective fingerprinting techniques are.
+	</p>
+	<p>
+		We do this as part of ongoing research in the area of browser fingerprinting, as well as to provide statistics (such as those on the statistics page) to clients of the website.
+		A paper(s) may be published in the future that discusses fingerprints collected by this website but such research will not provide user identification,
+		 information that could be used to deanonymise Tor clients or tracking data that could be employed to track users based on data collected here.
+	</p>
+	<p>
+		Data may be shared with other researchers upon their request but under the same conditions as for publication.
+		If cookies are enabled we associate all the fingerprints for a user with those shared by the same cookie; the purpose of this is to prevent resubmission of a fingerprint from being counted and to provide the ability to look at and compare previous fingerprints easily. You may disable cookies if you do not wish this to occur.
+		Fingerprints collected are publicly available on the website, but to view a fingerprint you need to know the designated UUID, which is <b>extremely</b> hard to guess but it is still feasible that anonymised data, as previously indicated, could be read from this site.
+		However, if you don't share your fingerprint it is unlikely to be viewed by anybody except you through the website, although researchers can and will be accessing the fingerprint data as listed above.
+	</p>
+	<p>
+		Currently the database has not been shared with anybody.
+		We have received no requests from law enforcement for the database or any other data.
+		We will do our best to prevent theft or misuse of collected data, however, such incidents are still possible.
+	</p>
+	<p>
+		To reiterate: We will not attempt to deanonymise Tor clients nor will we attempt to track users across other websites using data gathered here.
+	</p>
+	<p>
+		Thank you for participating in this project. We will place links to any published research here to allow users to confirm that we are following the usage policy.
+	</p>
+
 	<h2>Information we collect</h2>
 	<p>
 		When a client submits themselves to fingerprinting we collect several pieces of data about them.
@@ -65,33 +95,7 @@
 	<p>
 		The date and time that a fingerprint was taken is stored along with the fingerprint. 
 	</p>
-	
-	<h2>Use of data</h2>
-	<p>
-		The purpose of this website is to compile a database of browser fingerprints from which statistics and other interesting data can be extracted.
-		We will not track or attempt to track clients outside of this website.
-	</p>
-	
-	<h3>Sharing of data</h3>
-	<p>
-		Fingerprints, aggregated data about fingerprints, and other statistics may be published and shared publicly (See: <a href="statistics">Statistics</a>).
-		For non-Tor clients IP addresses will not be collected or published, however statistics that can be derived from IP address, such as the country of clients may be published.
-		For Tor clients the IP address or identity of the Tor exit node being used may be published. 
-		An effort will be made to protect the privacy of clients in situations where their privacy may be threatened.
-	</p>
-	<p>
-		The database of collected data, may be shared with a third party upon request,
-		 provided they have a valid reason (e.g. research) and they agree to abide by our privacy policy.
-		Currently the database has not been shared with anybody.
-		We have received no requests from law enforcement for the database or any other data.
-		We will do our best to prevent theft or misuse of collected data, however, such incidents are still possible.
-	</p>
-	<p>
-		Each fingerprint is assigned a unique UUID; this UUID, or a URL containing this UUID, may be shared by the client to allow others to see and compare their fingerprint.
-		The UUIDs used are so long (122 random bits) that it is very unlikely they can be guessed.
-		Hence it is very unlikely that a fingerprint will be viewed by others on the website without the client disclosing its UUID or URL.
-	</p>
-	
+
 	<h2>Disclaimer</h2>
 	<p>
 		This privacy policy may change at any time, for instance, when a new test is added we will change the policy to reflect collection of results of the new test.
