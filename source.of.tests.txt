@@ -1,8 +1,8 @@
 ### Monitor Contrast Level
-Me.
+Original.
 
 ### Colour Vision
-Me. [Test removed for ethics reasons]
+Original. [Test removed for ethics reasons]
 
 ### User Agent
 Panopticlick.
@@ -34,6 +34,9 @@ AmIUnique.
 ### System Fonts
 Panopticlick.
 
+### System Fonts
+Fingerprintjs2.
+
 ### Character Sizes
 https://www.bamsoftware.com/talks/fc15-fontfp/fontfp.html
 Paper: https://www.bamsoftware.com/papers/fontfp.pdf
@@ -45,10 +48,10 @@ Panopticlick.
 Panopticlick.
 
 ### IndexedDB Enabled Test
-Valve github.
+Fingerprintjs2.
 
 ### Do Not Track header
-Me.
+Original.
 
 ### Client/server time difference (minutes)
 https://trac.torproject.org/projects/tor/ticket/2940
@@ -60,14 +63,14 @@ https://trac.torproject.org/projects/tor/ticket/15473
 https://trac.torproject.org/projects/tor/ticket/13018
 
 ### Using Tor?
-Me.
+Original.
 
 ### Blocking Ads?
-Me.
+Original.
 
 ### Canvas
 AmIUnique?
-Valve github
+Fingerprintjs2.
 
 ### WebGL Vendor
 AmIUnique?
