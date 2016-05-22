@@ -22,8 +22,7 @@
 </head>
 <body>
 	<p>
-		Please type the numbers in to the box and click continue.
-		Some circles may not contain numbers.
+		Please type the letters from the image into the box below.
 	</p>
 	<p>
 		The purpose of this is to confirm that you're human.
