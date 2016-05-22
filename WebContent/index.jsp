@@ -27,10 +27,11 @@
 	</div>
 	<p>
 		Browserprint is a free open source project designed to provide the same and better functionality as the <a href="https://panopticlick.eff.org/">original Panopticlick</a>.
-		Several of the tests are based on publicly available code from <a href="https://amiunique.org/">Am I unique?</a> and <a href="https://github.com/Valve/fingerprintjs2">Github user Valve's Fingerprintjs2</a>.
+		Several of the tests are based on publicly available code from <a href="https://amiunique.org/">Am I unique?</a> and <a href="https://github.com/Valve/fingerprintjs2">Fingerprintjs2</a>.
+		The inspiration for each test can be found on the <a href="sources">sources page</a>. 
 	</p>
 	<p>
-		Browserprint is developed by a student of, and generously hosted by the <a href="https://www.adelaide.edu.au/">University of Adelaide</a>.
+		Browserprint is developed by a student of and generously hosted by the <a href="https://www.adelaide.edu.au/">University of Adelaide</a>.
 		This project would not be possible without their help.
 	</p>
 </div>

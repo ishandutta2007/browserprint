@@ -53,6 +53,15 @@
     <url-pattern>/privacy</url-pattern>
   </servlet-mapping>
   <servlet>
+    <display-name>SourcesPage</display-name>
+    <servlet-name>SourcesPage</servlet-name>
+    <jsp-file>/WEB-INF/sources.jsp</jsp-file>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>SourcesPage</servlet-name>
+    <url-pattern>/sources</url-pattern>
+  </servlet-mapping>
+  <servlet>
     <display-name>ViewSampleServlet</display-name>
     <servlet-name>ViewSampleServlet</servlet-name>
     <servlet-class>servlets.ViewSampleServlet</servlet-class>
