@@ -30,7 +30,7 @@
 	<p>
 		Panopticlick.
 	</p>
-	<h3>HTTP\_ACCEPT Headers</h3>
+	<h3>HTTP_ACCEPT Headers</h3>
 	<p>
 		Panopticlick.
 	</p>
@@ -122,6 +122,10 @@
 	<h3>WebGL Renderer</h3>
 	<p>
 		AmIUnique?
+	</p>
+	<h3>Touch Support</h3>
+	<p>
+		Fingerprintjs2.
 	</p>
 </div>
 <%@include file="footer.jsp" %>

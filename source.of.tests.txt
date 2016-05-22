@@ -77,3 +77,6 @@ AmIUnique?
 
 ### WebGL Renderer
 AmIUnique?
+
+### Touch Support
+Fingerprintjs2.
