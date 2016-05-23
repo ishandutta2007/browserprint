@@ -32,7 +32,8 @@
 	</p>
 	<p>
 		Browserprint is developed by a student of and generously hosted by the <a href="https://www.adelaide.edu.au/">University of Adelaide</a>.
-		This project would not be possible without their help.
+		Browerprint's development was partially funded by <a href="http://acems.org.au/">ACEMS</a>.
+		This project would not be possible without these institutions' help.
 	</p>
 </div>
 <%@include file="/WEB-INF/footer.jsp" %>
