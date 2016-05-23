@@ -23,9 +23,6 @@
 <body>
 	<p>
 		Please type the letters from the image into the box below.
-	</p>
-	<p>
-		The purpose of this is to confirm that you're human.
 	</p><%--
 	--%><c:if test="${ requestScope.error != null }">
 	<p class="error">
