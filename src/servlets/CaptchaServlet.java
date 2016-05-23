@@ -74,7 +74,7 @@ public class CaptchaServlet extends HttpServlet {
 			/*
 			 * Draw the image.
 			 */
-			final String ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+			final String ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 			Random rand = new SecureRandom();
 			
 			char captchaChars[] = new char[MIN_CAPTCHA_LENGTH + rand.nextInt(CAPTCHA_LENGTH_VARIABILITY + 1)];

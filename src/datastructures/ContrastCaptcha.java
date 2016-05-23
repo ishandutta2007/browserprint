@@ -1,5 +1,8 @@
 package datastructures;
 
+/**
+ * Is case insensitive.
+ */
 public class ContrastCaptcha {
 	public char captchaChars[];
 	public CaptchaColours captchaCharColours[];
@@ -7,7 +10,7 @@ public class ContrastCaptcha {
 	public enum CaptchaColours{UNIMPORTANT, LIGHT_GREY, LIGHTEST_GREY};
 	
 	public ContrastCaptcha(char[] captchaChars, CaptchaColours[] captchaCharColours) {
-		this.captchaChars = captchaChars;
+		setCaptchaChars(captchaChars);
 		this.captchaCharColours = captchaCharColours;
 	}
 	
@@ -15,7 +18,10 @@ public class ContrastCaptcha {
 		return captchaChars;
 	}
 	public void setCaptchaChars(char[] captchaChars) {
-		this.captchaChars = captchaChars;
+		this.captchaChars = captchaChars.clone();
+		for(int i = 0; i < captchaChars.length; ++i){
+			captchaChars[i] = Character.toUpperCase(captchaChars[i]); 
+		}
 	}
 	public CaptchaColours[] getCaptchaCharColours() {
 		return captchaCharColours;
@@ -30,6 +36,7 @@ public class ContrastCaptcha {
 	 * @return
 	 */
 	public Integer isValid(String captchaAnswer){
+		captchaAnswer = captchaAnswer.toUpperCase();
 		int contrastLevel = 0;
 		
 		if(captchaAnswer.length() < captchaChars.length - 2){
