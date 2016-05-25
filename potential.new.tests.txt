@@ -1,3 +1,32 @@
+### Adblocking, again
+The current ad blocking test seems to only work on older browsers.
+Newer browsers seem to report ads as being blocked despite no ad blocking software being installed.
+It wouldn't be hard to replace the test with something easy like seeing if ads.js or adv.js is blocked.
+Look here for filters used by Adblock and AdblockPlus:
+	https://easylist-downloads.adblockplus.org/easylist.txt
+
+### Adblocking, acceptable ads
+To augment the ad blocking test we can see if ``acceptable ads'' are allowed by the browser.
+Adblock and Adblock Plus:
+	https://easylist-downloads.adblockplus.org/exceptionrules.txt
+Problem is acceptable ads are probably tied to domain; need to experiment to see if we can trick it.
+
+### Suspicious file blocking
+Browserprint at one point wouldn't work for browsers that had Adblock installed and configured in a certain way.
+The reason for this is that the main JS file was called fingerprint.js and one of Adblock's lists blocked this.
+We can test with a range of file names to see if they're blocked or not.
+Thinks that may be blocked:
+-Anti-adblock messages.
+	https://easylist-downloads.adblockplus.org/antiadblockfilters.txt
+-Social media buttons.
+	https://easylist-downloads.adblockplus.org/fanboy-social.txt
+-Things that might affect privacy (like fingerprint.js).
+	https://easylist-downloads.adblockplus.org/easyprivacy.txt
+-Other annoyances (RSS stuff, EU cookies stuff, more of what appears to be social media buttons).
+	https://easylist-downloads.adblockplus.org/fanboy-annoyance.txt
+-Malware domains.
+	https://easylist-downloads.adblockplus.org/malwaredomains_full.txt
+
 ### IQ test (or similar CAPTCHA)
 Present simple puzzles to the user and have them solve them to pass the CAPTCHA.
 Tests would need to scale in difficulty based on how many a user gets right / wrong.
