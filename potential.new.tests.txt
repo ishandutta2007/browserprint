@@ -10,6 +10,7 @@ To augment the ad blocking test we can see if ``acceptable ads'' are allowed by 
 Adblock and Adblock Plus:
 	https://easylist-downloads.adblockplus.org/exceptionrules.txt
 Problem is acceptable ads are probably tied to domain; need to experiment to see if we can trick it.
+Or alternatively we could just put an ``acceptable ad'' on the page and see if it's shown.
 
 ### Suspicious file blocking
 Browserprint at one point wouldn't work for browsers that had Adblock installed and configured in a certain way.
