@@ -17,8 +17,8 @@
 		swfobject.embedSWF("flash/OSData.swf", "OSDataDiv", "0", "0", "9.0.0", false, flashvars, params, attributes);
 	</script>
 	<script type="text/javascript" src="scripts/PluginDetect.js"></script>
-	<script type="text/javascript" src="scripts/fingerprint.js"></script>
-	<script type="text/javascript" src="scripts/fingerprint.valve.js"></script>
+	<script type="text/javascript" src="scripts/f.js"></script>
+	<script type="text/javascript" src="scripts/fjs2.js"></script>
 	<script type="text/javascript">
 		$(window).load(function(){
 			var flash = $("#OSData")[0];
