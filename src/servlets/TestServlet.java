@@ -205,12 +205,32 @@ public class TestServlet extends HttpServlet {
 		fingerprint.setMathTan(request.getParameter("MathTan"));
 		fingerprint.setTbbVersion(request.getParameter("TbbVersion"));
 		{
-			String val = request.getParameter("AdsBlocked");
+			String val = request.getParameter("AdsBlockedGoogle");
 			if (val != null) {
 				if (val.equals("1")) {
-					fingerprint.setAdsBlocked(true);
+					fingerprint.setAdsBlockedGoogle(true);
 				} else if (val.equals("0")) {
-					fingerprint.setAdsBlocked(false);
+					fingerprint.setAdsBlockedGoogle(false);
+				}
+			}
+		}
+		{
+			String val = request.getParameter("AdsBlockedBanner");
+			if (val != null) {
+				if (val.equals("1")) {
+					fingerprint.setAdsBlockedBanner(true);
+				} else if (val.equals("0")) {
+					fingerprint.setAdsBlockedBanner(false);
+				}
+			}
+		}
+		{
+			String val = request.getParameter("AdsBlockedScript");
+			if (val != null) {
+				if (val.equals("1")) {
+					fingerprint.setAdsBlockedScript(true);
+				} else if (val.equals("0")) {
+					fingerprint.setAdsBlockedScript(false);
 				}
 			}
 		}

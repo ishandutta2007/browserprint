@@ -160,17 +160,41 @@ function getMathTan() {
 	}
 }
 
-function getAdsBlocked() {
+function getAdsBlockedGoogle() {
 	try {
 		if ($('#ad').height() == 0) {
-			// Ads are blocked.
+			// Ad was blocked.
 			return 1;
 		} else {
-			// Ads are not blocked.
+			// Ad was not blocked.
 			return 0;
 		}
 	} catch (e) {
 		return "Error";
+	}
+}
+
+function getAdsBlockedBanner() {
+	try {
+		if($("#banner468x60").height() == 0){
+			// Ad was blocked.
+			return 1;
+		}
+		else{
+			// Ad was not blocked.
+			return 0;
+		}
+	} catch (e) {
+		return "Error";
+	}
+}
+
+function getAdsBlockedScript() {
+	try {
+		return testscript_blockedFunction();
+	} catch (e) {
+		// Ad script was blocked.
+		return 1;
 	}
 }
 

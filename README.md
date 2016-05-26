@@ -83,9 +83,10 @@ For instance on a 64bit Linux machine it produces the value -1.4214488238747245 
 Checks whether a client's request came from a Tor exit node, and hence whether they're using Tor.
 It does so by performing a TorDNSEL request for each client.
 
-### Blocking Ads?
+### Blocking Google Ads?
 Checks whether ad blocking software is installed.
 It does so by attempting to display an ad and checking whether it was successful.
+May also be affected by tracker blocking software.
 
 ### Canvas
 Rendering of a specific picture with the HTML5 Canvas element following a fixed set of instructions.

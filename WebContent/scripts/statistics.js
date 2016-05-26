@@ -427,7 +427,7 @@ $(function() {
 	});
 	
 	/* Ads blocked */
-	jQuery.getJSON("json?chart=adsBlocked", function(jsonData){
+	jQuery.getJSON("json?chart=adsBlockedGoogle", function(jsonData){
 		var nbTotal = 0;
 		$.each(jsonData, function(key, num) {
 			nbTotal += num;
@@ -447,12 +447,12 @@ $(function() {
 			var per = val*100/nbTotal;
 			dataArray.push({name:name, y:per});
 		});
-		$('#adsBlockedGraph').highcharts({
+		$('#adsBlockedGoogleGraph').highcharts({
 			chart: {
 				type: 'pie'
 			},
 			title: {
-				text: 'Percentage of clients with ads blocked'
+				text: 'Percentage of clients with Google ads blocked'
 			},
 			plotOptions: {
 				series: {

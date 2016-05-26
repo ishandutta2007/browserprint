@@ -19,6 +19,7 @@
 	<script type="text/javascript" src="scripts/PluginDetect.js"></script>
 	<script type="text/javascript" src="scripts/f.js"></script>
 	<script type="text/javascript" src="scripts/fjs2.js"></script>
+	<script type="text/javascript" src="adtests/easylist/ads/js/testscript.js"></script>
 	<script type="text/javascript">
 		$(window).load(function(){
 			var flash = $("#OSData")[0];
@@ -211,12 +212,28 @@
 	    		value: tbbVersion
 			}).appendTo('#formdiv');
 			
-			//AdsBlocked
+			//AdsBlockedGoogle
 			$('<input>').attr({
 	    		type: 'hidden',
-	    		id: 'AdsBlocked',
-	    		name: 'AdsBlocked',
-	    		value: getAdsBlocked()
+	    		id: 'AdsBlockedGoogle',
+	    		name: 'AdsBlockedGoogle',
+	    		value: getAdsBlockedGoogle()
+			}).appendTo('#formdiv');
+			
+			//AdsBlockedBanner
+			$('<input>').attr({
+	    		type: 'hidden',
+	    		id: 'AdsBlockedBanner',
+	    		name: 'AdsBlockedBanner',
+	    		value: getAdsBlockedBanner()
+			}).appendTo('#formdiv');
+			
+			//AdsBlockedScript
+			$('<input>').attr({
+	    		type: 'hidden',
+	    		id: 'AdsBlockedScript',
+	    		name: 'AdsBlockedScript',
+	    		value: getAdsBlockedScript()
 			}).appendTo('#formdiv');
 			
 			//Canvas
@@ -315,7 +332,7 @@
 	<script type="text/javascript">
         google_ad_height = 90;
     </script> 
-	<div id="ad" style="display:none;">
+	<div id="ad" style="display:none">
 		<script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
 	</div>
 </body>

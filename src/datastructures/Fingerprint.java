@@ -39,7 +39,9 @@ public class Fingerprint {
 	private String tbbVersion;
 	private String ipAddress;
 	
-	private Boolean adsBlocked;
+	private Boolean adsBlockedGoogle;
+	private Boolean adsBlockedBanner;
+	private Boolean adsBlockedScript;
 	
 	private String canvas;
 	private String webGLVendor;
@@ -77,7 +79,9 @@ public class Fingerprint {
 		usingTor = false;
 		tbbVersion = null;
 		ipAddress = null;
-		adsBlocked = null;
+		adsBlockedGoogle = null;
+		adsBlockedBanner = null;
+		adsBlockedScript = null;
 		canvas = null;
 		webGLVendor = null;
 		webGLRenderer = null;
@@ -302,12 +306,28 @@ public class Fingerprint {
 		this.ipAddress = ipAddress;
 	}
 
-	public Boolean getAdsBlocked() {
-		return adsBlocked;
+	public Boolean getAdsBlockedGoogle() {
+		return adsBlockedGoogle;
 	}
 
-	public void setAdsBlocked(Boolean adsBlocked) {
-		this.adsBlocked = adsBlocked;
+	public void setAdsBlockedGoogle(Boolean adsBlockedGoogle) {
+		this.adsBlockedGoogle = adsBlockedGoogle;
+	}
+
+	public Boolean getAdsBlockedBanner() {
+		return adsBlockedBanner;
+	}
+
+	public void setAdsBlockedBanner(Boolean adsBlockedBanner) {
+		this.adsBlockedBanner = adsBlockedBanner;
+	}
+
+	public Boolean getAdsBlockedScript() {
+		return adsBlockedScript;
+	}
+
+	public void setAdsBlockedScript(Boolean adsBlockedScript) {
+		this.adsBlockedScript = adsBlockedScript;
 	}
 
 	public String getCanvas() {

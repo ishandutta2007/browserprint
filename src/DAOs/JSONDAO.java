@@ -212,8 +212,8 @@ public class JSONDAO {
 		return getStringResults("LanguageFlash");
 	}
 	
-	public static final String getAdsBlocked() {
-		return getBooleanResults("AdsBlocked");
+	public static final String getAdsBlockedGoogle() {
+		return getBooleanResults("AdsBlockedGoogle");
 	}
 	
 	public static final String getScreenDetails() {
