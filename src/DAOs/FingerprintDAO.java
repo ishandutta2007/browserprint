@@ -27,9 +27,9 @@ import beans.UniquenessBean;
 import datastructures.Fingerprint;
 
 public class FingerprintDAO {
-	private static final String insertSampleStr = "INSERT INTO `Samples`(`SampleUUID`, `IP`, `TimeStamp`, `AllHeaders`, `ContrastLevel`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `LanguageFlash`, `Fonts`, `FontsJS_CSS`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `IndexedDBEnabled`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlockedGoogle`, `Canvas`, `WebGLVendor`, `WebGLRenderer`, `TouchPoints`, `TouchEvent`, `TouchStart`) VALUES(?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+	private static final String insertSampleStr = "INSERT INTO `Samples`(`SampleUUID`, `IP`, `TimeStamp`, `AllHeaders`, `ContrastLevel`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `LanguageFlash`, `Fonts`, `FontsJS_CSS`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `IndexedDBEnabled`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlockedGoogle`, `AdsBlockedBanner`, `AdsBlockedScript`, `Canvas`, `WebGLVendor`, `WebGLRenderer`, `TouchPoints`, `TouchEvent`, `TouchStart`) VALUES(?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 	private static final String getSampleCountStr = "SELECT COUNT(*) FROM `Samples`;";
-	private static final String selectSampleStr = "SELECT `ContrastLevel`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `LanguageFlash`, `Fonts`, `FontsJS_CSS`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `IndexedDBEnabled`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlockedGoogle`, `WebGLVendor`, `WebGLRenderer`, `TouchPoints`, `TouchEvent`, `TouchStart` FROM `Samples` WHERE `SampleUUID` = ?;";
+	private static final String selectSampleStr = "SELECT `ContrastLevel`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `LanguageFlash`, `Fonts`, `FontsJS_CSS`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `IndexedDBEnabled`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlockedGoogle`, `AdsBlockedScript`, `WebGLVendor`, `WebGLRenderer`, `TouchPoints`, `TouchEvent`, `TouchStart` FROM `Samples` WHERE `SampleUUID` = ?;";
 	private static final String selectSampleSetIDHistory = "SELECT `SampleUUID`, `Timestamp` FROM `SampleSets` INNER JOIN `Samples` USING (`SampleID`) WHERE `SampleSetID` = ? ORDER BY `Timestamp` DESC;";
 
 	private static final String NO_JAVASCRIPT = "No JavaScript";
@@ -312,11 +312,11 @@ public class FingerprintDAO {
 			characteristics.add(bean);
 		}
 		{
-			CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "AdsBlockedGoogle", fingerprint.getAdsBlockedGoogle());
-			bean.setName("Blocking Google Ads?");
+			CharacteristicBean bean = getAdsBlockedCharacteristicBean(conn, sampleCount, fingerprint);
+			bean.setName("Blocking ads?");
 			bean.setNameHoverText("Checks whether ad blocking software is installed."
-			+ " It does so by attempting to display an ad and checking whether it was successful."
-			+ " May also be affected by tracker blocking software.");
+					+ " It does so by attempting to display 2 ads and trying to call a function from a script named like an ad serving script."
+					+ " Google ad may also be affected by tracker blocking software.");
 			characteristics.add(bean);
 		}
 		/*{
@@ -438,6 +438,18 @@ public class FingerprintDAO {
 		++index;
 		if (fingerprint.getAdsBlockedGoogle() != null) {
 			insertSample.setBoolean(index, fingerprint.getAdsBlockedGoogle());
+		} else {
+			insertSample.setNull(index, java.sql.Types.BOOLEAN);
+		}
+		++index;
+		if (fingerprint.getAdsBlockedBanner() != null) {
+			insertSample.setBoolean(index, fingerprint.getAdsBlockedBanner());
+		} else {
+			insertSample.setNull(index, java.sql.Types.BOOLEAN);
+		}
+		++index;
+		if (fingerprint.getAdsBlockedScript() != null) {
+			insertSample.setBoolean(index, fingerprint.getAdsBlockedScript());
 		} else {
 			insertSample.setNull(index, java.sql.Types.BOOLEAN);
 		}
@@ -595,6 +607,8 @@ public class FingerprintDAO {
 		 + " AND `UsingTor` = ?"
 		 + " AND `TbbVersion`" + (fingerprint.getTbbVersion() == null ? " IS NULL" : " = ?")
 		 + " AND `AdsBlockedGoogle`" + (fingerprint.getAdsBlockedGoogle() == null ? " IS NULL" : " = ?")
+		 + " AND `AdsBlockedBanner`" + (fingerprint.getAdsBlockedBanner() == null ? " IS NULL" : " = ?")
+		 + " AND `AdsBlockedScript`" + (fingerprint.getAdsBlockedScript() == null ? " IS NULL" : " = ?")
 		 /*+ " AND `Canvas`" + (fingerprint.getCanvas() == null ? " IS NULL" : " = ?")*/
 		 + " AND `WebGLVendor`" + (fingerprint.getWebGLVendor() == null ? " IS NULL" : " = ?")
 		 + " AND `WebGLRenderer`" + (fingerprint.getWebGLRenderer() == null ? " IS NULL" : " = ?")
@@ -703,6 +717,14 @@ public class FingerprintDAO {
 			checkExists.setBoolean(index, fingerprint.getAdsBlockedGoogle());
 			++index;
 		}
+		if (fingerprint.getAdsBlockedBanner() != null) {
+			checkExists.setBoolean(index, fingerprint.getAdsBlockedBanner());
+			++index;
+		}
+		if (fingerprint.getAdsBlockedScript() != null) {
+			checkExists.setBoolean(index, fingerprint.getAdsBlockedScript());
+			++index;
+		}
 		/*if (fingerprint.getCanvas() != null) {
 			checkExists.setString(index, fingerprint.getCanvas());
 			++index;
@@ -793,6 +815,8 @@ public class FingerprintDAO {
 		+ " AND `UsingTor` = ?"
 		+ " AND `TbbVersion`" + (fingerprint.getTbbVersion() == null ? " IS NULL" : " = ?")
 		+ " AND `AdsBlockedGoogle`" + (fingerprint.getAdsBlockedGoogle() == null ? " IS NULL" : " = ?")
+		+ " AND `AdsBlockedBanner`" + (fingerprint.getAdsBlockedBanner() == null ? " IS NULL" : " = ?")
+		+ " AND `AdsBlockedScript`" + (fingerprint.getAdsBlockedScript() == null ? " IS NULL" : " = ?")
 		/*+ " AND `Canvas`" + (fingerprint.getCanvas() == null ? " IS NULL" : " = ?")*/
 		+ " AND `WebGLVendor`" + (fingerprint.getWebGLVendor() == null ? " IS NULL" : " = ?")
 		+ " AND `WebGLRenderer`" + (fingerprint.getWebGLRenderer() == null ? " IS NULL" : " = ?")
@@ -896,6 +920,14 @@ public class FingerprintDAO {
 		}
 		if (fingerprint.getAdsBlockedGoogle() != null) {
 			checkExists.setBoolean(index, fingerprint.getAdsBlockedGoogle());
+			++index;
+		}
+		if (fingerprint.getAdsBlockedBanner() != null) {
+			checkExists.setBoolean(index, fingerprint.getAdsBlockedBanner());
+			++index;
+		}
+		if (fingerprint.getAdsBlockedScript() != null) {
+			checkExists.setBoolean(index, fingerprint.getAdsBlockedScript());
 			++index;
 		}
 		/*if (fingerprint.getCanvas() != null) {
@@ -1186,6 +1218,91 @@ public class FingerprintDAO {
 	}
 	
 	/**
+	 * Create the ads blocked CharacteristicBean.
+	 * 
+	 * @param conn
+	 *            A connection to the database.
+	 * @param num_samples
+	 *            The number of samples in the database.
+	 * @param value
+	 *            The value of this sample.
+	 * @return
+	 * @throws SQLException
+	 */
+	private static CharacteristicBean getAdsBlockedCharacteristicBean(Connection conn, int num_samples, Fingerprint fingerprint) throws SQLException {
+		CharacteristicBean chrbean = new CharacteristicBean();
+
+		PreparedStatement getCount;
+		String querystr = "SELECT COUNT(*) FROM `Samples` WHERE"
+		+ " `AdsBlockedGoogle`" + (fingerprint.getAdsBlockedGoogle() == null ? " IS NULL": " = ?")
+		+ " AND `AdsBlockedBanner`" + (fingerprint.getAdsBlockedBanner() == null ? " IS NULL": " = ?")
+		+ " AND `AdsBlockedScript`" + (fingerprint.getAdsBlockedScript() == null ? " IS NULL": " = ?");
+		getCount = conn.prepareStatement(querystr);
+		
+		int index = 1;
+		
+		String adsBlockedStr = "Google ad: ";
+		if(fingerprint.getAdsBlockedGoogle() == null && fingerprint.getAdsBlockedBanner() == null && fingerprint.getAdsBlockedScript() == null){
+			adsBlockedStr = NO_JAVASCRIPT;
+		}
+		else{
+			if (fingerprint.getAdsBlockedGoogle() != null) {
+				if (fingerprint.getAdsBlockedGoogle()) {
+					adsBlockedStr += "Blocked";
+				} else {
+					adsBlockedStr += "Not blocked";
+				}
+				getCount.setBoolean(index, fingerprint.getAdsBlockedGoogle());
+				++index;
+			}
+			else{
+				adsBlockedStr += "NoJS";
+			}
+			adsBlockedStr += ", ";
+			
+			adsBlockedStr += "Banner ad: ";
+			if (fingerprint.getAdsBlockedBanner() != null) {
+				if (fingerprint.getAdsBlockedBanner()) {
+					adsBlockedStr += "Blocked";
+				} else {
+					adsBlockedStr += "Not blocked";
+				}
+				getCount.setBoolean(index, fingerprint.getAdsBlockedBanner());
+				++index;
+			}
+			else{
+				adsBlockedStr += "NoJS";
+			}
+			adsBlockedStr += ", ";
+			
+			adsBlockedStr += "Ad script: ";
+			if (fingerprint.getAdsBlockedScript() != null) {
+				if (fingerprint.getAdsBlockedScript()) {
+					adsBlockedStr += "Blocked";
+				} else {
+					adsBlockedStr += "Not blocked";
+				}
+				getCount.setBoolean(index, fingerprint.getAdsBlockedScript());
+				++index;
+			}
+			else{
+				adsBlockedStr += "NoJS";
+			}
+		}
+		chrbean.setValue(adsBlockedStr);
+
+		ResultSet rs = getCount.executeQuery();
+		rs.next();
+		int count = rs.getInt(1);
+		rs.close();
+		chrbean.setNumOccurrences(count);
+		chrbean.setInX(((double) num_samples) / ((double) count));
+		chrbean.setBits(Math.abs(Math.log(chrbean.getInX()) / Math.log(2)));
+
+		return chrbean;
+	}
+	
+	/**
 	 * Create the touch CharacteristicBean.
 	 * 
 	 * @param conn
@@ -1404,6 +1521,16 @@ public class FingerprintDAO {
 		fingerprint.setAdsBlockedGoogle(rs.getBoolean(index));
 		if (rs.wasNull()) {
 			fingerprint.setAdsBlockedGoogle(null);
+		}
+		++index;
+		fingerprint.setAdsBlockedBanner(rs.getBoolean(index));
+		if (rs.wasNull()) {
+			fingerprint.setAdsBlockedBanner(null);
+		}
+		++index;
+		fingerprint.setAdsBlockedScript(rs.getBoolean(index));
+		if (rs.wasNull()) {
+			fingerprint.setAdsBlockedScript(null);
 		}
 		++index;
 		// Canvas

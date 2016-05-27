@@ -333,7 +333,8 @@
         google_ad_height = 90;
     </script> 
 	<div id="ad" style="display:none">
-		<script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
+		<script type="text/javascript" src="https://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
 	</div>
+	<img id="banner468x60" src="adtests/easylist/ads/banner468x60.png" style="display:none"/>
 </body>
 </html>
