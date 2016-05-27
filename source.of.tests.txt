@@ -65,7 +65,7 @@ https://trac.torproject.org/projects/tor/ticket/13018
 ### Using Tor?
 Original.
 
-### Blocking Google Ads?
+### Blocking Ads?
 Original.
 
 ### Canvas

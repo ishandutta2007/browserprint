@@ -316,7 +316,7 @@ public class FingerprintDAO {
 			bean.setName("Blocking ads?");
 			bean.setNameHoverText("Checks whether ad blocking software is installed."
 					+ " It does so by attempting to display 2 ads and trying to call a function from a script named like an ad serving script."
-					+ " Google ad may also be affected by tracker blocking software.");
+					+ " The Google ad may also be affected by tracker blocking software.");
 			characteristics.add(bean);
 		}
 		/*{
