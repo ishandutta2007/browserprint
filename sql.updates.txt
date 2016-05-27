@@ -1,0 +1,28 @@
+REMEMBER TO UPDATE THE VERSION NUMBER!
+
+--Rename a column AdsBlocked to AdsBlockedGoogle.
+START TRANSACTION;
+ALTER TABLE `Samples` CHANGE `AdsBlocked` `AdsBlockedGoogle` BOOL;
+ALTER TABLE `Samples` MODIFY COLUMN `BrowserprintVersion` SMALLINT UNSIGNED NOT NULL DEFAULT 10;
+COMMIT;
+
+--Add new column AdsBlockedBanner to table.
+----This is an alternative way of doing this, this one involves widening the datatype so we can have a PREVIOUS_VERSION value.
+----This was silly though because we can detect it's a previous version by looking at the version number
+--START TRANSACTION;
+--ALTER TABLE `Samples` ADD `AdsBlockedBanner` TINYINT(2) AFTER `AdsBlockedGoogle`;
+--UPDATE  `Samples` SET `AdsBlockedBanner` = -1;
+--ALTER TABLE `Samples` MODIFY COLUMN `BrowserprintVersion` SMALLINT UNSIGNED NOT NULL DEFAULT 11;
+--COMMIT;
+
+--Add new column AdsBlockedBanner to table.
+START TRANSACTION;
+ALTER TABLE `Samples` ADD `AdsBlockedBanner` BOOL AFTER `AdsBlockedGoogle`;
+ALTER TABLE `Samples` MODIFY COLUMN `BrowserprintVersion` SMALLINT UNSIGNED NOT NULL DEFAULT 11;
+COMMIT;
+
+--Add mew column AdsBlockedScript to table.
+START TRANSACTION;
+ALTER TABLE `Samples` ADD `AdsBlockedScript` BOOL AFTER `AdsBlockedBanner`;
+ALTER TABLE `Samples` MODIFY COLUMN `BrowserprintVersion` SMALLINT UNSIGNED NOT NULL DEFAULT 12;
+COMMIT;
