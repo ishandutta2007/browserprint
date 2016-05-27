@@ -1,10 +1,3 @@
-### Adblocking, again
-The current ad blocking test seems to only work on older browsers.
-Newer browsers seem to report ads as being blocked despite no ad blocking software being installed.
-It wouldn't be hard to replace the test with something easy like seeing if ads.js or adv.js is blocked.
-Look here for filters used by Adblock and AdblockPlus:
-	https://easylist-downloads.adblockplus.org/easylist.txt
-
 ### Adblocking, acceptable ads
 To augment the ad blocking test we can see if ``acceptable ads'' are allowed by the browser.
 Adblock and Adblock Plus:
