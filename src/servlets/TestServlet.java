@@ -324,7 +324,7 @@ public class TestServlet extends HttpServlet {
 		{
 			HttpSession session = request.getSession(false);
 			if(session != null){
-				fingerprint.setScreenDetailsCSS(session.getAttribute("width") + "x" + session.getAttribute("height") + "," + session.getAttribute("device-width") + "x" + session.getAttribute("device-height"));
+				fingerprint.setScreenDetailsCSS(session.getAttribute("device-width") + "x" + session.getAttribute("device-height"));
 				session.invalidate();
 			}
 		}

@@ -37,8 +37,6 @@
 			<input type="submit" value="Continue">
 		</form>
 	</div>
-	<div id="width"></div>
-	<div id="height"></div>
 	<div id="device-width"></div>
 	<div id="device-height"></div>
 </body>
