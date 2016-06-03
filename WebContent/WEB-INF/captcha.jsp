@@ -1,5 +1,5 @@
 <%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%><%-- These comments are to prevent excess whitespace in the output.
---%><%@page session="false"%><%--
+--%><%@page session="true"%><%--
 --%><%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%><%--
 --%><jsp:useBean id="captchaBean" class="beans.CaptchaBean" scope="request" /><%--
 --%><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
@@ -8,7 +8,8 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>Browserprint</title>
 	<meta name="robots" content="noindex" >
-	<link type="text/css" href="style.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<link rel="stylesheet" type="text/css" href="<c:url value="screenSizeCSS.css"/>">
 	<script type="text/javascript" src="scripts/jquery-1.11.2.min.js"></script>
 	<script type="text/javascript">
 	$(window).load(function(){
@@ -36,5 +37,9 @@
 			<input type="submit" value="Continue">
 		</form>
 	</div>
+	<div id="width"></div>
+	<div id="height"></div>
+	<div id="device-width"></div>
+	<div id="device-height"></div>
 </body>
 </html>

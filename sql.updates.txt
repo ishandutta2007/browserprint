@@ -21,8 +21,14 @@ ALTER TABLE `Samples` ADD `AdsBlockedBanner` BOOL AFTER `AdsBlockedGoogle`;
 ALTER TABLE `Samples` MODIFY COLUMN `BrowserprintVersion` SMALLINT UNSIGNED NOT NULL DEFAULT 11;
 COMMIT;
 
---Add mew column AdsBlockedScript to table.
+--Add new column AdsBlockedScript to table.
 START TRANSACTION;
 ALTER TABLE `Samples` ADD `AdsBlockedScript` BOOL AFTER `AdsBlockedBanner`;
 ALTER TABLE `Samples` MODIFY COLUMN `BrowserprintVersion` SMALLINT UNSIGNED NOT NULL DEFAULT 12;
+COMMIT;
+
+--Add new column ScreenDetailsCSS to table.
+START TRANSACTION;
+ALTER TABLE `Samples` ADD `ScreenDetailsCSS` TEXT AFTER `ScreenDetailsFlash`;
+ALTER TABLE `Samples` MODIFY COLUMN `BrowserprintVersion` SMALLINT UNSIGNED NOT NULL DEFAULT 13;
 COMMIT;

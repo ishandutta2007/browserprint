@@ -88,6 +88,24 @@
     <servlet-name>CaptchaServlet</servlet-name>
     <url-pattern>/captcha</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <display-name>screenSizeCSS</display-name>
+    <servlet-name>screenSizeCSS</servlet-name>
+    <jsp-file>/WEB-INF/screenSizeCSS.jsp</jsp-file>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>screenSizeCSS</servlet-name>
+    <url-pattern>/screenSizeCSS.css</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <display-name>ScreenSizeCSSServlet</display-name>
+    <servlet-name>ScreenSizeCSSServlet</servlet-name>
+    <servlet-class>servlets.ScreenSizeCSSServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ScreenSizeCSSServlet</servlet-name>
+    <url-pattern>/screenSize/*</url-pattern>
+  </servlet-mapping>
   <filter>
     <filter-name>UTF8Filter</filter-name>
     <filter-class>filters.UTF8Filter</filter-class>

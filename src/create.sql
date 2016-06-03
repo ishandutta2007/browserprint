@@ -6,7 +6,7 @@ USE `browserprint`;
  * REMEMBER TO INCREMENT THE DEFAULT VAULE OF `BrowserprintVersion` IF YOU CHANGE THIS.
  */
 CREATE TABLE `Samples` (
-  `BrowserprintVersion` SMALLINT UNSIGNED NOT NULL DEFAULT 12,
+  `BrowserprintVersion` SMALLINT UNSIGNED NOT NULL DEFAULT 13,
   `IP` TEXT NOT NULL,
   `TimeStamp` DATETIME NOT NULL,
   `AllHeaders` TEXT NOT NULL,
@@ -20,6 +20,7 @@ CREATE TABLE `Samples` (
   `TimeZone` TEXT,
   `ScreenDetails` TEXT,
   `ScreenDetailsFlash` TEXT,
+  `ScreenDetailsCSS` TEXT,
   `LanguageFlash` TEXT,
   `Fonts` TEXT,
   `FontsJS_CSS` TEXT,

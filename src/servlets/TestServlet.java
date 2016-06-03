@@ -106,9 +106,6 @@ public class TestServlet extends HttpServlet {
 			request.setAttribute("error", CAPTCHA_ERROR_MSG);
 			return null;
 		}
-		finally{
-			session.invalidate();
-		}
 
 		String captchaAnswer = request.getParameter("captchaAnswer");
 		if (captchaAnswer == null) {
@@ -323,6 +320,14 @@ public class TestServlet extends HttpServlet {
 		fingerprint.setSampleSetID(SampleIDs.getSampleSetID(request, getServletContext()));
 
 		fingerprint.setAllHeaders(getAllHeadersString(request));
+		
+		{
+			HttpSession session = request.getSession(false);
+			if(session != null){
+				fingerprint.setScreenDetailsCSS(session.getAttribute("width") + "x" + session.getAttribute("height") + "," + session.getAttribute("device-width") + "x" + session.getAttribute("device-height"));
+				session.invalidate();
+			}
+		}
 		
 		return fingerprint;
 	}

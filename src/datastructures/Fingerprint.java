@@ -17,6 +17,7 @@ public class Fingerprint {
 	private String timeZone;
 	private String screenDetails;
 	private String screenDetailsFlash;
+	private String screenDetailsCSS;
 	private String languageFlash;
 	private String fonts;
 	private String fontsJS_CSS;
@@ -63,6 +64,7 @@ public class Fingerprint {
 		timeZone = null;
 		screenDetails = null;
 		screenDetailsFlash = null;
+		screenDetailsCSS = null;
 		languageFlash = null;
 		fonts = null;
 		fontsJS_CSS = null;
@@ -178,6 +180,14 @@ public class Fingerprint {
 		this.screenDetailsFlash = screenDetailsFlash;
 	}
 	
+	public String getScreenDetailsCSS() {
+		return screenDetailsCSS;
+	}
+
+	public void setScreenDetailsCSS(String screenDetailsCSS) {
+		this.screenDetailsCSS = screenDetailsCSS;
+	}
+
 	public String getLanguageFlash() {
 		return languageFlash;
 	}

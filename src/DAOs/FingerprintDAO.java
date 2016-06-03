@@ -27,9 +27,9 @@ import beans.UniquenessBean;
 import datastructures.Fingerprint;
 
 public class FingerprintDAO {
-	private static final String insertSampleStr = "INSERT INTO `Samples`(`SampleUUID`, `IP`, `TimeStamp`, `AllHeaders`, `ContrastLevel`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `LanguageFlash`, `Fonts`, `FontsJS_CSS`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `IndexedDBEnabled`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlockedGoogle`, `AdsBlockedBanner`, `AdsBlockedScript`, `Canvas`, `WebGLVendor`, `WebGLRenderer`, `TouchPoints`, `TouchEvent`, `TouchStart`) VALUES(?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+	private static final String insertSampleStr = "INSERT INTO `Samples`(`SampleUUID`, `IP`, `TimeStamp`, `AllHeaders`, `ContrastLevel`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `ScreenDetailsCSS`, `LanguageFlash`, `Fonts`, `FontsJS_CSS`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `IndexedDBEnabled`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlockedGoogle`, `AdsBlockedBanner`, `AdsBlockedScript`, `Canvas`, `WebGLVendor`, `WebGLRenderer`, `TouchPoints`, `TouchEvent`, `TouchStart`) VALUES(?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 	private static final String getSampleCountStr = "SELECT COUNT(*) FROM `Samples`;";
-	private static final String selectSampleStr = "SELECT `ContrastLevel`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `LanguageFlash`, `Fonts`, `FontsJS_CSS`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `IndexedDBEnabled`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlockedGoogle`, `AdsBlockedBanner`, `AdsBlockedScript`, `WebGLVendor`, `WebGLRenderer`, `TouchPoints`, `TouchEvent`, `TouchStart` FROM `Samples` WHERE `SampleUUID` = ?;";
+	private static final String selectSampleStr = "SELECT `ContrastLevel`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `ScreenDetailsCSS`, `LanguageFlash`, `Fonts`, `FontsJS_CSS`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `IndexedDBEnabled`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlockedGoogle`, `AdsBlockedBanner`, `AdsBlockedScript`, `WebGLVendor`, `WebGLRenderer`, `TouchPoints`, `TouchEvent`, `TouchStart` FROM `Samples` WHERE `SampleUUID` = ?;";
 	private static final String selectSampleSetIDHistory = "SELECT `SampleUUID`, `Timestamp` FROM `SampleSets` INNER JOIN `Samples` USING (`SampleID`) WHERE `SampleSetID` = ? ORDER BY `Timestamp` DESC;";
 
 	private static final String NO_JAVASCRIPT = "No JavaScript";
@@ -217,6 +217,12 @@ public class FingerprintDAO {
 			characteristics.add(bean);
 		}
 		{
+			CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "ScreenDetailsCSS", fingerprint.getScreenDetailsCSS());
+			bean.setName("Screen Size (CSS)");
+			bean.setNameHoverText("The screen size and colour depth of the monitor displaying the client's web browser, detected using CSS.");
+			characteristics.add(bean);
+		}
+		{
 			CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "LanguageFlash", fingerprint.getLanguageFlash());
 			bean.setName("Language (Flash)");
 			bean.setNameHoverText("The language of the client's browser, as detected using Flash.");
@@ -385,6 +391,8 @@ public class FingerprintDAO {
 		insertSample.setString(index, fingerprint.getScreenDetails());
 		++index;
 		insertSample.setString(index, fingerprint.getScreenDetailsFlash());
+		++index;
+		insertSample.setString(index, fingerprint.getScreenDetailsCSS());
 		++index;
 		insertSample.setString(index, fingerprint.getLanguageFlash());
 		++index;
@@ -591,6 +599,7 @@ public class FingerprintDAO {
 		 + " AND `TimeZone`" + (fingerprint.getTimeZone() == null ? " IS NULL" : " = ?")
 		 + " AND `ScreenDetails`" + (fingerprint.getScreenDetails() == null ? " IS NULL" : " = ?")
 		 + " AND `ScreenDetailsFlash`" + (fingerprint.getScreenDetailsFlash() == null ? " IS NULL" : " = ?")
+		 + " AND `ScreenDetailsCSS`" + (fingerprint.getScreenDetailsCSS() == null ? " IS NULL" : " = ?")
 		 + " AND `LanguageFlash`" + (fingerprint.getLanguageFlash() == null ? " IS NULL" : " = ?")
 		 + " AND `Fonts`" + (fingerprint.getFonts() == null ? " IS NULL" : " = ?")
 		 + " AND `FontsJS_CSS`" + (fingerprint.getFontsJS_CSS() == null ? " IS NULL" : " = ?")
@@ -655,6 +664,10 @@ public class FingerprintDAO {
 		}
 		if (fingerprint.getScreenDetailsFlash() != null) {
 			checkExists.setString(index, fingerprint.getScreenDetailsFlash());
+			++index;
+		}
+		if (fingerprint.getScreenDetailsCSS() != null) {
+			checkExists.setString(index, fingerprint.getScreenDetailsCSS());
 			++index;
 		}
 		if (fingerprint.getLanguageFlash() != null) {
@@ -799,6 +812,7 @@ public class FingerprintDAO {
 		+ " AND `TimeZone`" + (fingerprint.getTimeZone() == null ? " IS NULL" : " = ?")
 		+ " AND `ScreenDetails`" + (fingerprint.getScreenDetails() == null ? " IS NULL" : " = ?")
 		+ " AND `ScreenDetailsFlash`" + (fingerprint.getScreenDetailsFlash() == null ? " IS NULL" : " = ?")
+		+ " AND `ScreenDetailsCSS`" + (fingerprint.getScreenDetailsCSS() == null ? " IS NULL" : " = ?")
 		+ " AND `LanguageFlash`" + (fingerprint.getLanguageFlash() == null ? " IS NULL" : " = ?")
 		+ " AND `Fonts`" + (fingerprint.getFonts() == null ? " IS NULL" : " = ?")
 		+ " AND `FontsJS_CSS`" + (fingerprint.getFontsJS_CSS() == null ? " IS NULL" : " = ?")
@@ -860,6 +874,10 @@ public class FingerprintDAO {
 		}
 		if (fingerprint.getScreenDetailsFlash() != null) {
 			checkExists.setString(index, fingerprint.getScreenDetailsFlash());
+			++index;
+		}
+		if (fingerprint.getScreenDetailsCSS() != null) {
+			checkExists.setString(index, fingerprint.getScreenDetailsCSS());
 			++index;
 		}
 		if (fingerprint.getLanguageFlash() != null) {
@@ -1456,6 +1474,9 @@ public class FingerprintDAO {
 		++index;
 		// ScreenDetailsFlash
 		fingerprint.setScreenDetailsFlash(rs.getString(index));
+		++index;
+		// ScreenDetailsCSS
+		fingerprint.setScreenDetailsCSS(rs.getString(index));
 		++index;
 		// LanguageFlash
 		fingerprint.setLanguageFlash(rs.getString(index));
