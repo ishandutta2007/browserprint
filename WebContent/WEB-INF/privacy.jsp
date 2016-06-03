@@ -58,7 +58,7 @@
 		<li>The name of the platform the browser is running on, detected using JavaScript and flash.</li>
 		<li>A list of your installed browser plugins, as detected using JavaScript.</li>
 		<li>The time-zone configured on your machine, as detected using JavaScript.</li>
-		<li>The screen size and colour depth of the monitor displaying the client's web browser, as detected using JavaScript and flash.</li>
+		<li>The screen size and colour depth of the monitor displaying the client's web browser, as detected using JavaScript, Flash, and CSS.</li>
 		<li>The language of the client's browser, as detected using Flash.</li>
 		<li>The fonts installed on the client's machine, detected using Flash and JavaScript.</li>
 		<li>The heights and widths of a set of Unicode characters rendered in various styles (e.g. sans-serif).</li>

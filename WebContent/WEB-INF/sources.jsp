@@ -58,6 +58,10 @@
 	<p>
 		AmIUnique.
 	</p>
+	<h3>Screen Size (CSS)</h3>
+	<p>
+		Based on a proof of concept from <a href="https://github.com/arthuredelstein">Arthur Edelstein</a>.
+	</p>
 	<h3>Language (Flash)</h3>
 	<p>	
 		AmIUnique.
