@@ -35,6 +35,12 @@
 		Browerprint's development was partially funded by <a href="http://acems.org.au/">ACEMS</a>.
 		This project would not be possible without these institutions' help.
 	</p>
+	<p>
+		<b>News 2016-06-04:</b> We have now implemented our first CSS fingerprinting test that doesn't involve JavaScript;
+		 a test for the size of the monitor the browser is being displayed on.
+		It's our hope that this will be just the first of many innovative CSS-only tests.
+		Thanks to <a href="https://github.com/arthuredelstein">Arthur Edelstein</a> for the concept.
+	</p>
 </div>
 <%@include file="/WEB-INF/footer.jsp" %>
 </body>
