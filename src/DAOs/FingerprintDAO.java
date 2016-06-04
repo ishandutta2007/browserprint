@@ -9,6 +9,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.TimeZone;
+import java.util.TreeSet;
 import java.util.UUID;
 
 import javax.servlet.ServletContext;
@@ -29,6 +30,7 @@ import datastructures.Fingerprint;
 public class FingerprintDAO {
 	private static final String insertSampleStr = "INSERT INTO `Samples`(`SampleUUID`, `IP`, `TimeStamp`, `AllHeaders`, `ContrastLevel`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `ScreenDetailsCSS`, `LanguageFlash`, `Fonts`, `FontsJS_CSS`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `IndexedDBEnabled`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlockedGoogle`, `AdsBlockedBanner`, `AdsBlockedScript`, `Canvas`, `WebGLVendor`, `WebGLRenderer`, `TouchPoints`, `TouchEvent`, `TouchStart`) VALUES(?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 	private static final String getSampleCountStr = "SELECT COUNT(*) FROM `Samples`;";
+	private static final String getSampleCountVersionAwareStr = "SELECT `BrowserprintVersion` AS `Version`, (SELECT COUNT(*) FROM `Samples` WHERE `BrowserprintVersion` >= `Version`) FROM `Samples` GROUP BY `BrowserprintVersion` UNION SELECT 1, COUNT(*) FROM `Samples`;";
 	private static final String selectSampleStr = "SELECT `ContrastLevel`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `ScreenDetailsCSS`, `LanguageFlash`, `Fonts`, `FontsJS_CSS`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `IndexedDBEnabled`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlockedGoogle`, `AdsBlockedBanner`, `AdsBlockedScript`, `WebGLVendor`, `WebGLRenderer`, `TouchPoints`, `TouchEvent`, `TouchStart` FROM `Samples` WHERE `SampleUUID` = ?;";
 	private static final String selectSampleSetIDHistory = "SELECT `SampleUUID`, `Timestamp` FROM `SampleSets` INNER JOIN `Samples` USING (`SampleID`) WHERE `SampleSetID` = ? ORDER BY `Timestamp` DESC;";
 
@@ -128,7 +130,8 @@ public class FingerprintDAO {
 		/*
 		 * Get number of samples.
 		 */
-		int sampleCount = getSampleCount(conn);
+		TreeSet<VersionCount> sampleCounts = getSampleCountVersionAware(conn);
+		int totalSamples = sampleCounts.first().getCount();
 
 		/*
 		 * Get uniqueness.
@@ -139,8 +142,8 @@ public class FingerprintDAO {
 		} else {
 			uniquenessbean.setUnique(false);
 		}
-		uniquenessbean.setNum_samples(sampleCount);
-		uniquenessbean.setInX(((double) sampleCount) / ((double) sampleOccurrences));
+		uniquenessbean.setNum_samples(totalSamples);
+		uniquenessbean.setInX(((double) totalSamples) / ((double) sampleOccurrences));
 		uniquenessbean.setBits(Math.abs(Math.log(uniquenessbean.getInX()) / Math.log(2)));
 		uniquenessbean.setNum_occurrences(sampleOccurrences);
 
@@ -149,7 +152,7 @@ public class FingerprintDAO {
 		 */
 		ArrayList<CharacteristicBean> characteristics = chrsbean.getCharacteristics();
 		{
-			CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "ContrastLevel", fingerprint.getContrastLevel());
+			CharacteristicBean bean = getCharacteristicBean(conn, sampleCounts.lower(new VersionCount(9 + 1)).getCount(), "ContrastLevel", fingerprint.getContrastLevel());
 			bean.setName("Monitor Contrast Level");
 			bean.setNameHoverText("A rough measure of the level of contrast of the monitor the browser is being displayed on.");
 			
@@ -167,69 +170,69 @@ public class FingerprintDAO {
 			characteristics.add(bean);
 		}
 		{
-			CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "UserAgent", fingerprint.getUser_agent());
+			CharacteristicBean bean = getCharacteristicBean(conn, totalSamples, "UserAgent", fingerprint.getUser_agent());
 			bean.setName("User Agent");
 			bean.setNameHoverText("The User-Agent header sent with the HTTP request for the page.");
 			characteristics.add(bean);
 		}
 		{
-			CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "AcceptHeaders", fingerprint.getAccept_headers());
+			CharacteristicBean bean = getCharacteristicBean(conn, totalSamples, "AcceptHeaders", fingerprint.getAccept_headers());
 			bean.setName("HTTP_ACCEPT Headers");
 			bean.setNameHoverText("The concatenation of three headers from the HTTP request:"
 			+ " The Accept request header, the Accept-Encoding request header, and the Accept-Language request header.");
 			characteristics.add(bean);
 		}
 		{
-			CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "Platform", fingerprint.getPlatform());
+			CharacteristicBean bean = getCharacteristicBean(conn, totalSamples, "Platform", fingerprint.getPlatform());
 			bean.setName("Platform (JavaScript)");
 			bean.setNameHoverText("The name of the platform the browser is running on, detected using JavaScript.");
 			characteristics.add(bean);
 		}
 		{
-			CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "PlatformFlash", fingerprint.getPlatformFlash());
+			CharacteristicBean bean = getCharacteristicBean(conn, totalSamples, "PlatformFlash", fingerprint.getPlatformFlash());
 			bean.setName("Platform (Flash)");
 			bean.setNameHoverText("The name of the platform the browser is running on, detected using Flash.");
 			characteristics.add(bean);
 		}
 		{
-			CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "PluginDetails", fingerprint.getPluginDetails());
+			CharacteristicBean bean = getCharacteristicBean(conn, totalSamples, "PluginDetails", fingerprint.getPluginDetails());
 			bean.setName("Browser Plugin Details");
 			bean.setNameHoverText("A list of the browsers installed plugins as detected using JavaScript.");
 			characteristics.add(bean);
 		}
 		{
-			CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "TimeZone", fingerprint.getTimeZone());
+			CharacteristicBean bean = getCharacteristicBean(conn, totalSamples, "TimeZone", fingerprint.getTimeZone());
 			bean.setName("Time Zone");
 			bean.setNameHoverText("The time-zone configured on the client's machine.");
 			characteristics.add(bean);
 		}
 		{
-			CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "ScreenDetails", fingerprint.getScreenDetails());
+			CharacteristicBean bean = getCharacteristicBean(conn, totalSamples, "ScreenDetails", fingerprint.getScreenDetails());
 			bean.setName("Screen Size and Colour Depth");
 			bean.setNameHoverText("The screen size and colour depth of the monitor displaying the client's web browser.");
 			characteristics.add(bean);
 		}
 		{
-			CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "ScreenDetailsFlash", fingerprint.getScreenDetailsFlash());
+			CharacteristicBean bean = getCharacteristicBean(conn, totalSamples, "ScreenDetailsFlash", fingerprint.getScreenDetailsFlash());
 			bean.setName("Screen Size (Flash)");
 			bean.setNameHoverText("The resolution of the client's monitor(s)."
 			+ " Different from the other screen size test in that this number can be the cumulative resolution of the monitors in multiple monitor set ups.");
 			characteristics.add(bean);
 		}
 		{
-			CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "ScreenDetailsCSS", fingerprint.getScreenDetailsCSS());
+			CharacteristicBean bean = getCharacteristicBean(conn, sampleCounts.lower(new VersionCount(13 + 1)).getCount(), "ScreenDetailsCSS", fingerprint.getScreenDetailsCSS());
 			bean.setName("Screen Size (CSS)");
 			bean.setNameHoverText("The screen size and colour depth of the monitor displaying the client's web browser, detected using CSS.");
 			characteristics.add(bean);
 		}
 		{
-			CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "LanguageFlash", fingerprint.getLanguageFlash());
+			CharacteristicBean bean = getCharacteristicBean(conn, totalSamples, "LanguageFlash", fingerprint.getLanguageFlash());
 			bean.setName("Language (Flash)");
 			bean.setNameHoverText("The language of the client's browser, as detected using Flash.");
 			characteristics.add(bean);
 		}
 		{
-			CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "Fonts", fingerprint.getFonts());
+			CharacteristicBean bean = getCharacteristicBean(conn, totalSamples, "Fonts", fingerprint.getFonts());
 			if (bean.getValue().equals("")) {
 				bean.setValue("No fonts detected");
 			}
@@ -238,7 +241,7 @@ public class FingerprintDAO {
 			characteristics.add(bean);
 		}
 		{
-			CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "FontsJS_CSS", fingerprint.getFontsJS_CSS());
+			CharacteristicBean bean = getCharacteristicBean(conn, sampleCounts.lower(new VersionCount(6 + 1)).getCount(), "FontsJS_CSS", fingerprint.getFontsJS_CSS());
 			if (bean.getValue().equals("")) {
 				bean.setValue("No fonts detected");
 			}
@@ -247,32 +250,32 @@ public class FingerprintDAO {
 			characteristics.add(bean);
 		}
 		{
-			CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "CharSizes", fingerprint.getCharSizes());
+			CharacteristicBean bean = getCharacteristicBean(conn, sampleCounts.lower(new VersionCount(2 + 1)).getCount(), "CharSizes", fingerprint.getCharSizes());
 			bean.setName("Character Sizes");
 			bean.setNameHoverText("The height and width of a set of Unicode characters when rendered with a set of different styles (e.g. sans-serif).");
 			characteristics.add(bean);
 		}
 		{
-			CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "CookiesEnabled", fingerprint.isCookiesEnabled());
+			CharacteristicBean bean = getCharacteristicBean(conn, totalSamples, "CookiesEnabled", fingerprint.isCookiesEnabled());
 			bean.setName("Are Cookies Enabled?");
 			bean.setNameHoverText("Whether cookies are enabled.");
 			characteristics.add(bean);
 		}
 		{
-			CharacteristicBean bean = getSuperCookieCharacteristicBean(conn, sampleCount, fingerprint);
+			CharacteristicBean bean = getSuperCookieCharacteristicBean(conn, sampleCounts.lower(new VersionCount(5 + 1)).getCount(), fingerprint);
 			bean.setName("Limited supercookie test");
 			bean.setNameHoverText("Three tests of whether DOM storage is supported (and enabled) in the client's web browser."
 			+ " Tests for localStorage, sessionStorage, and Internet Explorer's userData.");
 			characteristics.add(bean);
 		}
 		{
-			CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "IndexedDBEnabled", fingerprint.getIndexedDBEnabled());
+			CharacteristicBean bean = getCharacteristicBean(conn, sampleCounts.lower(new VersionCount(8 + 1)).getCount(), "IndexedDBEnabled", fingerprint.getIndexedDBEnabled());
 			bean.setName("Does the browser support IndexedDB?");
 			bean.setNameHoverText("Detects whether the browser supports IndexedDB, a database embedded within the browser.");
 			characteristics.add(bean);
 		}
 		{
-			CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "DoNotTrack", fingerprint.getDoNotTrack());
+			CharacteristicBean bean = getCharacteristicBean(conn, totalSamples, "DoNotTrack", fingerprint.getDoNotTrack());
 			if (bean.getValue().equals(NO_JAVASCRIPT)) {
 				bean.setValue("No preference");
 			}
@@ -281,20 +284,20 @@ public class FingerprintDAO {
 			characteristics.add(bean);
 		}
 		{
-			CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "ClockDifference", fingerprint.getClockDifference());
+			CharacteristicBean bean = getCharacteristicBean(conn, totalSamples, "ClockDifference", fingerprint.getClockDifference());
 			bean.setName("Client/server time difference (minutes)");
 			bean.setNameHoverText("The approximate amount of difference between the time on the client's computer and the clock on the server."
 			+ " i.e., the clock on the client's computer is 5 minutes ahead of the clock on the server.");
 			characteristics.add(bean);
 		}
 		{
-			CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "DateTime", fingerprint.getDateTime());
+			CharacteristicBean bean = getCharacteristicBean(conn, totalSamples, "DateTime", fingerprint.getDateTime());
 			bean.setName("Date/Time format");
 			bean.setNameHoverText("When the JavaScript function toLocaleString() is called on a date it can reveal information about the language of the browser via the names of days and months." + " For instance the output 'Thursday January 01, 10:30:00 GMT+1030 1970' reveals that English is our configured language because 'Thursday' is English." + " Additionally different browsers tend to return differently formatted results." + " For instance Opera returns the above whereas Firefox returns '1/1/1970 9:30:00 am' for the same date (UNIX epoch)." + " Additionally timezone information may be revealed." + " For instance the above were taken on a computer configured for ACST (+9:30), which is why the times shown aren't midnight.");
 			characteristics.add(bean);
 		}
 		{
-			CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "MathTan", fingerprint.getMathTan());
+			CharacteristicBean bean = getCharacteristicBean(conn, totalSamples, "MathTan", fingerprint.getMathTan());
 			bean.setName("Math/Tan function");
 			bean.setNameHoverText("The same math functions run on different platforms and browsers can produce different results."
 			+ " In particular we are interested in the output of Math.tan(-1e300), which has been observed to produce different values depending on operating system."
@@ -302,14 +305,14 @@ public class FingerprintDAO {
 			characteristics.add(bean);
 		}
 		{
-			CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "UsingTor", fingerprint.isUsingTor());
+			CharacteristicBean bean = getCharacteristicBean(conn, totalSamples, "UsingTor", fingerprint.isUsingTor());
 			bean.setName("Using Tor?");
 			bean.setNameHoverText("Checks whether a client's request came from a Tor exit node, and hence whether they're using Tor."
 			+ " It does so by performing a TorDNSEL request for each client.");
 			characteristics.add(bean);
 		}
 		{
-			CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "TbbVersion", fingerprint.getTbbVersion());
+			CharacteristicBean bean = getCharacteristicBean(conn, sampleCounts.lower(new VersionCount(8 + 1)).getCount(), "TbbVersion", fingerprint.getTbbVersion());
 			bean.setName("TBB version");
 			if (bean.getValue().equals("")) {
 				bean.setValue("No Tor Browser Bundle version detected");
@@ -318,7 +321,7 @@ public class FingerprintDAO {
 			characteristics.add(bean);
 		}
 		{
-			CharacteristicBean bean = getAdsBlockedCharacteristicBean(conn, sampleCount, fingerprint);
+			CharacteristicBean bean = getAdsBlockedCharacteristicBean(conn, sampleCounts.lower(new VersionCount(12 + 1)).getCount(), fingerprint);
 			bean.setName("Blocking ads?");
 			bean.setNameHoverText("Checks whether ad blocking software is installed."
 					+ " It does so by attempting to display 2 ads and trying to call a function from a script named like an ad serving script."
@@ -336,19 +339,19 @@ public class FingerprintDAO {
 			characteristics.add(bean);
 		}*/
 		{
-			CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "WebGLVendor", fingerprint.getWebGLVendor());
+			CharacteristicBean bean = getCharacteristicBean(conn, totalSamples, "WebGLVendor", fingerprint.getWebGLVendor());
 			bean.setName("WebGL Vendor");
 			bean.setNameHoverText("Name of the WebGL Vendor. Some browsers give the full name of the underlying graphics card used by the device.");
 			characteristics.add(bean);
 		}
 		{
-			CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "WebGLRenderer", fingerprint.getWebGLRenderer());
+			CharacteristicBean bean = getCharacteristicBean(conn, totalSamples, "WebGLRenderer", fingerprint.getWebGLRenderer());
 			bean.setName("WebGL Renderer");
 			bean.setNameHoverText("Name of the WebGL Renderer. Some browsers give the full name of the underlying graphics driver.");
 			characteristics.add(bean);
 		}
 		{
-			CharacteristicBean bean = getTouchCharacteristicBean(conn, sampleCount, fingerprint);
+			CharacteristicBean bean = getTouchCharacteristicBean(conn, sampleCounts.lower(new VersionCount(8 + 1)).getCount(), fingerprint);
 			bean.setName("Touch Support");
 			bean.setNameHoverText("Primative touch screen detection.");
 			characteristics.add(bean);
@@ -787,6 +790,28 @@ public class FingerprintDAO {
 		int sampleCount = rs.getInt(1);
 		rs.close();
 		return sampleCount;
+	}
+	
+	/**
+	 * Get number of samples for each version.
+	 * Counts include all samples with version number higher than or equal to the version number in question.
+	 * E.g. For version 1 we have all samples, since all samples are version 1 or higher.
+	 * For version 2 we have all samples of version 2, version 3, version 4, ..., up until the latest version.
+	 * We only need to use this version aware version of sample count because we're adding features to the live site, so there will be fingerprints from older versions.
+	 * @param conn
+	 * @return
+	 * @throws SQLException
+	 */
+	public static TreeSet<VersionCount> getSampleCountVersionAware(Connection conn) throws SQLException {
+		PreparedStatement getSampleCount = conn.prepareStatement(getSampleCountVersionAwareStr);
+		
+		TreeSet<VersionCount> counts = new TreeSet<VersionCount>();
+		ResultSet rs = getSampleCount.executeQuery();
+		while(rs.next()){
+			counts.add(new VersionCount(rs.getInt(1), rs.getInt(2)));
+		}
+		rs.close();
+		return counts;
 	}
 
 	/**
@@ -1586,5 +1611,41 @@ public class FingerprintDAO {
 		getFingerprint.close();
 
 		return fingerprint;
+	}
+}
+
+class VersionCount implements Comparable<VersionCount>{
+	private int version;
+	private int count;
+	
+	public VersionCount(int version){
+		this.version = version;
+		this.count = 0;
+	}
+	
+	public VersionCount(int version, int count){
+		this.version = version;
+		this.count = count;
+	}
+
+	@Override
+	public int compareTo(VersionCount o) {
+		return this.version - o.version;
+	}
+
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
+	}
+
+	public int getCount() {
+		return count;
+	}
+
+	public void setCount(int count) {
+		this.count = count;
 	}
 }
