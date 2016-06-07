@@ -11,15 +11,6 @@
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<link rel="stylesheet" type="text/css" href="<c:url value="screenSizeCSS.css"/>">
 	<script type="text/javascript" src="scripts/jquery-1.11.2.min.js"></script>
-	<script type="text/javascript">
-	$(window).load(function(){
-		$('<input>').attr({
-			type: 'hidden',
-			name: 'js_enabled',
-			value: 'true'
-		}).appendTo('#captchaForm');
-	});
-	</script>
 </head>
 <body>
 	<p>
@@ -36,6 +27,13 @@
 			<input type="text" name="captchaAnswer"><br/>
 			<input type="submit" value="Continue">
 		</form>
+		<script type="text/javascript">
+		$('<input>').attr({
+			type: 'hidden',
+			name: 'js_enabled',
+			value: 'true'
+		}).appendTo('#captchaForm');
+		</script>
 	</div>
 	<div id="device-width"></div>
 	<div id="device-height"></div>
