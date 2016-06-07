@@ -181,7 +181,7 @@ public class CaptchaServlet extends HttpServlet {
 		
 		request.setAttribute("captchaBean", new CaptchaBean(imageString));
 		
-		session.setMaxInactiveInterval(60);//Session invalidates after 60 seconds.
+		session.setMaxInactiveInterval(240);//Session invalidates after 240 seconds.
 		session.setAttribute("captcha", captchaSolution);
 		
 		request.getRequestDispatcher("/WEB-INF/captcha.jsp").forward(request, response);
