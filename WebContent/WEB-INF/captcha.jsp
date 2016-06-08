@@ -24,16 +24,16 @@
 	<div>
 		<img src="${ captchaBean.captchaSrc }"/>
 		<form id="captchaForm" action="<c:url value="test"/>" method="POST">
+			<script type="text/javascript">
+			$('<input>').attr({
+				type: 'hidden',
+				name: 'js_enabled',
+				value: 'true'
+			}).appendTo('#captchaForm');
+			</script>
 			<input type="text" name="captchaAnswer"><br/>
 			<input type="submit" value="Continue">
 		</form>
-		<script type="text/javascript">
-		$('<input>').attr({
-			type: 'hidden',
-			name: 'js_enabled',
-			value: 'true'
-		}).appendTo('#captchaForm');
-		</script>
 	</div>
 	<div id="device-width"></div>
 	<div id="device-height"></div>
