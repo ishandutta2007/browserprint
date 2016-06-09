@@ -10,8 +10,8 @@
 	 		<img alt="Creative Commons License" style="border-width:0" src="images/creativecommons.80x15.png" >
 	 	</a>
 	 	<br>
-	 	The output of this web application is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
+		The output of this web application is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
 	 	<br>
-	 	Copyright (c) 2015 Lachlan Kang
+		Copyright (c) 2015 Lachlan Kang
 	 </div>
 </div>
