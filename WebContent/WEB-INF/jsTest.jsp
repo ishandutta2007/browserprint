@@ -9,6 +9,44 @@
 	<meta name="robots" content="noindex" >
 	<script type="text/javascript" src="scripts/jquery-1.11.2.min.js"></script>
 	<script type="text/javascript" src="scripts/swfobject.js"></script>
+	<script type="text/javascript" src="scripts/PluginDetect.js"></script>
+	<script type="text/javascript" src="scripts/f.js"></script>
+	<script type="text/javascript" src="scripts/fjs2.js"></script>
+	<script type="text/javascript" src="adtests/easylist/ads/js/testscript.js"></script>
+</head>
+<body>
+	<script type="text/javascript">
+	var tbbVersion = "";
+	function pref(key, val) {
+		if(key == "torbrowser.version"){
+			tbbVersion = val;
+		}
+	}
+	</script>
+	<script type="text/javascript" src="resource:///defaults/preferences/000-tor-browser.js"></script>
+	<p>
+		Please wait...
+	</p>
+	<form id="detailsForm" action="<c:url value="test"/>" method="POST">
+		<div id="formdiv">
+			<input type="hidden" name="show_fingerprint" value="true">
+			<input type="hidden" name="captchaAnswer" value="<c:out value='${ param.captchaAnswer }'/>">
+		</div>
+	</form>
+	<!-- Flash for detecting fonts and other things. -->
+	<div id="OSDataDiv">
+			<a href="http://www.adobe.com/go/getflashplayer">
+				<img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player" />
+			</a>
+	</div>
+	<!-- Part of the ad blocking test. -->
+	<script type="text/javascript">
+        google_ad_height = 90;
+    </script> 
+	<div id="ad" style="display:none">
+		<script type="text/javascript" src="https://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
+	</div>
+	<img id="banner468x60" src="adtests/easylist/ads/banner468x60.png" style="display:none"/>
 	<script type="text/javascript">
 		var flashvars = {};
 		var params = {};
@@ -16,12 +54,12 @@
 		attributes.id = "OSData";
 		swfobject.embedSWF("flash/OSData.swf", "OSDataDiv", "0", "0", "9.0.0", false, flashvars, params, attributes);
 	</script>
-	<script type="text/javascript" src="scripts/PluginDetect.js"></script>
-	<script type="text/javascript" src="scripts/f.js"></script>
-	<script type="text/javascript" src="scripts/fjs2.js"></script>
-	<script type="text/javascript" src="adtests/easylist/ads/js/testscript.js"></script>
 	<script type="text/javascript">
 		$(window).load(function(){
+			//We sleep for a second to avoid a bug where Flash doesn't work because it hasn't had enough time to load or something.
+			setTimeout(getFP, 1000);
+		});
+		function getFP(){
 			var flash = $("#OSData")[0];
 			
 			//Platform
@@ -131,6 +169,7 @@
 					}
 				}catch(e){
 					val = 'Flash disabled';
+					alert(e);
 				}
 				$('<input>').attr({
 			   		type: 'hidden',
@@ -287,7 +326,7 @@
 			
 			//Submit the page.
 			submitDetailsForm();
-		});
+		}
 		
 		function submitDetailsForm(){
 			//Time, for clock skew test.
@@ -302,39 +341,5 @@
 			$('#detailsForm').submit();
 		}
 	</script>
-</head>
-<body>
-	<script type="text/javascript">
-	var tbbVersion = "";
-	function pref(key, val) {
-		if(key == "torbrowser.version"){
-			tbbVersion = val;
-		}
-	}
-	</script>
-	<script type="text/javascript" src="resource:///defaults/preferences/000-tor-browser.js"></script>
-	<p>
-		Please wait...
-	</p>
-	<form id="detailsForm" action="<c:url value="test"/>" method="POST">
-		<div id="formdiv">
-			<input type="hidden" name="show_fingerprint" value="true">
-			<input type="hidden" name="captchaAnswer" value="<c:out value='${ param.captchaAnswer }'/>">
-		</div>
-	</form>
-	<!-- Flash for detecting fonts and other things. -->
-	<div id="OSDataDiv">
-			<a href="http://www.adobe.com/go/getflashplayer">
-				<img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player" />
-			</a>
-	</div>
-	<!-- Part of the ad blocking test. -->
-	<script type="text/javascript">
-        google_ad_height = 90;
-    </script> 
-	<div id="ad" style="display:none">
-		<script type="text/javascript" src="https://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
-	</div>
-	<img id="banner468x60" src="adtests/easylist/ads/banner468x60.png" style="display:none"/>
 </body>
 </html>
