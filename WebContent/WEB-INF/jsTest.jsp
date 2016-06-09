@@ -169,7 +169,6 @@
 					}
 				}catch(e){
 					val = 'Flash disabled';
-					alert(e);
 				}
 				$('<input>').attr({
 			   		type: 'hidden',
