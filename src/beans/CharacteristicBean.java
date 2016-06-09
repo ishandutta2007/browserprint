@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 @SuppressWarnings("serial")
 public class CharacteristicBean implements Serializable{
+	public static final int DEPRECATED_COLOUR[] = {200, 200, 200};
 	
 	private String name;
 	private String nameHoverText;
@@ -11,6 +12,7 @@ public class CharacteristicBean implements Serializable{
 	private double bits;
 	private double inX;
 	private String value;
+	private int colour[];
 
 	public CharacteristicBean(){
 		name = "";
@@ -19,6 +21,7 @@ public class CharacteristicBean implements Serializable{
 		bits = 0;
 		inX = 0;
 		value = "";
+		colour = null;
 	}
 	
 	public String getName() {
@@ -69,4 +72,11 @@ public class CharacteristicBean implements Serializable{
 		this.value = value;
 	}
 
+	public int[] getColour() {
+		return colour;
+	}
+
+	public void setColour(int[] colour) {
+		this.colour = colour;
+	}
 }

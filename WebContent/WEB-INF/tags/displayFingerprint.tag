@@ -8,15 +8,20 @@
 	<tr>
 		<th>Browser Characteristic</th>
 <%--		<th>bits of identifying information</th>
---%>	<th>Number of occurrences</th>
+--%>		<th>Number of occurrences</th>
 		<th>one in <i>x</i> browsers have this value</th>
 		<th>value</th>
 	</tr>
-	<c:forEach var="chr" items="${ chrsBean.characteristics }"><tr>
+	<c:forEach var="chr" items="${ chrsBean.characteristics }"><%--
+	--%><c:choose><%--
+		--%><c:when test="${ chr.colour != null }">	<tr style="background-color: rgb(${ chr.colour[0] },${ chr.colour[1] },${ chr.colour[2] });"></c:when><%--
+--%><c:otherwise>	<tr></c:otherwise><%--
+	--%></c:choose>
 		<td class="hovertext" title="${ chr.nameHoverText }">${ chr.name }</td>
 <%--		<td><fmt:formatNumber value="${ chr.bits }" maxFractionDigits="2"/></td>
 --%>		<td>${ chr.numOccurrences }</td>
 		<td><fmt:formatNumber value="${ chr.inX }" maxFractionDigits="2"/></td>
 		<td class="tableValue">${ chr.value }</td>
-	</tr></c:forEach>
-</table>
+	</tr>
+<%----%></c:forEach><%--
+--%></table>

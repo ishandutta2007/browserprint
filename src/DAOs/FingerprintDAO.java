@@ -31,7 +31,7 @@ public class FingerprintDAO {
 	private static final String insertSampleStr = "INSERT INTO `Samples`(`SampleUUID`, `IP`, `TimeStamp`, `AllHeaders`, `ContrastLevel`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `ScreenDetailsCSS`, `LanguageFlash`, `Fonts`, `FontsJS_CSS`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `IndexedDBEnabled`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlockedGoogle`, `AdsBlockedBanner`, `AdsBlockedScript`, `Canvas`, `WebGLVendor`, `WebGLRenderer`, `TouchPoints`, `TouchEvent`, `TouchStart`) VALUES(?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 	private static final String getSampleCountStr = "SELECT COUNT(*) FROM `Samples`;";
 	private static final String getSampleCountVersionAwareStr = "SELECT `BrowserprintVersion` AS `Version`, (SELECT COUNT(*) FROM `Samples` WHERE `BrowserprintVersion` >= `Version`) FROM `Samples` GROUP BY `BrowserprintVersion` UNION SELECT 1, COUNT(*) FROM `Samples`;";
-	private static final String selectSampleStr = "SELECT `ContrastLevel`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `ScreenDetailsCSS`, `LanguageFlash`, `Fonts`, `FontsJS_CSS`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `IndexedDBEnabled`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlockedGoogle`, `AdsBlockedBanner`, `AdsBlockedScript`, `WebGLVendor`, `WebGLRenderer`, `TouchPoints`, `TouchEvent`, `TouchStart` FROM `Samples` WHERE `SampleUUID` = ?;";
+	private static final String selectSampleStr = "SELECT `ContrastLevel`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `ScreenDetailsCSS`, `LanguageFlash`, `Fonts`, `FontsJS_CSS`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `IndexedDBEnabled`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlockedGoogle`, `AdsBlockedBanner`, `AdsBlockedScript`, `Canvas`, `WebGLVendor`, `WebGLRenderer`, `TouchPoints`, `TouchEvent`, `TouchStart` FROM `Samples` WHERE `SampleUUID` = ?;";
 	private static final String selectSampleSetIDHistory = "SELECT `SampleUUID`, `Timestamp` FROM `SampleSets` INNER JOIN `Samples` USING (`SampleID`) WHERE `SampleSetID` = ? ORDER BY `Timestamp` DESC;";
 
 	private static final String NO_JAVASCRIPT = "No JavaScript";
@@ -179,7 +179,7 @@ public class FingerprintDAO {
 			CharacteristicBean bean = getCharacteristicBean(conn, totalSamples, "AcceptHeaders", fingerprint.getAccept_headers());
 			bean.setName("HTTP_ACCEPT Headers");
 			bean.setNameHoverText("The concatenation of three headers from the HTTP request:"
-			+ " The Accept request header, the Accept-Encoding request header, and the Accept-Language request header.");
+					+ " The Accept request header, the Accept-Encoding request header, and the Accept-Language request header.");
 			characteristics.add(bean);
 		}
 		{
@@ -208,21 +208,25 @@ public class FingerprintDAO {
 		}
 		{
 			CharacteristicBean bean = getCharacteristicBean(conn, totalSamples, "ScreenDetails", fingerprint.getScreenDetails());
-			bean.setName("Screen Size and Colour Depth");
-			bean.setNameHoverText("The screen size and colour depth of the monitor displaying the client's web browser.");
+			bean.setColour(CharacteristicBean.DEPRECATED_COLOUR);
+			bean.setName("Screen Size and Colour Depth [DEPRECATED]");
+			bean.setNameHoverText("The screen size and colour depth of the monitor displaying the client's web browser."
+					+ " Deprecated because in the current implementation zooming changes the result in newer browsers.");
 			characteristics.add(bean);
 		}
 		{
 			CharacteristicBean bean = getCharacteristicBean(conn, totalSamples, "ScreenDetailsFlash", fingerprint.getScreenDetailsFlash());
 			bean.setName("Screen Size (Flash)");
 			bean.setNameHoverText("The resolution of the client's monitor(s)."
-			+ " Different from the other screen size test in that this number can be the cumulative resolution of the monitors in multiple monitor set ups.");
+					+ " Different from the other screen size test in that this number can be the cumulative resolution of the monitors in multiple monitor set ups.");
 			characteristics.add(bean);
 		}
 		{
 			CharacteristicBean bean = getCharacteristicBean(conn, sampleCounts.lower(new VersionCount(13 + 1)).getCount(), "ScreenDetailsCSS", fingerprint.getScreenDetailsCSS());
-			bean.setName("Screen Size (CSS)");
-			bean.setNameHoverText("The screen size and colour depth of the monitor displaying the client's web browser, detected using CSS.");
+			bean.setColour(CharacteristicBean.DEPRECATED_COLOUR);
+			bean.setName("Screen Size (CSS) [DEPRECATED]");
+			bean.setNameHoverText("The screen size and colour depth of the monitor displaying the client's web browser, detected using CSS."
+					+ " Deprecated because in the current implementation zooming changes the result in newer browsers.");
 			characteristics.add(bean);
 		}
 		{
@@ -251,8 +255,10 @@ public class FingerprintDAO {
 		}
 		{
 			CharacteristicBean bean = getCharacteristicBean(conn, sampleCounts.lower(new VersionCount(2 + 1)).getCount(), "CharSizes", fingerprint.getCharSizes());
-			bean.setName("Character Sizes");
-			bean.setNameHoverText("The height and width of a set of Unicode characters when rendered with a set of different styles (e.g. sans-serif).");
+			bean.setColour(CharacteristicBean.DEPRECATED_COLOUR);
+			bean.setName("Character Sizes [DEPRECATED]");
+			bean.setNameHoverText("The height and width of a set of Unicode characters when rendered with a set of different styles (e.g. sans-serif)."
+					+ " Deprecated because in the current implementation zooming changes the result.");
 			characteristics.add(bean);
 		}
 		{
@@ -265,7 +271,7 @@ public class FingerprintDAO {
 			CharacteristicBean bean = getSuperCookieCharacteristicBean(conn, sampleCounts.lower(new VersionCount(5 + 1)).getCount(), fingerprint);
 			bean.setName("Limited supercookie test");
 			bean.setNameHoverText("Three tests of whether DOM storage is supported (and enabled) in the client's web browser."
-			+ " Tests for localStorage, sessionStorage, and Internet Explorer's userData.");
+					+ " Tests for localStorage, sessionStorage, and Internet Explorer's userData.");
 			characteristics.add(bean);
 		}
 		{
@@ -287,7 +293,7 @@ public class FingerprintDAO {
 			CharacteristicBean bean = getCharacteristicBean(conn, totalSamples, "ClockDifference", fingerprint.getClockDifference());
 			bean.setName("Client/server time difference (minutes)");
 			bean.setNameHoverText("The approximate amount of difference between the time on the client's computer and the clock on the server."
-			+ " i.e., the clock on the client's computer is 5 minutes ahead of the clock on the server.");
+					+ " i.e., the clock on the client's computer is 5 minutes ahead of the clock on the server.");
 			characteristics.add(bean);
 		}
 		{
@@ -300,7 +306,7 @@ public class FingerprintDAO {
 			CharacteristicBean bean = getCharacteristicBean(conn, totalSamples, "MathTan", fingerprint.getMathTan());
 			bean.setName("Math/Tan function");
 			bean.setNameHoverText("The same math functions run on different platforms and browsers can produce different results."
-			+ " In particular we are interested in the output of Math.tan(-1e300), which has been observed to produce different values depending on operating system."
+					+ " In particular we are interested in the output of Math.tan(-1e300), which has been observed to produce different values depending on operating system."
 					+ " For instance on a 64bit Linux machine it produces the value -1.4214488238747245 and on a Windows machine it produces the value -4.987183803371025.");
 			characteristics.add(bean);
 		}
@@ -308,7 +314,7 @@ public class FingerprintDAO {
 			CharacteristicBean bean = getCharacteristicBean(conn, totalSamples, "UsingTor", fingerprint.isUsingTor());
 			bean.setName("Using Tor?");
 			bean.setNameHoverText("Checks whether a client's request came from a Tor exit node, and hence whether they're using Tor."
-			+ " It does so by performing a TorDNSEL request for each client.");
+					+ " It does so by performing a TorDNSEL request for each client.");
 			characteristics.add(bean);
 		}
 		{
@@ -328,16 +334,18 @@ public class FingerprintDAO {
 					+ " The Google ad may also be affected by tracker blocking software.");
 			characteristics.add(bean);
 		}
-		/*{
-			CharacteristicBean bean = getCharacteristicBean(conn, sampleCount, "Canvas", fingerprint.getCanvas());
-			bean.setName("Canvas");
+		{
+			CharacteristicBean bean = getCharacteristicBean(conn, totalSamples, "Canvas", fingerprint.getCanvas());
+			bean.setName("Canvas [DEPRECATED]");
+			bean.setColour(CharacteristicBean.DEPRECATED_COLOUR);
 			if (bean.getValue().equals(NO_JAVASCRIPT) == false && bean.getValue().equals(NOT_SUPPORTED) == false) {
 				bean.setValue("<img width=\"400\" height=\"60\" alt=\"A HTML5 canvas test\" src=\"" + bean.getValue() + "\">");
 			}
 			bean.setNameHoverText("Rendering of a specific picture with the HTML5 Canvas element following a fixed set of instructions."
-			+ " The picture presents some slight noticeable variations depending on the OS and the browser used.");
+					+ " The picture presents some slight noticeable variations depending on the OS and the browser used."
+					+ " Deprecated because under some circumstances a browser can produce different canvases just by refreshing the page.");
 			characteristics.add(bean);
-		}*/
+		}
 		{
 			CharacteristicBean bean = getCharacteristicBean(conn, totalSamples, "WebGLVendor", fingerprint.getWebGLVendor());
 			bean.setName("WebGL Vendor");
@@ -835,13 +843,13 @@ public class FingerprintDAO {
 		+ " AND `PlatformFlash`" + (fingerprint.getPlatformFlash() == null ? " IS NULL" : " = ?")
 		+ " AND `PluginDetails`" + (fingerprint.getPluginDetails() == null ? " IS NULL" : " = ?")
 		+ " AND `TimeZone`" + (fingerprint.getTimeZone() == null ? " IS NULL" : " = ?")
-		+ " AND `ScreenDetails`" + (fingerprint.getScreenDetails() == null ? " IS NULL" : " = ?")
+		/*+ " AND `ScreenDetails`" + (fingerprint.getScreenDetails() == null ? " IS NULL" : " = ?")*/
 		+ " AND `ScreenDetailsFlash`" + (fingerprint.getScreenDetailsFlash() == null ? " IS NULL" : " = ?")
-		+ " AND `ScreenDetailsCSS`" + (fingerprint.getScreenDetailsCSS() == null ? " IS NULL" : " = ?")
+		/*+ " AND `ScreenDetailsCSS`" + (fingerprint.getScreenDetailsCSS() == null ? " IS NULL" : " = ?")*/
 		+ " AND `LanguageFlash`" + (fingerprint.getLanguageFlash() == null ? " IS NULL" : " = ?")
 		+ " AND `Fonts`" + (fingerprint.getFonts() == null ? " IS NULL" : " = ?")
 		+ " AND `FontsJS_CSS`" + (fingerprint.getFontsJS_CSS() == null ? " IS NULL" : " = ?")
-		+ " AND `CharSizes`" + (fingerprint.getCharSizes() == null ? " IS NULL" : " = ?")
+		/*+ " AND `CharSizes`" + (fingerprint.getCharSizes() == null ? " IS NULL" : " = ?")*/
 		+ " AND `CookiesEnabled` = ?"
 		+ " AND `SuperCookieLocalStorage`" + (fingerprint.getSuperCookieLocalStorage() == null ? " IS NULL" : " = ?")
 		+ " AND `SuperCookieSessionStorage`" + (fingerprint.getSuperCookieSessionStorage() == null ? " IS NULL" : " = ?")
@@ -893,18 +901,18 @@ public class FingerprintDAO {
 			checkExists.setString(index, fingerprint.getTimeZone());
 			++index;
 		}
-		if (fingerprint.getScreenDetails() != null) {
+		/*if (fingerprint.getScreenDetails() != null) {
 			checkExists.setString(index, fingerprint.getScreenDetails());
 			++index;
-		}
+		}*/
 		if (fingerprint.getScreenDetailsFlash() != null) {
 			checkExists.setString(index, fingerprint.getScreenDetailsFlash());
 			++index;
 		}
-		if (fingerprint.getScreenDetailsCSS() != null) {
+		/*if (fingerprint.getScreenDetailsCSS() != null) {
 			checkExists.setString(index, fingerprint.getScreenDetailsCSS());
 			++index;
-		}
+		}*/
 		if (fingerprint.getLanguageFlash() != null) {
 			checkExists.setString(index, fingerprint.getLanguageFlash());
 			++index;
@@ -917,10 +925,10 @@ public class FingerprintDAO {
 			checkExists.setString(index, fingerprint.getFontsJS_CSS());
 			++index;
 		}
-		if (fingerprint.getCharSizes() != null) {
+		/*if (fingerprint.getCharSizes() != null) {
 			checkExists.setString(index, fingerprint.getCharSizes());
 			++index;
-		}
+		}*/
 		checkExists.setBoolean(index, fingerprint.isCookiesEnabled());
 		++index;
 		if (fingerprint.getSuperCookieLocalStorage() != null) {
@@ -1580,8 +1588,8 @@ public class FingerprintDAO {
 		}
 		++index;
 		// Canvas
-		/*fingerprint.setCanvas(rs.getString(index));
-		++index;*/
+		fingerprint.setCanvas(rs.getString(index));
+		++index;
 		// WebGLVendor
 		fingerprint.setWebGLVendor(rs.getString(index));
 		++index;
