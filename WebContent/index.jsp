@@ -1,5 +1,6 @@
 <%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%><%-- These comments are to prevent excess whitespace in the output.
 --%><%@page session="false"%><%--
+--%><%@taglib prefix="common" tagdir="/WEB-INF/tags"%><%--
 --%><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
@@ -8,7 +9,7 @@
 <link type="text/css" href="style.css" rel="stylesheet">
 </head>
 <body>
-<%@include file="/WEB-INF/header.html" %>
+<common:header/>
 <div id="content">
 	<p>
 		Does your web browser have a unique fingerprint?
@@ -36,12 +37,15 @@
 		This project would not be possible without these institutions' help.
 	</p>
 	<p>
+		<b>News 2016-06-11:</b> We have written a <a href="blog/userFingerprinting">blog post</a> discussing a kind of fingerprinting that may have never have been explored until now.
+	</p>
+	<p>
 		<b>News 2016-06-04:</b> We have now implemented our first CSS fingerprinting test that doesn't involve JavaScript;
 		 a test for the size of the monitor the browser is being displayed on.
 		It's our hope that this will be just the first of many innovative CSS-only tests.
 		Thanks to <a href="https://github.com/arthuredelstein">Arthur Edelstein</a> for the concept.
 	</p>
 </div>
-<%@include file="/WEB-INF/footer.jsp" %>
+<common:footer/>
 </body>
 </html>

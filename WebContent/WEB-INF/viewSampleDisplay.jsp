@@ -1,10 +1,10 @@
 <%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%><%-- These comments are to prevent excess whitespace in the output.
 --%><%@page session="false"%><%--
 --%><%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%><%--
+--%><%@taglib prefix="common" tagdir="/WEB-INF/tags"%><%--
 --%><jsp:useBean id="historyListBean" class="beans.HistoryListBean" scope="request" /><%--
 --%><jsp:useBean id="chrsBean1" class="beans.CharacteristicsBean" scope="request" /><%--
 --%><jsp:useBean id="uniquenessBean1" class="beans.UniquenessBean" scope="request" /><%--
---%><%@taglib prefix="common" tagdir="/WEB-INF/tags"%><%--
 --%><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
@@ -38,7 +38,7 @@
 	</script>
 </head>
 <body>
-<%@include file="header.html" %>
+<common:header/>
 	<p>
 		<a href="view">Back</a>
 	</p>
@@ -162,6 +162,6 @@
 		<common:displayFingerprint chrsBean="${ chrsBean1 }"/>
 	</c:otherwise>
 </c:choose>
-<%@include file="footer.jsp" %>
+<common:footer/>
 </body>
 </html>

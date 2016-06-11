@@ -2,9 +2,9 @@
 --%><%@page session="false"%><%--
 --%><%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%><%--
 --%><%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%><%--
+--%><%@taglib prefix="common" tagdir="/WEB-INF/tags"%><%--
 --%><jsp:useBean id="chrsBean" class="beans.CharacteristicsBean" scope="request" /><%--
 --%><jsp:useBean id="uniquenessBean" class="beans.UniquenessBean" scope="request" /><%--
---%><%@taglib prefix="common" tagdir="/WEB-INF/tags"%><%--
 --%><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
@@ -15,7 +15,7 @@
 	<script type="text/javascript" src="scripts/jquery-1.11.2.min.js"></script>
 </head>
 <body>
-<%@include file="header.html" %>
+<common:header/>
 	<p>
 		<a href=".">Back</a>
 	</p>
@@ -33,6 +33,6 @@
 		</script>
 	</p>
 <common:displayFingerprint chrsBean="${ chrsBean }"/>
-<%@include file="footer.jsp" %>
+<common:footer/>
 </body>
 </html>

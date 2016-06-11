@@ -1,8 +1,8 @@
 <%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%><%-- These comments are to prevent excess whitespace in the output.
 --%><%@page session="false"%><%--
 --%><%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%><%--
---%><jsp:useBean id="historyListBean" class="beans.HistoryListBean" scope="request" /><%--
 --%><%@taglib prefix="common" tagdir="/WEB-INF/tags"%><%--
+--%><jsp:useBean id="historyListBean" class="beans.HistoryListBean" scope="request" /><%--
 --%><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
@@ -27,7 +27,7 @@
 	</script>
 </head>
 <body>
-<%@include file="header.html" %>
+<common:header/>
 	<p>
 		View past browser fingerprints.
 	</p>
@@ -65,6 +65,6 @@
 			</table>
 		</form>
 	</div>
-<%@include file="footer.jsp" %>
+<common:footer/>
 </body>
 </html>

@@ -1,5 +1,6 @@
 <%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%><%-- These comments are to prevent excess whitespace in the output.
 --%><%@page session="false"%><%--
+--%><%@taglib prefix="common" tagdir="/WEB-INF/tags"%><%--
 --%><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
@@ -8,7 +9,7 @@
 <link type="text/css" href="style.css" rel="stylesheet">
 </head>
 <body>
-<%@include file="header.html" %>
+<common:header/>
 <div id="content">
 	<h1>Sources of our tests</h1>
 	<p>
@@ -132,6 +133,6 @@
 		Fingerprintjs2.
 	</p>
 </div>
-<%@include file="footer.jsp" %>
+<common:footer/>
 </body>
 </html>

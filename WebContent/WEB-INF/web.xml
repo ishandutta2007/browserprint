@@ -106,6 +106,24 @@
     <servlet-name>ScreenSizeCSSServlet</servlet-name>
     <url-pattern>/screenSize/*</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <display-name>blog</display-name>
+    <servlet-name>blog</servlet-name>
+    <jsp-file>/WEB-INF/blog/userFingerprinting.jsp</jsp-file>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>blog</servlet-name>
+    <url-pattern>/blog/</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <display-name>blogUserFingerprinting</display-name>
+    <servlet-name>blogUserFingerprinting</servlet-name>
+    <jsp-file>/WEB-INF/blog/userFingerprinting.jsp</jsp-file>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>blogUserFingerprinting</servlet-name>
+    <url-pattern>/blog/userFingerprinting</url-pattern>
+  </servlet-mapping>
   <filter>
     <filter-name>UTF8Filter</filter-name>
     <filter-class>filters.UTF8Filter</filter-class>

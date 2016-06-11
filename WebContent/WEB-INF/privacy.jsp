@@ -1,5 +1,6 @@
 <%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%><%-- These comments are to prevent excess whitespace in the output.
 --%><%@page session="false"%><%--
+--%><%@taglib prefix="common" tagdir="/WEB-INF/tags"%><%--
 --%><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
@@ -8,7 +9,7 @@
 <link type="text/css" href="style.css" rel="stylesheet">
 </head>
 <body>
-<%@include file="header.html" %>
+<common:header/>
 <div id="content">
 	<h2>What we will do with this data: ethical use and details of retention.</h2>
 	<p>
@@ -102,6 +103,6 @@
 		We do not collect contact details of clients so it is impossible for us to notify you of changes.
 	</p>
 </div>
-<%@include file="footer.jsp" %>
+<common:footer/>
 </body>
 </html>
