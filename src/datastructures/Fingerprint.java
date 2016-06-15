@@ -44,6 +44,10 @@ public class Fingerprint {
 	private Boolean adsBlockedBanner;
 	private Boolean adsBlockedScript;
 	
+	private Integer likeShareFacebook;
+	private Integer likeShareTwitter;
+	private Integer likeShareReddit;
+	
 	private String canvas;
 	private String webGLVendor;
 	private String webGLRenderer;
@@ -84,6 +88,9 @@ public class Fingerprint {
 		adsBlockedGoogle = null;
 		adsBlockedBanner = null;
 		adsBlockedScript = null;
+		likeShareFacebook = null;
+		likeShareTwitter = null;
+		likeShareReddit = null;
 		canvas = null;
 		webGLVendor = null;
 		webGLRenderer = null;
@@ -338,6 +345,30 @@ public class Fingerprint {
 
 	public void setAdsBlockedScript(Boolean adsBlockedScript) {
 		this.adsBlockedScript = adsBlockedScript;
+	}
+	
+	public Integer getLikeShareFacebook() {
+		return likeShareFacebook;
+	}
+
+	public void setLikeShareFacebook(Integer likeShareFacebook) {
+		this.likeShareFacebook = likeShareFacebook;
+	}
+
+	public Integer getLikeShareTwitter() {
+		return likeShareTwitter;
+	}
+
+	public void setLikeShareTwitter(Integer likeShareTwitter) {
+		this.likeShareTwitter = likeShareTwitter;
+	}
+
+	public Integer getLikeShareReddit() {
+		return likeShareReddit;
+	}
+
+	public void setLikeShareReddit(Integer likeShareReddit) {
+		this.likeShareReddit = likeShareReddit;
 	}
 
 	public String getCanvas() {

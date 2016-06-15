@@ -198,6 +198,81 @@ function getAdsBlockedScript() {
 	}
 }
 
+function getFacebookSocialButton() {
+	try {
+		var likeButton = $("#likeButton");
+		if(likeButton.length == 0){
+			//Privacy Badger or similar must have replaced the like button div.
+			return 1;
+		}
+		else{
+			if(likeButton.children().length == 0){
+				//NoScript, uMatrix.
+				return 2;
+			}
+			else{
+				var retval = 0; //0 = no blocking.
+				likeButton.children().each(function(){
+					if($(this).height() == 0 && $(this).width() == 0){
+						//Adblock Plus Anti-Social.
+						retval = 3;
+					}
+				});
+				return retval;
+			}
+		}
+	} catch (ex) {
+		return "Error";
+	}
+}
+
+function getTwitterButton(){
+	try{
+		if($("#twitterLink").length == 0){
+			if($("#twitter-widget-0").length != 0){
+				//Not blocked.
+				return 0;
+			}
+			else{
+				//Blocked by Privacy Badger.
+				return 1;
+			}
+		}
+		else{
+			//Blocked by anything that blocks scripts.
+			return 2;
+		}
+	}
+	catch(ex){
+		return "Error";
+	}
+}
+
+function getRedditButton(){
+	try{
+		var redditButtonDiv = $("#redditButtonDiv");
+		var retval = 2;//2 = blocked by anything that blocks scripts.
+		redditButtonDiv.children().each(function(){
+			if($(this).is("iframe")){
+				if($(this).height() == 0 && $(this).width() == 0){
+					//Something happened, was it blocked by ... something?
+					retval = 4;
+					return;
+				}
+				else{
+					//Not blocked.
+					retval = 0;
+					return;
+				}
+			}
+		});
+		return retval;
+	}
+	catch(ex){
+		return "Error";
+	}
+}
+
 function getCanvas() {
 	try {
 		/*

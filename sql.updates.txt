@@ -32,3 +32,21 @@ START TRANSACTION;
 ALTER TABLE `Samples` ADD `ScreenDetailsCSS` TEXT AFTER `ScreenDetailsFlash`;
 ALTER TABLE `Samples` MODIFY COLUMN `BrowserprintVersion` SMALLINT UNSIGNED NOT NULL DEFAULT 13;
 COMMIT;
+
+--Add new column LikeShareFacebook to table.
+START TRANSACTION;
+ALTER TABLE `Samples` ADD `LikeShareFacebook` INTEGER AFTER `AdsBlockedScript`;
+ALTER TABLE `Samples` MODIFY COLUMN `BrowserprintVersion` SMALLINT UNSIGNED NOT NULL DEFAULT 14;
+COMMIT;
+
+--Add new column LikeShareTwitter to table.
+START TRANSACTION;
+ALTER TABLE `Samples` ADD `LikeShareTwitter` INTEGER AFTER `LikeShareFacebook`;
+ALTER TABLE `Samples` MODIFY COLUMN `BrowserprintVersion` SMALLINT UNSIGNED NOT NULL DEFAULT 15;
+COMMIT;
+
+--Add new column LikeShareReddit to table.
+START TRANSACTION;
+ALTER TABLE `Samples` ADD `LikeShareReddit` INTEGER AFTER `LikeShareTwitter`;
+ALTER TABLE `Samples` MODIFY COLUMN `BrowserprintVersion` SMALLINT UNSIGNED NOT NULL DEFAULT 16;
+COMMIT;

@@ -39,6 +39,13 @@
 				<img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player" />
 			</a>
 	</div>
+	<script type="text/javascript">
+		var flashvars = {};
+		var params = {};
+		var attributes = {};
+		attributes.id = "OSData";
+		swfobject.embedSWF("flash/OSData.swf", "OSDataDiv", "0", "0", "9.0.0", false, flashvars, params, attributes);
+	</script>
 	<!-- Part of the ad blocking test. -->
 	<script type="text/javascript">
         google_ad_height = 90;
@@ -47,13 +54,29 @@
 		<script type="text/javascript" src="https://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
 	</div>
 	<img id="banner468x60" src="adtests/easylist/ads/banner468x60.png" style="display:none"/>
-	<script type="text/javascript">
-		var flashvars = {};
-		var params = {};
-		var attributes = {};
-		attributes.id = "OSData";
-		swfobject.embedSWF("flash/OSData.swf", "OSDataDiv", "0", "0", "9.0.0", false, flashvars, params, attributes);
-	</script>
+	<div style="display:none">
+		<div id="likeButton" class="fb-like" data-href="https://browserprint.info"></div>
+	</div>
+	<div id="fb-root"></div>
+	<div id="redditButtonDiv" style="display:none">
+		<script type="text/javascript">
+			//Set the details of the reddit button.
+			reddit_url='browserprint.info';
+			reddit_newwindow='1';
+		</script>
+		<script type="text/javascript" src="//www.redditstatic.com/button/button1.js?newwindow=1"></script>
+	</div>
+	<div style="display:none">
+		<a href="https://twitter.com/share" id="twitterLink" class="twitter-share-button" data-url="https://browserprint.info" data-text="Check out your browser fingerprint at">Tweet</a>
+	</div>
+	<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+	<script type="text/javascript">(function(d, s, id) {
+		var js, fjs = d.getElementsByTagName(s)[0];
+		if (d.getElementById(id)) return;
+		js = d.createElement(s); js.id = id;
+		js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.6";
+		fjs.parentNode.insertBefore(js, fjs);
+	}(document, 'script', 'facebook-jssdk'));</script>
 	<script type="text/javascript">
 		$(window).load(function(){
 			//We sleep for a second to avoid a bug where Flash doesn't work because it hasn't had enough time to load or something.
@@ -274,6 +297,30 @@
 	    		value: getAdsBlockedScript()
 			}).appendTo('#formdiv');
 			
+			//LikeShareFacebook
+			$('<input>').attr({
+	    		type: 'hidden',
+	    		id: 'LikeShareFacebook',
+	    		name: 'LikeShareFacebook',
+	    		value: getFacebookSocialButton()
+			}).appendTo('#formdiv');
+			
+			//LikeShareTwitter
+			$('<input>').attr({
+	    		type: 'hidden',
+	    		id: 'LikeShareTwitter',
+	    		name: 'LikeShareTwitter',
+	    		value: getTwitterButton()
+			}).appendTo('#formdiv');
+			
+			//LikeShareReddit
+			$('<input>').attr({
+	    		type: 'hidden',
+	    		id: 'LikeShareReddit',
+	    		name: 'LikeShareReddit',
+	    		value: getRedditButton()
+			}).appendTo('#formdiv');
+						
 			//Canvas
 			$('<input>').attr({
 	    		type: 'hidden',

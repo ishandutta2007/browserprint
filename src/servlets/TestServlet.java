@@ -231,6 +231,27 @@ public class TestServlet extends HttpServlet {
 				}
 			}
 		}
+		{
+			try {
+				fingerprint.setLikeShareFacebook(Integer.parseInt(request.getParameter("LikeShareFacebook")));
+			} catch (NumberFormatException ex) {
+				fingerprint.setLikeShareFacebook(null);
+			}
+		}
+		{
+			try {
+				fingerprint.setLikeShareTwitter(Integer.parseInt(request.getParameter("LikeShareTwitter")));
+			} catch (NumberFormatException ex) {
+				fingerprint.setLikeShareTwitter(null);
+			}
+		}
+		{
+			try {
+				fingerprint.setLikeShareReddit(Integer.parseInt(request.getParameter("LikeShareReddit")));
+			} catch (NumberFormatException ex) {
+				fingerprint.setLikeShareReddit(null);
+			}
+		}
 		fingerprint.setCanvas(request.getParameter("Canvas"));
 		fingerprint.setWebGLVendor(request.getParameter("WebGLVendor"));
 		fingerprint.setWebGLRenderer(request.getParameter("WebGLRenderer"));

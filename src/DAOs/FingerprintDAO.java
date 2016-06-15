@@ -28,10 +28,10 @@ import beans.UniquenessBean;
 import datastructures.Fingerprint;
 
 public class FingerprintDAO {
-	private static final String insertSampleStr = "INSERT INTO `Samples`(`SampleUUID`, `IP`, `TimeStamp`, `AllHeaders`, `ContrastLevel`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `ScreenDetailsCSS`, `LanguageFlash`, `Fonts`, `FontsJS_CSS`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `IndexedDBEnabled`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlockedGoogle`, `AdsBlockedBanner`, `AdsBlockedScript`, `Canvas`, `WebGLVendor`, `WebGLRenderer`, `TouchPoints`, `TouchEvent`, `TouchStart`) VALUES(?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+	private static final String insertSampleStr = "INSERT INTO `Samples`(`SampleUUID`, `IP`, `TimeStamp`, `AllHeaders`, `ContrastLevel`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `ScreenDetailsCSS`, `LanguageFlash`, `Fonts`, `FontsJS_CSS`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `IndexedDBEnabled`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlockedGoogle`, `AdsBlockedBanner`, `AdsBlockedScript`, `LikeShareFacebook`, `LikeShareTwitter`, `LikeShareReddit`, `Canvas`, `WebGLVendor`, `WebGLRenderer`, `TouchPoints`, `TouchEvent`, `TouchStart`) VALUES(?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 	private static final String getSampleCountStr = "SELECT COUNT(*) FROM `Samples`;";
 	private static final String getSampleCountVersionAwareStr = "SELECT `BrowserprintVersion` AS `Version`, (SELECT COUNT(*) FROM `Samples` WHERE `BrowserprintVersion` >= `Version`) FROM `Samples` GROUP BY `BrowserprintVersion` UNION SELECT 1, COUNT(*) FROM `Samples`;";
-	private static final String selectSampleStr = "SELECT `ContrastLevel`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `ScreenDetailsCSS`, `LanguageFlash`, `Fonts`, `FontsJS_CSS`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `IndexedDBEnabled`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlockedGoogle`, `AdsBlockedBanner`, `AdsBlockedScript`, `Canvas`, `WebGLVendor`, `WebGLRenderer`, `TouchPoints`, `TouchEvent`, `TouchStart` FROM `Samples` WHERE `SampleUUID` = ?;";
+	private static final String selectSampleStr = "SELECT `ContrastLevel`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `ScreenDetailsCSS`, `LanguageFlash`, `Fonts`, `FontsJS_CSS`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `IndexedDBEnabled`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlockedGoogle`, `AdsBlockedBanner`, `AdsBlockedScript`, `LikeShareFacebook`, `LikeShareTwitter`, `LikeShareReddit`, `Canvas`, `WebGLVendor`, `WebGLRenderer`, `TouchPoints`, `TouchEvent`, `TouchStart` FROM `Samples` WHERE `SampleUUID` = ?;";
 	private static final String selectSampleSetIDHistory = "SELECT `SampleUUID`, `Timestamp` FROM `SampleSets` INNER JOIN `Samples` USING (`SampleID`) WHERE `SampleSetID` = ? ORDER BY `Timestamp` DESC;";
 
 	private static final String NO_JAVASCRIPT = "No JavaScript";
@@ -335,6 +335,13 @@ public class FingerprintDAO {
 			characteristics.add(bean);
 		}
 		{
+			CharacteristicBean bean = getLikeShareCharacteristicBean(conn, sampleCounts.lower(new VersionCount(16 + 1)).getCount(), fingerprint);
+			bean.setName("Blocking like/share buttons?");
+			bean.setNameHoverText("Checks whether software is installed that blocks or modifies like or share buttons."
+					+ " It does so by attempting to display 3 share buttons and if they're displayed properly.");
+			characteristics.add(bean);
+		}
+		{
 			CharacteristicBean bean = getCharacteristicBean(conn, totalSamples, "Canvas", fingerprint.getCanvas());
 			bean.setName("Canvas [DEPRECATED]");
 			bean.setColour(CharacteristicBean.DEPRECATED_COLOUR);
@@ -471,6 +478,24 @@ public class FingerprintDAO {
 			insertSample.setBoolean(index, fingerprint.getAdsBlockedScript());
 		} else {
 			insertSample.setNull(index, java.sql.Types.BOOLEAN);
+		}
+		++index;
+		if (fingerprint.getLikeShareFacebook() != null) {
+			insertSample.setInt(index, fingerprint.getLikeShareFacebook());
+		} else {
+			insertSample.setNull(index, java.sql.Types.INTEGER);
+		}
+		++index;
+		if (fingerprint.getLikeShareTwitter() != null) {
+			insertSample.setInt(index, fingerprint.getLikeShareTwitter());
+		} else {
+			insertSample.setNull(index, java.sql.Types.INTEGER);
+		}
+		++index;
+		if (fingerprint.getLikeShareReddit() != null) {
+			insertSample.setInt(index, fingerprint.getLikeShareReddit());
+		} else {
+			insertSample.setNull(index, java.sql.Types.INTEGER);
 		}
 		++index;
 		insertSample.setString(index, fingerprint.getCanvas());
@@ -629,7 +654,10 @@ public class FingerprintDAO {
 		 + " AND `AdsBlockedGoogle`" + (fingerprint.getAdsBlockedGoogle() == null ? " IS NULL" : " = ?")
 		 + " AND `AdsBlockedBanner`" + (fingerprint.getAdsBlockedBanner() == null ? " IS NULL" : " = ?")
 		 + " AND `AdsBlockedScript`" + (fingerprint.getAdsBlockedScript() == null ? " IS NULL" : " = ?")
-		 /*+ " AND `Canvas`" + (fingerprint.getCanvas() == null ? " IS NULL" : " = ?")*/
+		 + " AND `LikeShareFacebook`" + (fingerprint.getLikeShareFacebook() == null ? " IS NULL" : " = ?")
+		 + " AND `LikeShareTwitter`" + (fingerprint.getLikeShareTwitter() == null ? " IS NULL" : " = ?")
+		 + " AND `LikeShareReddit`" + (fingerprint.getLikeShareReddit() == null ? " IS NULL" : " = ?")
+		 + " AND `Canvas`" + (fingerprint.getCanvas() == null ? " IS NULL" : " = ?")
 		 + " AND `WebGLVendor`" + (fingerprint.getWebGLVendor() == null ? " IS NULL" : " = ?")
 		 + " AND `WebGLRenderer`" + (fingerprint.getWebGLRenderer() == null ? " IS NULL" : " = ?")
 		 + " AND `TouchPoints`" + (fingerprint.getTouchPoints() == null ? " IS NULL" : " = ?")
@@ -749,10 +777,22 @@ public class FingerprintDAO {
 			checkExists.setBoolean(index, fingerprint.getAdsBlockedScript());
 			++index;
 		}
-		/*if (fingerprint.getCanvas() != null) {
+		if (fingerprint.getLikeShareFacebook() != null) {
+			checkExists.setInt(index, fingerprint.getLikeShareFacebook());
+			++index;
+		}
+		if (fingerprint.getLikeShareTwitter() != null) {
+			checkExists.setInt(index, fingerprint.getLikeShareTwitter());
+			++index;
+		}
+		if (fingerprint.getLikeShareReddit() != null) {
+			checkExists.setInt(index, fingerprint.getLikeShareReddit());
+			++index;
+		}
+		if (fingerprint.getCanvas() != null) {
 			checkExists.setString(index, fingerprint.getCanvas());
 			++index;
-		}*/
+		}
 		if (fingerprint.getWebGLVendor() != null) {
 			checkExists.setString(index, fingerprint.getWebGLVendor());
 			++index;
@@ -864,6 +904,9 @@ public class FingerprintDAO {
 		+ " AND `AdsBlockedGoogle`" + (fingerprint.getAdsBlockedGoogle() == null ? " IS NULL" : " = ?")
 		+ " AND `AdsBlockedBanner`" + (fingerprint.getAdsBlockedBanner() == null ? " IS NULL" : " = ?")
 		+ " AND `AdsBlockedScript`" + (fingerprint.getAdsBlockedScript() == null ? " IS NULL" : " = ?")
+		+ " AND `LikeShareFacebook`" + (fingerprint.getLikeShareFacebook() == null ? " IS NULL" : " = ?")
+		+ " AND `LikeShareTwitter`" + (fingerprint.getLikeShareTwitter() == null ? " IS NULL" : " = ?")
+		+ " AND `LikeShareReddit`" + (fingerprint.getLikeShareReddit() == null ? " IS NULL" : " = ?")
 		/*+ " AND `Canvas`" + (fingerprint.getCanvas() == null ? " IS NULL" : " = ?")*/
 		+ " AND `WebGLVendor`" + (fingerprint.getWebGLVendor() == null ? " IS NULL" : " = ?")
 		+ " AND `WebGLRenderer`" + (fingerprint.getWebGLRenderer() == null ? " IS NULL" : " = ?")
@@ -979,6 +1022,18 @@ public class FingerprintDAO {
 		}
 		if (fingerprint.getAdsBlockedScript() != null) {
 			checkExists.setBoolean(index, fingerprint.getAdsBlockedScript());
+			++index;
+		}
+		if (fingerprint.getLikeShareFacebook() != null) {
+			checkExists.setInt(index, fingerprint.getLikeShareFacebook());
+			++index;
+		}
+		if (fingerprint.getLikeShareTwitter() != null) {
+			checkExists.setInt(index, fingerprint.getLikeShareTwitter());
+			++index;
+		}
+		if (fingerprint.getLikeShareReddit() != null) {
+			checkExists.setInt(index, fingerprint.getLikeShareReddit());
 			++index;
 		}
 		/*if (fingerprint.getCanvas() != null) {
@@ -1354,6 +1409,114 @@ public class FingerprintDAO {
 	}
 	
 	/**
+	 * Create the ads blocked CharacteristicBean.
+	 * 
+	 * @param conn
+	 *            A connection to the database.
+	 * @param num_samples
+	 *            The number of samples in the database.
+	 * @param value
+	 *            The value of this sample.
+	 * @return
+	 * @throws SQLException
+	 */
+	private static CharacteristicBean getLikeShareCharacteristicBean(Connection conn, int num_samples, Fingerprint fingerprint) throws SQLException {
+		CharacteristicBean chrbean = new CharacteristicBean();
+
+		PreparedStatement getCount;
+		String querystr = "SELECT COUNT(*) FROM `Samples` WHERE"
+		+ " `LikeShareFacebook`" + (fingerprint.getLikeShareFacebook() == null ? " IS NULL": " = ?")
+		+ " AND `LikeShareTwitter`" + (fingerprint.getLikeShareTwitter() == null ? " IS NULL": " = ?")
+		+ " AND `LikeShareReddit`" + (fingerprint.getLikeShareReddit() == null ? " IS NULL": " = ?");
+		getCount = conn.prepareStatement(querystr);
+		
+		int index = 1;
+		
+		String likeShareBlockedStr = "Facebook button: ";
+		if(fingerprint.getLikeShareFacebook() == null && fingerprint.getLikeShareTwitter() == null && fingerprint.getLikeShareReddit() == null){
+			likeShareBlockedStr = NO_JAVASCRIPT;
+		}
+		else{
+			if (fingerprint.getLikeShareFacebook() != null) {
+				if (fingerprint.getLikeShareFacebook() == 1) {
+					likeShareBlockedStr += "Replaced by Privacy Badger or similar";
+				} else if(fingerprint.getLikeShareFacebook() == 2) {
+					likeShareBlockedStr += "Blocked by script blocker";
+				}
+				else if(fingerprint.getLikeShareFacebook() == 3){
+					likeShareBlockedStr += "Blocked by Adblock Plus Anti-Social list or similar";
+				}
+				else if(fingerprint.getLikeShareFacebook() == 0){
+					likeShareBlockedStr += "Not blocked";
+				}
+				else{
+					likeShareBlockedStr += "Invalid";
+				}
+				getCount.setInt(index, fingerprint.getLikeShareFacebook());
+				++index;
+			}
+			else{
+				likeShareBlockedStr += "NoJS";
+			}
+			likeShareBlockedStr += ",<br/>\n";
+			
+			likeShareBlockedStr += "Twitter share button: ";
+			if (fingerprint.getLikeShareTwitter() != null) {
+				if (fingerprint.getLikeShareTwitter() == 1) {
+					likeShareBlockedStr += "Replaced by Privacy Badger or similar";
+				}
+				else if (fingerprint.getLikeShareTwitter() == 2) {
+					likeShareBlockedStr += "Blocked by script blocker or Adblock Plus Anti-Social list or similar";
+				}
+				else if (fingerprint.getLikeShareTwitter() == 0) {
+					likeShareBlockedStr += "Not blocked";
+				}
+				else {
+					likeShareBlockedStr += "Invalid";
+				}
+				getCount.setInt(index, fingerprint.getLikeShareTwitter());
+				++index;
+			}
+			else{
+				likeShareBlockedStr += "NoJS";
+			}
+			likeShareBlockedStr += ",<br/>\n";
+			
+			likeShareBlockedStr += "Reddit button: ";
+			if (fingerprint.getLikeShareReddit() != null) {
+				if (fingerprint.getLikeShareReddit() == 2) {
+					likeShareBlockedStr += "Blocked by script blocker or Adblock Plus Anti-Social list or similar";
+				} 
+				else if (fingerprint.getLikeShareReddit() == 4) {
+					likeShareBlockedStr += "Blocked by unknown";
+				}
+				else if (fingerprint.getLikeShareReddit() == 0) {
+					likeShareBlockedStr += "Not blocked";
+				}
+				else {
+					likeShareBlockedStr += "Invalid";
+				}
+				getCount.setInt(index, fingerprint.getLikeShareReddit());
+				++index;
+			}
+			else{
+				likeShareBlockedStr += "NoJS";
+			}
+		}
+		chrbean.setValue(likeShareBlockedStr);
+
+		ResultSet rs = getCount.executeQuery();
+		rs.next();
+		int count = rs.getInt(1);
+		rs.close();
+		chrbean.setNumOccurrences(count);
+		chrbean.setInX(((double) num_samples) / ((double) count));
+		chrbean.setBits(Math.abs(Math.log(chrbean.getInX()) / Math.log(2)));
+
+		return chrbean;
+	}
+	
+	/**
 	 * Create the touch CharacteristicBean.
 	 * 
 	 * @param conn
@@ -1585,6 +1748,21 @@ public class FingerprintDAO {
 		fingerprint.setAdsBlockedScript(rs.getBoolean(index));
 		if (rs.wasNull()) {
 			fingerprint.setAdsBlockedScript(null);
+		}
+		++index;
+		fingerprint.setLikeShareFacebook(rs.getInt(index));
+		if (rs.wasNull()) {
+			fingerprint.setLikeShareFacebook(null);
+		}
+		++index;
+		fingerprint.setLikeShareTwitter(rs.getInt(index));
+		if (rs.wasNull()) {
+			fingerprint.setLikeShareTwitter(null);
+		}
+		++index;
+		fingerprint.setLikeShareReddit(rs.getInt(index));
+		if (rs.wasNull()) {
+			fingerprint.setLikeShareReddit(null);
 		}
 		++index;
 		// Canvas
