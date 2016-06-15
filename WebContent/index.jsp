@@ -37,6 +37,10 @@
 		This project would not be possible without these institutions' help.
 	</p>
 	<p>
+		<b>News 2016-06-15:</b> We have added a new test.
+		This test checks to see whether like/share/social buttons are blocked or modified by the browser.
+	</p>
+	<p>
 		<b>News 2016-06-11:</b> We have written a <a href="blog/userFingerprinting">blog post</a> discussing a kind of fingerprinting that may have never have been explored until now.
 	</p>
 	<p>
