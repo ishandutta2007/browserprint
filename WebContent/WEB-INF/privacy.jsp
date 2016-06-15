@@ -72,6 +72,7 @@
 		<li>The output of the JavaScript Math.tan(-1e300).</li>
 		<li>Whether the client is thought to be using Tor or not. Detected by performing a TorDNSEL request.</li>
 		<li>Whether ads are blocked by the browser.</li>
+		<li>Whether like/share buttons are blocked or modified by the browser.</li>
 		<li>An image created by the client's browser using a HTML5 canvas.</li>
 		<li>The name of the WebGL vendor of the client's browser; this may be the name of the client's graphics card.</li>
 		<li>The name of the WebGL renderer of the client's browser; this may be the name of the client's underlying graphics driver.</li>

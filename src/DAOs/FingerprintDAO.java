@@ -338,7 +338,7 @@ public class FingerprintDAO {
 			CharacteristicBean bean = getLikeShareCharacteristicBean(conn, sampleCounts.lower(new VersionCount(16 + 1)).getCount(), fingerprint);
 			bean.setName("Blocking like/share buttons?");
 			bean.setNameHoverText("Checks whether software is installed that blocks or modifies like or share buttons."
-					+ " It does so by attempting to display 3 share buttons and if they're displayed properly.");
+					+ " It does so by attempting to display 3 share buttons and checking if they're displayed properly.");
 			characteristics.add(bean);
 		}
 		{

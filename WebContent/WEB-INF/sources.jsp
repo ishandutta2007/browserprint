@@ -115,7 +115,11 @@
 	<h3>Blocking Ads?</h3>
 	<p>
 		Original.
-	</p>	
+	</p>
+	<h3>Blocking like/share buttons?</h3>
+	<p>
+		Original.
+	</p>
 	<h3>Canvas</h3>
 	<p>
 		AmIUnique? and Fingerprintjs2.

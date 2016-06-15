@@ -88,6 +88,10 @@ Checks whether ad blocking software is installed.
 It does so by attempting to display 2 ads and trying to call a function from a script named like an ad serving script.
 The Google ad may also be affected by tracker blocking software.
 
+### Blocking like/share buttons?
+Checks whether software is installed that blocks or modifies like or share buttons.
+It does so by attempting to display 3 share buttons and checking if they're displayed properly.
+
 ### Canvas
 Rendering of a specific picture with the HTML5 Canvas element following a fixed set of instructions.
 The picture presents some slight noticeable variations depending on the OS and the browser used.
