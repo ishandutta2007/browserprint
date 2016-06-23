@@ -68,6 +68,9 @@ Original.
 ### Blocking Ads?
 Original.
 
+### Blocking like/share buttons?
+Original.
+
 ### Canvas
 AmIUnique?
 Fingerprintjs2.
