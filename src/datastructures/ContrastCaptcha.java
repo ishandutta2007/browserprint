@@ -65,8 +65,8 @@ public class ContrastCaptcha {
 			//Invalid answer.
 			return null;
 		}
-		if(matcher.group("lightest") == null){
-			if(matcher.group("light") == null){
+		if(matcher.group("light") == null){
+			if(matcher.group("lightest") == null){
 				//Both lightest and light excluded. Valid CAPTCHA.
 				return 2;
 			}
@@ -75,7 +75,7 @@ public class ContrastCaptcha {
 				return null;
 			}
 		}
-		else if(matcher.group("light") == null){
+		else if(matcher.group("lightest") == null){
 			//Light excluded. Valid CAPTCHA.
 			return 1;
 		}
