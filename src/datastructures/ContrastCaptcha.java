@@ -1,5 +1,8 @@
 package datastructures;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * Is case insensitive.
  */
@@ -37,64 +40,46 @@ public class ContrastCaptcha {
 	 */
 	public Integer isValid(String captchaAnswer){
 		captchaAnswer = captchaAnswer.toUpperCase();
-		int contrastLevel = 0;
 		
 		if(captchaAnswer.length() < captchaChars.length - 2){
 			//Too short. Invalid.
 			return null;
 		}
 		
-		boolean bothMissing = false;
-		int i, j;
-		for(i = j = 0; i < captchaChars.length && j < captchaAnswer.length(); ++i, ++j){
-			if(captchaChars[i] != captchaAnswer.charAt(j)){
-				if(captchaCharColours[i] == CaptchaColours.UNIMPORTANT){
-					//Invalid.
-					return null;
-				}
-				else{
-					if(captchaCharColours[i] == CaptchaColours.LIGHTEST_GREY){//1
-						if(contrastLevel == 2){
-							bothMissing = true;
-						}
-						
-						contrastLevel = 1;
-						++i;
-					}
-					else if(captchaCharColours[i] == CaptchaColours.LIGHT_GREY){//2
-						if(captchaCharColours.length - 2 != captchaAnswer.length()){
-							//Wrong length. Invalid.
-							return null;
-						}
-						if(contrastLevel == 1){
-							bothMissing = true;
-						}
-						if(contrastLevel < 2){
-							contrastLevel = 2;
-						}
-						++i;
-					}
-					else{
-						//Unknown colour. Invalid.
-						return null;
-					}
-				}
+		String patternStr = "^";
+		for(int i = 0; i < captchaChars.length; ++i){
+			if(captchaCharColours[i] == CaptchaColours.LIGHT_GREY){
+				patternStr += "(?<light>" + captchaChars[i] + ")?";
+			}
+			else  if(captchaCharColours[i] == CaptchaColours.LIGHTEST_GREY){
+				patternStr += "(?<lightest>" + captchaChars[i] + ")?";
+			}
+			else{
+				patternStr += captchaChars[i];
 			}
 		}
+		patternStr += "$";
 		
-		if(contrastLevel == 0 && captchaAnswer.length() != captchaCharColours.length){
-			//Wrong length. Invalid.
+		Matcher matcher = Pattern.compile(patternStr).matcher(captchaAnswer); 
+		if(matcher.matches() == false){
+			//Invalid answer.
 			return null;
 		}
-		else if(contrastLevel == 1 && captchaAnswer.length() != captchaCharColours.length - 1){
-			//Wrong length. Invalid.
-			return null;
+		if(matcher.group("lightest") == null){
+			if(matcher.group("light") == null){
+				//Both lightest and light excluded. Valid CAPTCHA.
+				return 2;
+			}
+			else{
+				//Can't exclude lightest but not second lightest.
+				return null;
+			}
 		}
-		else if(contrastLevel == 2 && !bothMissing){
-			//Lightest grey character wasn't input but the light grey one was.
-			return null;
+		else if(matcher.group("light") == null){
+			//Light excluded. Valid CAPTCHA.
+			return 1;
 		}
-		
-		return contrastLevel;
+		//Neither excluded. Valid CAPTCHA.
+		return 0;
 	}
 }
