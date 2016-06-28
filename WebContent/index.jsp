@@ -38,7 +38,7 @@
 	</p>
 	<p>
 		<b>News 2016-06-28:</b> We have added tests.
-		These tests work using the AudioContext API and are from <a href="https://audiofingerprint.openwpm.com/">https://audiofingerprint.openwpm.com/</a>.
+		These tests work using the AudioContext API and are based on real world fingerprinting code discovered here <a href="https://audiofingerprint.openwpm.com/">https://audiofingerprint.openwpm.com/</a>.
 	</p>
 	<p>
 		<b>News 2016-06-15:</b> We have added a new test.

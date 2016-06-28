@@ -375,7 +375,7 @@ public class FingerprintDAO {
 			CharacteristicBean bean = getAudioTestsCharacteristicBean(conn, sampleCounts.lower(new VersionCount(17 + 1)).getCount(), fingerprint);
 			bean.setName("Audio Fingerprints [EXPERIMENTAL]");
 			bean.setColour(CharacteristicBean.EXPERIMENTAL_COLOUR);
-			bean.setNameHoverText("A set of fingerprinting tests that work using the AudioContext API.");
+			bean.setNameHoverText("A set of fingerprinting tests that work using the AudioContext API. Based on fingerprinting code from the wild.");
 			characteristics.add(bean);
 		}
 	}
