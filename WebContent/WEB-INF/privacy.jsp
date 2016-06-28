@@ -77,6 +77,7 @@
 		<li>The name of the WebGL vendor of the client's browser; this may be the name of the client's graphics card.</li>
 		<li>The name of the WebGL renderer of the client's browser; this may be the name of the client's underlying graphics driver.</li>
 		<li>Information about touch screen support by the system.</li>
+		<li>The results of AudioContext fingerprinting tests; this does not involve recording audio or collecting sound played by your machine.</li>
 	</ul>
 	
 	<h3>Cookies</h3>

@@ -37,6 +37,10 @@
 		This project would not be possible without these institutions' help.
 	</p>
 	<p>
+		<b>News 2016-06-28:</b> We have added tests.
+		These tests work using the AudioContext API and are from <a href="https://audiofingerprint.openwpm.com/">https://audiofingerprint.openwpm.com/</a>.
+	</p>
+	<p>
 		<b>News 2016-06-15:</b> We have added a new test.
 		This test checks to see whether like/share/social buttons are blocked or modified by the browser.
 	</p>

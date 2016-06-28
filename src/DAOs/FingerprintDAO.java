@@ -28,10 +28,10 @@ import beans.UniquenessBean;
 import datastructures.Fingerprint;
 
 public class FingerprintDAO {
-	private static final String insertSampleStr = "INSERT INTO `Samples`(`SampleUUID`, `IP`, `TimeStamp`, `AllHeaders`, `ContrastLevel`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `ScreenDetailsCSS`, `LanguageFlash`, `Fonts`, `FontsJS_CSS`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `IndexedDBEnabled`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlockedGoogle`, `AdsBlockedBanner`, `AdsBlockedScript`, `LikeShareFacebook`, `LikeShareTwitter`, `LikeShareReddit`, `Canvas`, `WebGLVendor`, `WebGLRenderer`, `TouchPoints`, `TouchEvent`, `TouchStart`) VALUES(?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+	private static final String insertSampleStr = "INSERT INTO `Samples`(`SampleUUID`, `IP`, `TimeStamp`, `AllHeaders`, `ContrastLevel`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `ScreenDetailsCSS`, `LanguageFlash`, `Fonts`, `FontsJS_CSS`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `IndexedDBEnabled`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlockedGoogle`, `AdsBlockedBanner`, `AdsBlockedScript`, `LikeShareFacebook`, `LikeShareTwitter`, `LikeShareReddit`, `Canvas`, `WebGLVendor`, `WebGLRenderer`, `TouchPoints`, `TouchEvent`, `TouchStart`, `AudioFingerprintPXI`, `AudioFingerprintPXIFullBuffer`, `AudioFingerprintNtVc`, `AudioFingerprintCC`, `AudioFingerprintHybrid`) VALUES(?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 	private static final String getSampleCountStr = "SELECT COUNT(*) FROM `Samples`;";
 	private static final String getSampleCountVersionAwareStr = "SELECT `BrowserprintVersion` AS `Version`, (SELECT COUNT(*) FROM `Samples` WHERE `BrowserprintVersion` >= `Version`) FROM `Samples` GROUP BY `BrowserprintVersion` UNION SELECT 1, COUNT(*) FROM `Samples`;";
-	private static final String selectSampleStr = "SELECT `ContrastLevel`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `ScreenDetailsCSS`, `LanguageFlash`, `Fonts`, `FontsJS_CSS`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `IndexedDBEnabled`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlockedGoogle`, `AdsBlockedBanner`, `AdsBlockedScript`, `LikeShareFacebook`, `LikeShareTwitter`, `LikeShareReddit`, `Canvas`, `WebGLVendor`, `WebGLRenderer`, `TouchPoints`, `TouchEvent`, `TouchStart` FROM `Samples` WHERE `SampleUUID` = ?;";
+	private static final String selectSampleStr = "SELECT `ContrastLevel`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `ScreenDetailsCSS`, `LanguageFlash`, `Fonts`, `FontsJS_CSS`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `IndexedDBEnabled`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlockedGoogle`, `AdsBlockedBanner`, `AdsBlockedScript`, `LikeShareFacebook`, `LikeShareTwitter`, `LikeShareReddit`, `Canvas`, `WebGLVendor`, `WebGLRenderer`, `TouchPoints`, `TouchEvent`, `TouchStart`, `AudioFingerprintPXI`, `AudioFingerprintPXIFullBuffer`, `AudioFingerprintNtVc`, `AudioFingerprintCC`, `AudioFingerprintHybrid` FROM `Samples` WHERE `SampleUUID` = ?;";
 	private static final String selectSampleSetIDHistory = "SELECT `SampleUUID`, `Timestamp` FROM `SampleSets` INNER JOIN `Samples` USING (`SampleID`) WHERE `SampleSetID` = ? ORDER BY `Timestamp` DESC;";
 
 	private static final String NO_JAVASCRIPT = "No JavaScript";
@@ -371,6 +371,13 @@ public class FingerprintDAO {
 			bean.setNameHoverText("Primative touch screen detection.");
 			characteristics.add(bean);
 		}
+		{
+			CharacteristicBean bean = getAudioTestsCharacteristicBean(conn, sampleCounts.lower(new VersionCount(17 + 1)).getCount(), fingerprint);
+			bean.setName("Audio Fingerprints [EXPERIMENTAL]");
+			bean.setColour(CharacteristicBean.EXPERIMENTAL_COLOUR);
+			bean.setNameHoverText("A set of fingerprinting tests that work using the AudioContext API.");
+			characteristics.add(bean);
+		}
 	}
 
 	/**
@@ -521,6 +528,16 @@ public class FingerprintDAO {
 		} else {
 			insertSample.setNull(index, java.sql.Types.BOOLEAN);
 		}
+		++index;
+		insertSample.setString(index, fingerprint.getAudioFingerprintPXI());
+		++index;
+		insertSample.setString(index, fingerprint.getAudioFingerprintPXIFullBuffer());
+		++index;
+		insertSample.setString(index, fingerprint.getAudioFingerprintNtVc());
+		++index;
+		insertSample.setString(index, fingerprint.getAudioFingerprintCC());
+		++index;
+		insertSample.setString(index, fingerprint.getAudioFingerprintHybrid());
 
 		/*
 		 * Try to insert with a different random UUID until a unique one is found.
@@ -662,7 +679,12 @@ public class FingerprintDAO {
 		 + " AND `WebGLRenderer`" + (fingerprint.getWebGLRenderer() == null ? " IS NULL" : " = ?")
 		 + " AND `TouchPoints`" + (fingerprint.getTouchPoints() == null ? " IS NULL" : " = ?")
 		 + " AND `TouchEvent`" + (fingerprint.getTouchEvent() == null ? " IS NULL" : " = ?")
-		 + " AND `TouchStart`" + (fingerprint.getTouchStart() == null ? " IS NULL" : " = ?") + ";";
+		 + " AND `TouchStart`" + (fingerprint.getTouchStart() == null ? " IS NULL" : " = ?")
+		 + " AND `AudioFingerprintPXI`" + (fingerprint.getAudioFingerprintPXI() == null ? " IS NULL" : " = ?")
+		 + " AND `AudioFingerprintPXIFullBuffer`" + (fingerprint.getAudioFingerprintPXIFullBuffer() == null ? " IS NULL" : " = ?")
+		 + " AND `AudioFingerprintNtVc`" + (fingerprint.getAudioFingerprintNtVc() == null ? " IS NULL" : " = ?")
+		 + " AND `AudioFingerprintCC`" + (fingerprint.getAudioFingerprintCC() == null ? " IS NULL" : " = ?")
+		 + " AND `AudioFingerprintHybrid`" + (fingerprint.getAudioFingerprintHybrid() == null ? " IS NULL" : " = ?") + ";";
 		PreparedStatement checkExists = conn.prepareStatement(query);
 
 		int index = 1;
@@ -813,6 +835,26 @@ public class FingerprintDAO {
 			checkExists.setBoolean(index, fingerprint.getTouchStart());
 			++index;
 		}
+		if (fingerprint.getAudioFingerprintPXI() != null) {
+			checkExists.setString(index, fingerprint.getAudioFingerprintPXI());
+			++index;
+		}
+		if (fingerprint.getAudioFingerprintPXIFullBuffer() != null) {
+			checkExists.setString(index, fingerprint.getAudioFingerprintPXIFullBuffer());
+			++index;
+		}
+		if (fingerprint.getAudioFingerprintNtVc() != null) {
+			checkExists.setString(index, fingerprint.getAudioFingerprintNtVc());
+			++index;
+		}
+		if (fingerprint.getAudioFingerprintCC() != null) {
+			checkExists.setString(index, fingerprint.getAudioFingerprintCC());
+			++index;
+		}
+		if (fingerprint.getAudioFingerprintHybrid() != null) {
+			checkExists.setString(index, fingerprint.getAudioFingerprintHybrid());
+			++index;
+		}
 
 		ResultSet rs = checkExists.executeQuery();
 
@@ -912,7 +954,13 @@ public class FingerprintDAO {
 		+ " AND `WebGLRenderer`" + (fingerprint.getWebGLRenderer() == null ? " IS NULL" : " = ?")
 		+ " AND `TouchPoints`" + (fingerprint.getTouchPoints() == null ? " IS NULL" : " = ?")
 		+ " AND `TouchEvent`" + (fingerprint.getTouchEvent() == null ? " IS NULL" : " = ?")
-		+ " AND `TouchStart`" + (fingerprint.getTouchStart() == null ? " IS NULL" : " = ?")+ ";";
+		+ " AND `TouchStart`" + (fingerprint.getTouchStart() == null ? " IS NULL" : " = ?")
+		/*+ " AND `AudioFingerprintPXI`" + (fingerprint.getAudioFingerprintPXI() == null ? " IS NULL" : " = ?")
+		+ " AND `AudioFingerprintPXIFullBuffer`" + (fingerprint.getAudioFingerprintPXIFullBuffer() == null ? " IS NULL" : " = ?")
+		+ " AND `AudioFingerprintNtVc`" + (fingerprint.getAudioFingerprintNtVc() == null ? " IS NULL" : " = ?")
+		+ " AND `AudioFingerprintCC`" + (fingerprint.getAudioFingerprintCC() == null ? " IS NULL" : " = ?")
+		+ " AND `AudioFingerprintHybrid`" + (fingerprint.getAudioFingerprintHybrid() == null ? " IS NULL" : " = ?")*/
+		+ ";";
 		PreparedStatement checkExists = conn.prepareStatement(query);
 
 		int index = 1;
@@ -1060,6 +1108,26 @@ public class FingerprintDAO {
 			checkExists.setBoolean(index, fingerprint.getTouchStart());
 			++index;
 		}
+		/*if (fingerprint.getAudioFingerprintPXI() != null) {
+			checkExists.setString(index, fingerprint.getAudioFingerprintPXI());
+			++index;
+		}
+		if (fingerprint.getAudioFingerprintPXIFullBuffer() != null) {
+			checkExists.setString(index, fingerprint.getAudioFingerprintPXIFullBuffer());
+			++index;
+		}
+		if (fingerprint.getAudioFingerprintNtVc() != null) {
+			checkExists.setString(index, fingerprint.getAudioFingerprintNtVc());
+			++index;
+		}
+		if (fingerprint.getAudioFingerprintCC() != null) {
+			checkExists.setString(index, fingerprint.getAudioFingerprintCC());
+			++index;
+		}
+		if (fingerprint.getAudioFingerprintHybrid() != null) {
+			checkExists.setString(index, fingerprint.getAudioFingerprintHybrid());
+			++index;
+		}*/
 
 		ResultSet rs = checkExists.executeQuery();
 
@@ -1588,6 +1656,104 @@ public class FingerprintDAO {
 		return chrbean;
 	}
 
+	/**
+	 * Create the audio fingerprint CharacteristicBean.
+	 * 
+	 * @param conn
+	 *            A connection to the database.
+	 * @param num_samples
+	 *            The number of samples in the database.
+	 * @param value
+	 *            The value of this sample.
+	 * @return
+	 * @throws SQLException
+	 */
+	private static CharacteristicBean getAudioTestsCharacteristicBean(Connection conn, int num_samples, Fingerprint fingerprint) throws SQLException {
+		CharacteristicBean chrbean = new CharacteristicBean();
+
+		PreparedStatement getCount;
+		String querystr = "SELECT COUNT(*) FROM `Samples` WHERE"
+		+ " `AudioFingerprintPXI`" + (fingerprint.getAudioFingerprintPXI() == null ? " IS NULL": " = ?")
+		+ " AND `AudioFingerprintPXIFullBuffer`" + (fingerprint.getAudioFingerprintPXIFullBuffer() == null ? " IS NULL": " = ?")
+		+ " AND `AudioFingerprintNtVc`" + (fingerprint.getAudioFingerprintNtVc() == null ? " IS NULL": " = ?")
+		+ " AND `AudioFingerprintCC`" + (fingerprint.getAudioFingerprintCC() == null ? " IS NULL": " = ?")
+		+ " AND `AudioFingerprintHybrid`" + (fingerprint.getAudioFingerprintHybrid() == null ? " IS NULL": " = ?");
+		getCount = conn.prepareStatement(querystr);
+		
+		int index = 1;
+		
+		String touchStr;
+		if(fingerprint.getAudioFingerprintPXI() == null && fingerprint.getAudioFingerprintPXIFullBuffer() == null && fingerprint.getAudioFingerprintNtVc() == null
+				&& fingerprint.getAudioFingerprintCC() == null && fingerprint.getAudioFingerprintHybrid() == null){
+			touchStr = NO_JAVASCRIPT;
+		}
+		else{
+			touchStr = "<b>Fingerprint using DynamicsCompressor (sum of buffer values):</b><br> ";
+			if(fingerprint.getAudioFingerprintPXI() != null){
+				touchStr += fingerprint.getAudioFingerprintPXI();
+				getCount.setString(index, fingerprint.getAudioFingerprintPXI());
+				++index;
+			}
+			else{
+				touchStr += "NoJS";
+			}
+			
+			touchStr += "<br><b>Fingerprint using DynamicsCompressor (hash of full buffer):</b><br> ";
+			if(fingerprint.getAudioFingerprintPXIFullBuffer() != null){
+				touchStr += fingerprint.getAudioFingerprintPXIFullBuffer();
+				getCount.setString(index, fingerprint.getAudioFingerprintPXIFullBuffer());
+				++index;
+			}
+			else if(fingerprint.getAudioFingerprintPXI().equals("Not supported") || fingerprint.getAudioFingerprintPXI().equals("Error")){
+				touchStr += "Error or not supported";
+			}
+			else{
+				touchStr += "NoJS";
+			}
+			
+			touchStr += "<br><b>AudioContext properties:</b><br> ";
+			if(fingerprint.getAudioFingerprintNtVc() != null){
+				touchStr += fingerprint.getAudioFingerprintNtVc();
+				getCount.setString(index, fingerprint.getAudioFingerprintNtVc());
+				++index;
+			}
+			else{
+				touchStr += "NoJS";
+			}
+			
+			touchStr += "<br><b>Fingerprint using OscillatorNode:</b><br> ";
+			if(fingerprint.getAudioFingerprintCC() != null){
+				touchStr += fingerprint.getAudioFingerprintCC();
+				getCount.setString(index, fingerprint.getAudioFingerprintCC());
+				++index;
+			}
+			else{
+				touchStr += "NoJS";
+			}
+			
+			touchStr += "<br><b>Fingerprint using hybrid of OscillatorNode/DynamicsCompressor method:</b><br> ";
+			if(fingerprint.getAudioFingerprintHybrid() != null){
+				touchStr += fingerprint.getAudioFingerprintHybrid();
+				getCount.setString(index, fingerprint.getAudioFingerprintHybrid());
+				++index;
+			}
+			else{
+				touchStr += "NoJS";
+			}
+		}
+		chrbean.setValue(touchStr);
+
+		ResultSet rs = getCount.executeQuery();
+		rs.next();
+		int count = rs.getInt(1);
+		rs.close();
+		chrbean.setNumOccurrences(count);
+		chrbean.setInX(((double) num_samples) / ((double) count));
+		chrbean.setBits(Math.abs(Math.log(chrbean.getInX()) / Math.log(2)));
+
+		return chrbean;
+	}
+	
 	public static HistoryListBean getSampleSetIDsHistory(String sampleSetID, ServletContext context) throws ServletException {
 		HistoryListBean history = new HistoryListBean();
 		Connection conn = null;
@@ -1734,32 +1900,37 @@ public class FingerprintDAO {
 		// TbbVersion
 		fingerprint.setTbbVersion(rs.getString(index));
 		++index;
-		// AdsBlocked
+		// AdsBlockedGoogle
 		fingerprint.setAdsBlockedGoogle(rs.getBoolean(index));
 		if (rs.wasNull()) {
 			fingerprint.setAdsBlockedGoogle(null);
 		}
 		++index;
+		// AdsBlockedBanner
 		fingerprint.setAdsBlockedBanner(rs.getBoolean(index));
 		if (rs.wasNull()) {
 			fingerprint.setAdsBlockedBanner(null);
 		}
 		++index;
+		// AdsBlockedScript
 		fingerprint.setAdsBlockedScript(rs.getBoolean(index));
 		if (rs.wasNull()) {
 			fingerprint.setAdsBlockedScript(null);
 		}
 		++index;
+		// LikeShareFacebook
 		fingerprint.setLikeShareFacebook(rs.getInt(index));
 		if (rs.wasNull()) {
 			fingerprint.setLikeShareFacebook(null);
 		}
 		++index;
+		// LikeShareTwitter
 		fingerprint.setLikeShareTwitter(rs.getInt(index));
 		if (rs.wasNull()) {
 			fingerprint.setLikeShareTwitter(null);
 		}
 		++index;
+		// LikeShareReddit
 		fingerprint.setLikeShareReddit(rs.getInt(index));
 		if (rs.wasNull()) {
 			fingerprint.setLikeShareReddit(null);
@@ -1791,6 +1962,21 @@ public class FingerprintDAO {
 		if (rs.wasNull()) {
 			fingerprint.setTouchStart(null);
 		}
+		++index;
+		// AudioFingerprintPXI
+		fingerprint.setAudioFingerprintPXI(rs.getString(index));
+		++index;
+		// AudioFingerprintPXIFullBuffer
+		fingerprint.setAudioFingerprintPXIFullBuffer(rs.getString(index));
+		++index;
+		// AudioFingerprintNtVc
+		fingerprint.setAudioFingerprintNtVc(rs.getString(index));
+		++index;
+		// AudioFingerprintCC
+		fingerprint.setAudioFingerprintCC(rs.getString(index));
+		++index;
+		// AudioFingerprintHybrid
+		fingerprint.setAudioFingerprintHybrid(rs.getString(index));
 		++index;
 
 		rs.close();

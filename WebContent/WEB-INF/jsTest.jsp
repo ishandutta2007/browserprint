@@ -13,17 +13,10 @@
 	<script type="text/javascript" src="scripts/f.js"></script>
 	<script type="text/javascript" src="scripts/fjs2.js"></script>
 	<script type="text/javascript" src="adtests/easylist/ads/js/testscript.js"></script>
+	<script type="text/javascript" src="scripts/sha1.js"></script>
+	<script type="text/javascript" src="scripts/audiofp.js"></script>
 </head>
 <body>
-	<script type="text/javascript">
-	var tbbVersion = "";
-	function pref(key, val) {
-		if(key == "torbrowser.version"){
-			tbbVersion = val;
-		}
-	}
-	</script>
-	<script type="text/javascript" src="resource:///defaults/preferences/000-tor-browser.js"></script>
 	<p>
 		Please wait...
 	</p>
@@ -33,6 +26,32 @@
 			<input type="hidden" name="captchaAnswer" value="<c:out value='${ param.captchaAnswer }'/>">
 		</div>
 	</form>
+	<script type="text/javascript">
+		// Run the audio fingerprints.
+		// Unlike other fingerprinting functions these output to hidden elements instead of returning a value.
+		// There may be weird interference effects if the prints are run sequentially with no delay, hence the sleeping.
+		setTimeout(function() {
+			run_pxi_fp();
+		}, 0);
+		setTimeout(function() {
+			run_nt_vc_fp();
+		}, 1000);
+		setTimeout(function() {
+			run_cc_fp();
+		}, 2000);
+		setTimeout(function() {
+			run_hybrid_fp();
+		}, 3000);
+	</script>
+	<script type="text/javascript">
+	var tbbVersion = "";
+	function pref(key, val) {
+		if(key == "torbrowser.version"){
+			tbbVersion = val;
+		}
+	}
+	</script>
+	<script type="text/javascript" src="resource:///defaults/preferences/000-tor-browser.js"></script>
 	<!-- Flash for detecting fonts and other things. -->
 	<div id="OSDataDiv">
 			<a href="http://www.adobe.com/go/getflashplayer">
@@ -370,8 +389,9 @@
 	    		value: touch[2]
 			}).appendTo('#formdiv');
 			
-			//Submit the page.
-			submitDetailsForm();
+			//Submit the page after a few seconds.
+			//Delay is to allow the audio fingerprinting tests to all complete.
+			setTimeout(submitDetailsForm, 6000);
 		}
 		
 		function submitDetailsForm(){

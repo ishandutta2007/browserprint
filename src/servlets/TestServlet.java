@@ -282,6 +282,11 @@ public class TestServlet extends HttpServlet {
 				}
 			}
 		}
+		fingerprint.setAudioFingerprintPXI(request.getParameter("AudioFingerprintPXI"));
+		fingerprint.setAudioFingerprintPXIFullBuffer(request.getParameter("AudioFingerprintPXIFullBuffer"));
+		fingerprint.setAudioFingerprintNtVc(request.getParameter("AudioFingerprintNtVc"));
+		fingerprint.setAudioFingerprintCC(request.getParameter("AudioFingerprintCC"));
+		fingerprint.setAudioFingerprintHybrid(request.getParameter("AudioFingerprintHybrid"));
 		
 		serveRequest(request, response, fingerprint);
 	}

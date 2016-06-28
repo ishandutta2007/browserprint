@@ -55,6 +55,12 @@ public class Fingerprint {
 	private Integer touchPoints;
 	private Boolean touchEvent;
 	private Boolean touchStart;
+	
+	private String audioFingerprintPXI;
+	private String audioFingerprintPXIFullBuffer;
+	private String audioFingerprintNtVc;
+	private String audioFingerprintCC;
+	private String audioFingerprintHybrid;
 
 	public Fingerprint() {
 		sampleSetID = null;
@@ -97,6 +103,11 @@ public class Fingerprint {
 		touchPoints = null;
 		touchEvent = null;
 		touchStart = null;
+		audioFingerprintPXI = null;
+		audioFingerprintPXIFullBuffer = null;
+		audioFingerprintNtVc = null;
+		audioFingerprintCC = null;
+		audioFingerprintHybrid = null;
 	}
 	
 	public String getSampleSetID() {
@@ -417,5 +428,45 @@ public class Fingerprint {
 
 	public void setTouchStart(Boolean touchStart) {
 		this.touchStart = touchStart;
+	}
+
+	public String getAudioFingerprintPXI() {
+		return audioFingerprintPXI;
+	}
+
+	public void setAudioFingerprintPXI(String audioFingerprintPXI) {
+		this.audioFingerprintPXI = audioFingerprintPXI;
+	}
+
+	public String getAudioFingerprintPXIFullBuffer() {
+		return audioFingerprintPXIFullBuffer;
+	}
+
+	public void setAudioFingerprintPXIFullBuffer(String audioFingerprintPXIFullBuffer) {
+		this.audioFingerprintPXIFullBuffer = audioFingerprintPXIFullBuffer;
+	}
+
+	public String getAudioFingerprintNtVc() {
+		return audioFingerprintNtVc;
+	}
+
+	public void setAudioFingerprintNtVc(String audioFingerprintNtVc) {
+		this.audioFingerprintNtVc = audioFingerprintNtVc;
+	}
+
+	public String getAudioFingerprintCC() {
+		return audioFingerprintCC;
+	}
+
+	public void setAudioFingerprintCC(String audioFingerprintCC) {
+		this.audioFingerprintCC = audioFingerprintCC;
+	}
+
+	public String getAudioFingerprintHybrid() {
+		return audioFingerprintHybrid;
+	}
+
+	public void setAudioFingerprintHybrid(String audioFingerprintHybrid) {
+		this.audioFingerprintHybrid = audioFingerprintHybrid;
 	}
 }

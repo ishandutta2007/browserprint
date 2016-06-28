@@ -136,6 +136,11 @@
 	<p>
 		Fingerprintjs2.
 	</p>
+	<h3>Audio Fingerprints</h3>
+	<p>
+		Code taken with permission from https://audiofingerprint.openwpm.com/
+		Tests discovered in the wild by Steven Englehardt and Arvind Narayanan in the paper Online tracking: A 1-million-site measurement and analysis.
+	</p>
 </div>
 <common:footer/>
 </body>

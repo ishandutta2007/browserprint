@@ -5,6 +5,7 @@ import java.io.Serializable;
 @SuppressWarnings("serial")
 public class CharacteristicBean implements Serializable{
 	public static final int DEPRECATED_COLOUR[] = {200, 200, 200};
+	public static final int EXPERIMENTAL_COLOUR[] = {238, 130, 238};
 	
 	private String name;
 	private String nameHoverText;
