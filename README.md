@@ -105,6 +105,10 @@ Name of the WebGL Renderer. Some browsers give the full name of the underlying g
 ### Touch Support
 Primative touch screen detection.
 
+### Audio Fingerprints
+A set of fingerprinting tests that work using the AudioContext API.
+Based on fingerprinting code from the wild.
+
 ## Installation
 Here we give a quick overview of one way the project can be deployed.
 You need to have Apache Tomcat and MariaDB installed for this to work.
