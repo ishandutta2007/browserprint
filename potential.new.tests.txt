@@ -1,3 +1,6 @@
+### Internet speed
+Download something and time how long it takes.
+
 ### Adblocking, acceptable ads
 To augment the ad blocking test we can see if ``acceptable ads'' are allowed by the browser.
 Adblock and Adblock Plus:
