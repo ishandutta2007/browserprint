@@ -254,7 +254,7 @@ public class FingerprintDAO {
 			characteristics.add(bean);
 		}
 		{
-			CharacteristicBean bean = getCharacteristicBean(conn, sampleCounts.lower(new VersionCount(18 + 1)).getCount(), "FontsCSS", fingerprint.getFontsCSS());
+			CharacteristicBean bean = getCharacteristicBean(conn, sampleCounts.lower(new VersionCount(19 + 1)).getCount(), "FontsCSS", fingerprint.getFontsCSS());
 			if (bean.getValue().equals("")) {
 				bean.setValue("No fonts detected");
 			}
