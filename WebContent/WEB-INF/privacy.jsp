@@ -61,7 +61,7 @@
 		<li>The time-zone configured on your machine, as detected using JavaScript.</li>
 		<li>The screen size and colour depth of the monitor displaying the client's web browser, as detected using JavaScript, Flash, and CSS.</li>
 		<li>The language of the client's browser, as detected using Flash.</li>
-		<li>The fonts installed on the client's machine, detected using Flash and JavaScript.</li>
+		<li>The fonts installed on the client's machine, detected using Flash, JavaScript, and CSS.</li>
 		<li>The heights and widths of a set of Unicode characters rendered in various styles (e.g. sans-serif).</li>
 		<li>Whether cookies are enabled, detected by creating a cookie and then retrieving it.</li>
 		<li>Whether localStorage, sessionStorage, and Internet Explorer's userData are available in the browser, detected using JavaScript.</li>

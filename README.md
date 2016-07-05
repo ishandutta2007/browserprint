@@ -42,8 +42,17 @@ Different from the other screen size test in that this number can be the cumulat
 ### Language (Flash)
 The language of the client's browser, as detected using Flash.
 
-### System Fonts
+### System Fonts (Flash)
 The fonts installed on the client's machine, detected using Flash.
+
+### System Fonts (JS/CSS)
+The fonts installed on the client's machine, detected using JavaScript.
+Fonts list may be incomplete.
+
+### System Fonts (JS/CSS)
+The fonts installed on the client's machine, detected using CSS without JavaScript.
+Fonts list may be incomplete.
+CSS font fingerprinting can be blocked by disabling CSS or by disabling JavaScript using the NoScript extension (despite the test not using JavaScript).
 
 ### Character Sizes
 The height and width of a set of Unicode characters rendered at 2200pt with a variety of styles applied to them (e.g. sans-serif).

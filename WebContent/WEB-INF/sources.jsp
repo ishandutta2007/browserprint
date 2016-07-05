@@ -75,6 +75,10 @@
 	<p>
 		Fingerprintjs2.
 	</p>
+	<h3>System Fonts (CSS)</h3>
+	<p>
+		Based on test in the <a href="http://ip-check.info">JonDonym IP check</a> test page.
+	</p>
 	<h3>Character Sizes</h3>
 	<p>
 		Based on <a href="https://www.bamsoftware.com/talks/fc15-fontfp/fontfp.html">work</a> by David Fifield and Serge Egelmantalk.<br/>

@@ -37,6 +37,9 @@
 		This project would not be possible without these institutions' help.
 	</p>
 	<p>
+		<b>News 2016-07-05:</b> We have implemented a test that detects what fonts your browser has using CSS and no JavaScript.
+	</p>
+	<p>
 		<b>News 2016-06-28:</b> We have added tests.
 		These tests work using the AudioContext API and are based on real world fingerprinting code discovered here <a href="https://audiofingerprint.openwpm.com/">https://audiofingerprint.openwpm.com/</a>.
 	</p>
