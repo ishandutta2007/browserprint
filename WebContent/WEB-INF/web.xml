@@ -107,6 +107,15 @@
     <url-pattern>/screenSize/*</url-pattern>
   </servlet-mapping>
   <servlet>
+    <display-name>FontCSSServlet</display-name>
+    <servlet-name>FontCSSServlet</servlet-name>
+    <servlet-class>servlets.FontCSSServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>FontCSSServlet</servlet-name>
+    <url-pattern>/CSSFont/*</url-pattern>
+  </servlet-mapping>
+  <servlet>
     <display-name>blog</display-name>
     <servlet-name>blog</servlet-name>
     <jsp-file>/WEB-INF/blog/userFingerprinting.jsp</jsp-file>

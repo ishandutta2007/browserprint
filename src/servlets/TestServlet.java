@@ -6,6 +6,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.TreeSet;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -350,7 +352,26 @@ public class TestServlet extends HttpServlet {
 		{
 			HttpSession session = request.getSession(false);
 			if(session != null){
+				//Get ScreenDetailsCSS
 				fingerprint.setScreenDetailsCSS(session.getAttribute("device-width") + "x" + session.getAttribute("device-height"));
+				
+				//Get fontsCSS
+				String fontsStr = null;
+				{
+					TreeSet<String> fonts = (TreeSet<String>)session.getAttribute("fontsNotRequested");
+					if(fonts != null){
+						fontsStr = "";
+						Iterator<String> it = fonts.iterator();
+						if(it.hasNext()){
+							fontsStr += it.next();
+							while(it.hasNext()){
+								fontsStr += ", " + it.next();
+							}
+						}
+					}
+				}
+				fingerprint.setFontsCSS(fontsStr);
+				
 				session.invalidate();
 			}
 		}

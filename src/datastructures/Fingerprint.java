@@ -21,6 +21,7 @@ public class Fingerprint {
 	private String languageFlash;
 	private String fonts;
 	private String fontsJS_CSS;
+	private String fontsCSS;
 	private String charSizes;
 
 	private boolean cookiesEnabled;
@@ -78,6 +79,7 @@ public class Fingerprint {
 		languageFlash = null;
 		fonts = null;
 		fontsJS_CSS = null;
+		fontsCSS = null;
 		charSizes = null;
 		cookiesEnabled = false;
 		superCookieLocalStorage = null;
@@ -228,6 +230,14 @@ public class Fingerprint {
 
 	public void setFontsJS_CSS(String fontsJS_CSS) {
 		this.fontsJS_CSS = fontsJS_CSS;
+	}
+	
+	public String getFontsCSS() {
+		return fontsCSS;
+	}
+
+	public void setFontsCSS(String fontsCSS) {
+		this.fontsCSS = fontsCSS;
 	}
 
 	public String getCharSizes() {

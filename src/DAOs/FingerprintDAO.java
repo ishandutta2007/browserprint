@@ -28,10 +28,10 @@ import beans.UniquenessBean;
 import datastructures.Fingerprint;
 
 public class FingerprintDAO {
-	private static final String insertSampleStr = "INSERT INTO `Samples`(`SampleUUID`, `IP`, `TimeStamp`, `AllHeaders`, `ContrastLevel`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `ScreenDetailsCSS`, `LanguageFlash`, `Fonts`, `FontsJS_CSS`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `IndexedDBEnabled`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlockedGoogle`, `AdsBlockedBanner`, `AdsBlockedScript`, `LikeShareFacebook`, `LikeShareTwitter`, `LikeShareReddit`, `Canvas`, `WebGLVendor`, `WebGLRenderer`, `TouchPoints`, `TouchEvent`, `TouchStart`, `AudioFingerprintPXI`, `AudioFingerprintPXIFullBuffer`, `AudioFingerprintNtVc`, `AudioFingerprintCC`, `AudioFingerprintHybrid`) VALUES(?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+	private static final String insertSampleStr = "INSERT INTO `Samples`(`SampleUUID`, `IP`, `TimeStamp`, `AllHeaders`, `ContrastLevel`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `ScreenDetailsCSS`, `LanguageFlash`, `Fonts`, `FontsJS_CSS`, `FontsCSS`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `IndexedDBEnabled`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlockedGoogle`, `AdsBlockedBanner`, `AdsBlockedScript`, `LikeShareFacebook`, `LikeShareTwitter`, `LikeShareReddit`, `Canvas`, `WebGLVendor`, `WebGLRenderer`, `TouchPoints`, `TouchEvent`, `TouchStart`, `AudioFingerprintPXI`, `AudioFingerprintPXIFullBuffer`, `AudioFingerprintNtVc`, `AudioFingerprintCC`, `AudioFingerprintHybrid`) VALUES(?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 	private static final String getSampleCountStr = "SELECT COUNT(*) FROM `Samples`;";
 	private static final String getSampleCountVersionAwareStr = "SELECT `BrowserprintVersion` AS `Version`, (SELECT COUNT(*) FROM `Samples` WHERE `BrowserprintVersion` >= `Version`) FROM `Samples` GROUP BY `BrowserprintVersion` UNION SELECT 1, COUNT(*) FROM `Samples`;";
-	private static final String selectSampleStr = "SELECT `ContrastLevel`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `ScreenDetailsCSS`, `LanguageFlash`, `Fonts`, `FontsJS_CSS`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `IndexedDBEnabled`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlockedGoogle`, `AdsBlockedBanner`, `AdsBlockedScript`, `LikeShareFacebook`, `LikeShareTwitter`, `LikeShareReddit`, `Canvas`, `WebGLVendor`, `WebGLRenderer`, `TouchPoints`, `TouchEvent`, `TouchStart`, `AudioFingerprintPXI`, `AudioFingerprintPXIFullBuffer`, `AudioFingerprintNtVc`, `AudioFingerprintCC`, `AudioFingerprintHybrid` FROM `Samples` WHERE `SampleUUID` = ?;";
+	private static final String selectSampleStr = "SELECT `ContrastLevel`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `ScreenDetailsCSS`, `LanguageFlash`, `Fonts`, `FontsJS_CSS`, `FontsCSS`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `IndexedDBEnabled`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlockedGoogle`, `AdsBlockedBanner`, `AdsBlockedScript`, `LikeShareFacebook`, `LikeShareTwitter`, `LikeShareReddit`, `Canvas`, `WebGLVendor`, `WebGLRenderer`, `TouchPoints`, `TouchEvent`, `TouchStart`, `AudioFingerprintPXI`, `AudioFingerprintPXIFullBuffer`, `AudioFingerprintNtVc`, `AudioFingerprintCC`, `AudioFingerprintHybrid` FROM `Samples` WHERE `SampleUUID` = ?;";
 	private static final String selectSampleSetIDHistory = "SELECT `SampleUUID`, `Timestamp` FROM `SampleSets` INNER JOIN `Samples` USING (`SampleID`) WHERE `SampleSetID` = ? ORDER BY `Timestamp` DESC;";
 
 	private static final String NO_JAVASCRIPT = "No JavaScript";
@@ -254,6 +254,17 @@ public class FingerprintDAO {
 			characteristics.add(bean);
 		}
 		{
+			CharacteristicBean bean = getCharacteristicBean(conn, sampleCounts.lower(new VersionCount(18 + 1)).getCount(), "FontsCSS", fingerprint.getFontsCSS());
+			if (bean.getValue().equals("")) {
+				bean.setValue("No fonts detected");
+			}
+			bean.setName("Fonts (CSS only)");
+			bean.setNameHoverText("The fonts installed on the client's machine, detected using CSS without JavaScript." 
+					+ " Fonts list may be incomplete."
+					+ " CSS font fingerprinting can be blocked by disabling CSS or by disabling JavaScript using the NoScript extension (despite the test not using JavaScript).");
+			characteristics.add(bean);
+		}
+		{
 			CharacteristicBean bean = getCharacteristicBean(conn, sampleCounts.lower(new VersionCount(2 + 1)).getCount(), "CharSizes", fingerprint.getCharSizes());
 			bean.setColour(CharacteristicBean.DEPRECATED_COLOUR);
 			bean.setName("Character Sizes [DEPRECATED]");
@@ -424,6 +435,8 @@ public class FingerprintDAO {
 		insertSample.setString(index, fingerprint.getFonts());
 		++index;
 		insertSample.setString(index, fingerprint.getFontsJS_CSS());
+		++index;
+		insertSample.setString(index, fingerprint.getFontsCSS());
 		++index;
 		insertSample.setString(index, fingerprint.getCharSizes());
 		++index;
@@ -656,6 +669,7 @@ public class FingerprintDAO {
 		 + " AND `LanguageFlash`" + (fingerprint.getLanguageFlash() == null ? " IS NULL" : " = ?")
 		 + " AND `Fonts`" + (fingerprint.getFonts() == null ? " IS NULL" : " = ?")
 		 + " AND `FontsJS_CSS`" + (fingerprint.getFontsJS_CSS() == null ? " IS NULL" : " = ?")
+		 + " AND `FontsCSS`" + (fingerprint.getFontsCSS() == null ? " IS NULL" : " = ?")
 		 + " AND `CharSizes`" + (fingerprint.getCharSizes() == null ? " IS NULL" : " = ?")
 		 + " AND `CookiesEnabled` = ?"
 		 + " AND `SuperCookieLocalStorage`" + (fingerprint.getSuperCookieLocalStorage() == null ? " IS NULL" : " = ?")
@@ -741,6 +755,10 @@ public class FingerprintDAO {
 		}
 		if (fingerprint.getFontsJS_CSS() != null) {
 			checkExists.setString(index, fingerprint.getFontsJS_CSS());
+			++index;
+		}
+		if (fingerprint.getFontsCSS() != null) {
+			checkExists.setString(index, fingerprint.getFontsCSS());
 			++index;
 		}
 		if (fingerprint.getCharSizes() != null) {
@@ -931,6 +949,7 @@ public class FingerprintDAO {
 		+ " AND `LanguageFlash`" + (fingerprint.getLanguageFlash() == null ? " IS NULL" : " = ?")
 		+ " AND `Fonts`" + (fingerprint.getFonts() == null ? " IS NULL" : " = ?")
 		+ " AND `FontsJS_CSS`" + (fingerprint.getFontsJS_CSS() == null ? " IS NULL" : " = ?")
+		+ " AND `FontsCSS`" + (fingerprint.getFontsCSS() == null ? " IS NULL" : " = ?")
 		/*+ " AND `CharSizes`" + (fingerprint.getCharSizes() == null ? " IS NULL" : " = ?")*/
 		+ " AND `CookiesEnabled` = ?"
 		+ " AND `SuperCookieLocalStorage`" + (fingerprint.getSuperCookieLocalStorage() == null ? " IS NULL" : " = ?")
@@ -1014,6 +1033,10 @@ public class FingerprintDAO {
 		}
 		if (fingerprint.getFontsJS_CSS() != null) {
 			checkExists.setString(index, fingerprint.getFontsJS_CSS());
+			++index;
+		}
+		if (fingerprint.getFontsCSS() != null) {
+			checkExists.setString(index, fingerprint.getFontsCSS());
 			++index;
 		}
 		/*if (fingerprint.getCharSizes() != null) {
@@ -1848,6 +1871,9 @@ public class FingerprintDAO {
 		++index;
 		// FontsJS_CSS
 		fingerprint.setFontsJS_CSS(rs.getString(index));
+		++index;
+		// FontsCSS
+		fingerprint.setFontsCSS(rs.getString(index));
 		++index;
 		// CharSizes
 		fingerprint.setCharSizes(rs.getString(index));

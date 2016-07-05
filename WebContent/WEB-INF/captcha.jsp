@@ -1,6 +1,7 @@
 <%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%><%-- These comments are to prevent excess whitespace in the output.
 --%><%@page session="true"%><%--
 --%><%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%><%--
+--%><%@taglib prefix="common" tagdir="/WEB-INF/tags"%><%--
 --%><jsp:useBean id="captchaBean" class="beans.CaptchaBean" scope="request" /><%--
 --%><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
@@ -10,9 +11,11 @@
 	<meta name="robots" content="noindex" >
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<link rel="stylesheet" type="text/css" href="<c:url value="screenSizeCSS.css"/>">
-	<script type="text/javascript" src="scripts/jquery-1.11.2.min.js"></script>
 </head>
 <body>
+	<common:fontDetectCSSTest/>
+	<%--This script tag needs to be after the fontDetectCSSTest tag otherwise the CSS font test breaks in Opera. No idea why.
+	--%><script type="text/javascript" src="scripts/jquery-1.11.2.min.js"></script>
 	<p>
 		Please type the letters from the image into the box below.
 	</p><%--

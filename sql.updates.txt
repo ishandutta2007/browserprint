@@ -60,3 +60,9 @@ ALTER TABLE `Samples` ADD `AudioFingerprintCC` TEXT AFTER `AudioFingerprintNtVc`
 ALTER TABLE `Samples` ADD `AudioFingerprintHybrid` TEXT AFTER `AudioFingerprintCC`;
 ALTER TABLE `Samples` MODIFY COLUMN `BrowserprintVersion` SMALLINT UNSIGNED NOT NULL DEFAULT 17;
 COMMIT;
+
+--Add new column FontsCSS to table.
+START TRANSACTION;
+ALTER TABLE `Samples` ADD `FontsCSS` TEXT AFTER `FontsJS_CSS`;
+ALTER TABLE `Samples` MODIFY COLUMN `BrowserprintVersion` SMALLINT UNSIGNED NOT NULL DEFAULT 18;
+COMMIT;
