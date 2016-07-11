@@ -25,7 +25,9 @@
 	</p>
 	<p>
 		Data may be shared with other researchers upon their request but under the same conditions as for publication.
-		If cookies are enabled we associate all the fingerprints for a user with those shared by the same cookie; the purpose of this is to prevent resubmission of a fingerprint from being counted and to provide the ability to look at and compare previous fingerprints easily. You may disable cookies if you do not wish this to occur.
+		Additionally it's possible some fingerprint data (such as user-agent string) may be used in fingerprint spoofing software in the future.
+		If cookies are enabled we associate all the fingerprints for a user with those shared by the same cookie; the purpose of this is to prevent resubmission of a fingerprint from being counted and to provide the ability to look at and compare previous fingerprints easily.
+		You may disable cookies if you do not wish this to occur.
 		Fingerprints collected are publicly available on the website, but to view a fingerprint you need to know the designated UUID, which is <b>extremely</b> hard to guess but it is still feasible that anonymised data, as previously indicated, could be read from this site.
 		However, if you don't share your fingerprint it is unlikely to be viewed by anybody except you through the website, although researchers can and will be accessing the fingerprint data as listed above.
 	</p>
@@ -35,7 +37,9 @@
 		We will do our best to prevent theft or misuse of collected data, however, such incidents are still possible.
 	</p>
 	<p>
-		To reiterate: We will not attempt to deanonymise Tor clients nor will we attempt to track users across other websites using data gathered here.
+		To reiterate: <i>We</i> will not attempt to deanonymise Tor clients nor will <i>we</i> attempt to track users across other websites using data gathered here.
+		That being said as part of the fingerprinting process we embed scripts from <i>other</i> sites that <i>may</i> (or may not, we don't know) include tracking code or collect information used to track you;
+		 in particular scripts the scripts we are unsure about are ones to display a Facebook/Twitter/Reddit share button and scripts to display a Google ad.
 	</p>
 	<p>
 		Thank you for participating in this project. We will place links to any published research here to allow users to confirm that we are following the usage policy.
