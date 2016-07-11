@@ -37,7 +37,7 @@
 		This project would not be possible without these institutions' help.
 	</p>
 	<p>
-		<b>News 2016-07-05:</b> We have implemented a test that detects what fonts your browser has using CSS and no JavaScript.
+		<b>News 2016-07-05:</b> We have implemented a test that detects what fonts your browser has using CSS without JavaScript.
 	</p>
 	<p>
 		<b>News 2016-06-28:</b> We have added tests.
