@@ -76,7 +76,7 @@
 		The right-most plate in Figure 1 is Ishihara plate number 16;
 		 someone with normal colour vision will see 26, someone with protanopia will see 6, and someone with deuteranomalia will see 2.
 	</p>
-	<img src="../images/blog/colour.vision.captcha.png" style="display: block; margin-left: auto; margin-right: auto"/>
+	<img src="../images/blog/colour.vision.captcha.png" style="display: block; margin-left: auto; margin-right: auto" alt="An image of the proof of concept colour vision CAPTCHA"/>
 	<p>
 		<b>Fig. 1.</b> A screenshot of the first prototype.
 		This implementation is not very covert, the plates are obviously from a colour vision test;
