@@ -118,7 +118,7 @@
 	</p>
 	<h3>Blocking Ads?</h3>
 	<p>
-		Original.
+		Original, but also found on AmIUnique.
 	</p>
 	<h3>Blocking like/share buttons?</h3>
 	<p>
