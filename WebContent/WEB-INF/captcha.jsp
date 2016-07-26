@@ -11,9 +11,10 @@
 	<meta name="robots" content="noindex" >
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<link rel="stylesheet" type="text/css" href="<c:url value="screenSizeCSS.css"/>">
+	<common:fontDetectCSSTestHead/>
 </head>
 <body>
-	<common:fontDetectCSSTest/>
+	<common:fontDetectCSSTestBody/>
 	<%--This script tag needs to be after the fontDetectCSSTest tag otherwise the CSS font test breaks in Opera. No idea why.
 	--%><script type="text/javascript" src="scripts/jquery-1.11.2.min.js"></script>
 	<p>
@@ -25,17 +26,19 @@
 	</p>
 	</c:if>
 	<div>
-		<img src="${ captchaBean.captchaSrc }"/>
-		<form id="captchaForm" action="<c:url value="test"/>" method="POST">
-			<script type="text/javascript">
-			$('<input>').attr({
-				type: 'hidden',
-				name: 'js_enabled',
-				value: 'true'
-			}).appendTo('#captchaForm');
-			</script>
-			<input type="text" name="captchaAnswer"><br/>
-			<input type="submit" value="Continue">
+		<img src="${ captchaBean.captchaSrc }" alt="A text CAPTCHA"/>
+		<form action="<c:url value="test"/>" method="POST">
+			<div id="captchaDiv">
+				<script type="text/javascript">
+				$('<input>').attr({
+					type: 'hidden',
+					name: 'js_enabled',
+					value: 'true'
+				}).appendTo('#captchaDiv');
+				</script>
+				<input type="text" name="captchaAnswer"><br/>
+				<input type="submit" value="Continue">
+			</div>
 		</form>
 	</div>
 	<div id="device-width"></div>
