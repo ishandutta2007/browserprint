@@ -1727,7 +1727,7 @@ public class FingerprintDAO {
 				getCount.setString(index, fingerprint.getAudioFingerprintPXIFullBuffer());
 				++index;
 			}
-			else if(fingerprint.getAudioFingerprintPXI().equals("Not supported") || fingerprint.getAudioFingerprintPXI().equals("Error")){
+			else if(fingerprint.getAudioFingerprintPXIFullBuffer().equals("Not supported") || fingerprint.getAudioFingerprintPXIFullBuffer().equals("Error")){
 				touchStr += "Error or not supported";
 			}
 			else{
