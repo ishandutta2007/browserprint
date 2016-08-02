@@ -37,6 +37,9 @@
 		This project would not be possible without these institutions' help.
 	</p>
 	<p>
+		<b>News 2016-08-02</b> We've been featured on the front page of <a href="https://yro.slashdot.org/story/16/07/31/1357234/new-site-checks-your-browsers-fingerprint">slashdot</a>!
+	</p>
+	<p>
 		<b>News 2016-07-05:</b> We have implemented a test that detects what fonts your browser has using CSS without JavaScript.
 	</p>
 	<p>
