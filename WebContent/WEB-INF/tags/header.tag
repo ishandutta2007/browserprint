@@ -8,4 +8,5 @@
 	<a href="http://${ initParam['websiteBaseURL'] }/view">View fingerprints</a> |
 	<a href="http://${ initParam['websiteBaseURL'] }/statistics">Statistics</a> |
 	<a href="http://${ initParam['websiteBaseURL'] }/blog/">Blog</a>
+	(<a href="http://${ initParam['websiteBaseURL'] }/blog/rss.xml">RSS</a>)
 </div>

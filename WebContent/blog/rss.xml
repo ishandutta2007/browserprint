@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<atom:link href="https://browserprint.info/blog/rss.xml" rel="self" type="application/rss+xml" />
+		<title>Browserprint Blog</title>
+		<link>https://browserprint.info/</link>
+		<description>News and blog posts from Browserprint.</description>
+		<item>
+			<title>User fingerprinting via CAPTCHAs</title>
+			<link>https://browserprint.info/blog/userFingerprinting</link>
+			<guid>https://browserprint.info/blog/userFingerprinting</guid>
+			<pubDate>Mon, 27 Jun 2016 00:00:00 GMT</pubDate>
+			<description>A blog post discussing user fingerprinting via CAPTCHAs.</description>
+		</item>
+	</channel>
+</rss>
