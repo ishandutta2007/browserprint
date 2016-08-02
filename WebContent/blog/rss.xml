@@ -4,7 +4,7 @@
 		<atom:link href="https://browserprint.info/blog/rss.xml" rel="self" type="application/rss+xml" />
 		<title>Browserprint Blog</title>
 		<link>https://browserprint.info/</link>
-		<description>News and blog posts from Browserprint.</description>
+		<description>Blog posts from Browserprint.</description>
 		<item>
 			<title>User fingerprinting via CAPTCHAs</title>
 			<link>https://browserprint.info/blog/userFingerprinting</link>
