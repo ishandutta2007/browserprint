@@ -115,6 +115,15 @@
     <servlet-name>FontCSSServlet</servlet-name>
     <url-pattern>/CSSFont/*</url-pattern>
   </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>BlogRSSXML</servlet-name>
+    <url-pattern>/blog/rss.xml</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <display-name>BlogRSSXML</display-name>
+    <servlet-name>BlogRSSXML</servlet-name>
+    <jsp-file>/WEB-INF/blog/rss.jsp</jsp-file>
+  </servlet>
   <servlet>
     <display-name>blog</display-name>
     <servlet-name>blog</servlet-name>
@@ -186,7 +195,7 @@
   </context-param>
   <context-param>
     <param-name>websiteBaseURL</param-name>
-    <param-value>localhost:8080/browserprint</param-value>
+    <param-value>http://localhost:8080/browserprint</param-value>
   </context-param>
   <context-param>
     <param-name>CaptchaEncryptionPassword</param-name>

@@ -59,9 +59,9 @@
   </context-param>
   <!--
 	The base URL of the website.
-	For instance if the site is http://browserprint.info then this will be browserprint.info.
+	For instance if the site is https://browserprint.info then this will be https://browserprint.info
   -->
   <context-param>
   	<param-name>websiteBaseURL</param-name>
-  	<param-value>localhost:8080/browserprint</param-value>
+  	<param-value>http://localhost:8080/browserprint</param-value>
   </context-param>
