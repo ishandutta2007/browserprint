@@ -6,6 +6,13 @@
 		<link>https://browserprint.info/</link>
 		<description>Blog posts from Browserprint.</description>
 		<item>
+			<title>Defences against fingerprinting</title>
+			<link>https://browserprint.info/blog/fingerprintingDefence</link>
+			<guid>https://browserprint.info/blog/fingerprintingDefence</guid>
+			<pubDate>Mon, 4 Aug 2016 00:00:00 GMT</pubDate>
+			<description>A blog post discussing fingerprinting defences.</description>
+		</item>
+		<item>
 			<title>User fingerprinting via CAPTCHAs</title>
 			<link>https://browserprint.info/blog/userFingerprinting</link>
 			<guid>https://browserprint.info/blog/userFingerprinting</guid>

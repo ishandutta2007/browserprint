@@ -136,6 +136,10 @@ input.viewUuidTextbox{
 	display: inline-block;
 }
 
+p.continueReading{
+	text-align: center;
+}
+
 #statisticsDiv{
 	width: 1200px;
 	margin-left: auto;

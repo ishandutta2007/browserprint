@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Browserprint - Blog</title>
+<title>Browserprint - Blog - User fingerprinting via CAPTCHAs</title>
 <link type="text/css" href="../style.css" rel="stylesheet">
 </head>
 <body>
@@ -13,7 +13,7 @@
 <div id="content">
 	<h2><a href="userFingerprinting">User fingerprinting via CAPTCHAs</a></h2>
 	<h4>Posted: 2016-06-11<br/>
-	By <a href="mailto:${initParam['devEmail']}?subject=User%20fingerprinting">Lachlan Kang</a></h4>
+	By <a href="mailto:${initParam['devEmail']}?subject=Blog%20-%20User%20fingerprinting">Lachlan Kang</a></h4>
 	<p>
 		<b>Important note:</b> Almost all of this is currently theoretical and has not been implemented or trialled.
 		We have <b>absolutely no</b> intention of adding these tests to the main fingerprinting suite of Browserprint.
@@ -140,6 +140,7 @@
 		For example you could present an image selection CAPTCHA that says &quot;select all items that were invented in China&quot;.
 		This has a problem in that a user&#39;s level of knowledge may change, they may solve the CAPTCHA, get curious and look up the items, then next time answer differently because they now know more than they did before.
 	</p>
+	<h3>References</h3>
 	<ol>
 		<li>Fran ̧cois, J.: Heredity in ophthalmology. Mosby (1961)</li>
 		<li>Ishihara, S.: Test for colour-blindness. Tokyo: Hongo Harukicho (1917)</li>

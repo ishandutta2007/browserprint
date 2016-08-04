@@ -118,7 +118,7 @@
   <servlet>
     <display-name>blog</display-name>
     <servlet-name>blog</servlet-name>
-    <jsp-file>/WEB-INF/blog/userFingerprinting.jsp</jsp-file>
+    <jsp-file>/WEB-INF/blog/blog.jsp</jsp-file>
   </servlet>
   <servlet-mapping>
     <servlet-name>blog</servlet-name>
@@ -132,6 +132,15 @@
   <servlet-mapping>
     <servlet-name>blogUserFingerprinting</servlet-name>
     <url-pattern>/blog/userFingerprinting</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <display-name>blogFingerprintingDefence</display-name>
+    <servlet-name>blogFingerprintingDefence</servlet-name>
+    <jsp-file>/WEB-INF/blog/fingerprintingDefence.jsp</jsp-file>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>blogFingerprintingDefence</servlet-name>
+    <url-pattern>/blog/fingerprintingDefence</url-pattern>
   </servlet-mapping>
   <filter>
     <filter-name>UTF8Filter</filter-name>
