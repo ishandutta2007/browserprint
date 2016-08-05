@@ -37,6 +37,9 @@
 		This project would not be possible without these institutions' help.
 	</p>
 	<p>
+		<b>News 2016-08-05</b> We have written a <a href="blog/fingerprintingDefence">blog post</a> discussing what you can do against fingerprinting.
+	</p>
+	<p>
 		<b>News 2016-08-02</b> We've been featured on the front page of <a href="https://yro.slashdot.org/story/16/07/31/1357234/new-site-checks-your-browsers-fingerprint">slashdot</a>!
 	</p>
 	<p>

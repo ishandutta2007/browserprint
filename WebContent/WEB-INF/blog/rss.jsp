@@ -12,7 +12,7 @@
 			<title>Defences against fingerprinting</title>
 			<link>${ initParam['websiteBaseURL'] }/blog/fingerprintingDefence</link>
 			<guid>${ initParam['websiteBaseURL'] }/blog/fingerprintingDefence</guid>
-			<pubDate>Mon, 4 Aug 2016 00:00:00 GMT</pubDate>
+			<pubDate>Mon, 5 Aug 2016 08:30:00 GMT</pubDate>
 			<description>A blog post discussing fingerprinting defences.</description>
 		</item>
 		<item>

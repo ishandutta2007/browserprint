@@ -12,7 +12,7 @@
 <common:header/>
 <div id="content">
 	<h2><a href="fingerprintingDefence">Defences against fingerprinting</a></h2>
-	<h4>Posted: 2016-08-04<br/>
+	<h4>Posted: 2016-08-05<br/>
 	By <a href="mailto:${initParam['devEmail']}?subject=Blog%20-%20Fingerprinting%20defence">Lachlan Kang</a></h4>
 	<p>
 		If you&#39;re on this website you probably have at least some idea of what browser fingerprinting is.
