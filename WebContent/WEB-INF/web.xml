@@ -86,6 +86,15 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>CaptchaServlet</servlet-name>
+    <url-pattern>/captcha.png</url-pattern>
+  </servlet-mapping>
+    <servlet>
+    <display-name>CaptchaPage</display-name>
+    <servlet-name>CaptchaPage</servlet-name>
+    <jsp-file>/WEB-INF/captcha.jsp</jsp-file>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>CaptchaPage</servlet-name>
     <url-pattern>/captcha</url-pattern>
   </servlet-mapping>
   <servlet>

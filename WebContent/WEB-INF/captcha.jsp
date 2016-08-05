@@ -2,7 +2,6 @@
 --%><%@page session="true"%><%--
 --%><%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%><%--
 --%><%@taglib prefix="common" tagdir="/WEB-INF/tags"%><%--
---%><jsp:useBean id="captchaBean" class="beans.CaptchaBean" scope="request" /><%--
 --%><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
@@ -26,7 +25,14 @@
 	</p>
 	</c:if>
 	<div>
-		<img src="${ captchaBean.captchaSrc }" alt="A text CAPTCHA"/>
+		<img id="captchaImg" src="captcha.png" alt="A text CAPTCHA"/>
+		<br>
+		<script type="text/javascript">
+		function refresh(){
+			$("#captchaImg").attr("src", "captcha.png?z=" + new Date().getTime());
+		}
+		</script>
+		<a href="#" onclick="refresh()">refresh</a>
 		<form action="<c:url value="test"/>" method="POST">
 			<div id="captchaDiv">
 				<script type="text/javascript">
@@ -36,7 +42,9 @@
 					value: 'true'
 				}).appendTo('#captchaDiv');
 				</script>
-				<input type="text" name="captchaAnswer"><br/>
+				<input type="text" name="captchaAnswer">
+				<br>
+				<br>
 				<input type="submit" value="Continue">
 			</div>
 		</form>

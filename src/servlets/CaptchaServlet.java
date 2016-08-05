@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import beans.CaptchaBean;
 import datastructures.ContrastCaptcha;
 
 /**
@@ -38,11 +37,11 @@ public class CaptchaServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession(true);
-
+		
 		/*
 		 * Create CAPTCHA.
 		 */
-		String imageString;
+		BufferedImage bImage;
 		ContrastCaptcha captchaSolution;
 		{
 			final int MIN_CAPTCHA_LENGTH = 6;
@@ -68,7 +67,7 @@ public class CaptchaServlet extends HttpServlet {
 			/*
 			 * Create Graphics2D object.
 			 */
-			BufferedImage bImage = new BufferedImage(CAPTCHA_WIDTH, CAPTCHA_HEIGHT, BufferedImage.TYPE_INT_RGB);
+			bImage = new BufferedImage(CAPTCHA_WIDTH, CAPTCHA_HEIGHT, BufferedImage.TYPE_INT_RGB);
 			Graphics2D g2d = bImage.createGraphics();
 			
 			/*
@@ -168,23 +167,18 @@ public class CaptchaServlet extends HttpServlet {
 				int y2 = rand.nextInt(LINES_MAX_Y + 1);
 				g2d.drawLine(x1, y1, x2, y2);
 			}
-			
-			/*
-			 * Convert the image to a base64 String.
-			 */
-			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			ImageIO.write(bImage, "png", bos);
-			byte[] imageBytes = bos.toByteArray();
-	        imageString = Base64.getEncoder().encodeToString(imageBytes);
-			imageString = "data:image/png;base64," + imageString;
 		}
-		
-		request.setAttribute("captchaBean", new CaptchaBean(imageString));
-		
+
 		session.setMaxInactiveInterval(240);//Session invalidates after 240 seconds.
 		session.setAttribute("captcha", captchaSolution);
 		
-		request.getRequestDispatcher("/WEB-INF/captcha.jsp").forward(request, response);
+		//Prevent from caching
+		response.setHeader("Cache-Control", "private, no-store, no-cache, must-revalidate");
+		response.setHeader("Pragma", "no-cache");
+		
+		//Return image
+		response.setContentType("image/png");
+		ImageIO.write(bImage, "png", response.getOutputStream());
 	}
 
 	/**
