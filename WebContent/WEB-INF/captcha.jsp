@@ -25,11 +25,11 @@
 	</p>
 	</c:if>
 	<div>
-		<img id="captchaImg" src="captcha.png" alt="A text CAPTCHA"/>
+		<img id="captchaImg" src="<c:url value="captcha.png"/>" alt="A text CAPTCHA"/>
 		<br>
 		<script type="text/javascript">
 		function refresh(){
-			$("#captchaImg").attr("src", "captcha.png?z=" + new Date().getTime());
+			$("#captchaImg").attr("src", "<c:url value="captcha.png"/>?z=" + new Date().getTime());
 		}
 		</script>
 		<a href="#" onclick="refresh()">refresh</a>
