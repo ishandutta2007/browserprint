@@ -219,4 +219,91 @@ public class JSONDAO {
 	public static final String getScreenDetails() {
 		return getStringResults("ScreenDetails");
 	}
+	
+	/**
+	 * Get number of unique / not unique samples for JavaScript enabled / disabled.
+	 * Only counts samples >= version 19.
+	 * @return
+	 */
+	public static final String getUniqueness() {
+		Connection conn = null;
+		try {
+			conn = Database.getConnection();
+			conn.setReadOnly(true);
+
+			int uniqueWhereJsDisabled;
+			{
+				String query = "SELECT COUNT(*) FROM (SELECT COUNT(*) AS `NumOccurrences` FROM `Samples` WHERE `TimeZone` IS null AND `BrowserprintVersion` >= 19 GROUP BY `UserAgent`, `AcceptHeaders`, `ScreenDetailsCSS`, `FontsCSS`, `CookiesEnabled`, `DoNotTrack`) AS `NumOccurrencesTable` WHERE `NumOccurrences` = 1;";
+				PreparedStatement select = conn.prepareStatement(query);
+
+				ResultSet rs = select.executeQuery();
+
+				rs.next();
+				uniqueWhereJsDisabled = rs.getInt(1);
+				rs.close();
+				select.close();
+			}
+			int notUniqueWhereJsDisabled;
+			{
+				String query = "SELECT COUNT(*) FROM `Samples` WHERE `BrowserprintVersion` >= 19 AND `TimeZone` IS null;";
+				PreparedStatement select = conn.prepareStatement(query);
+
+				ResultSet rs = select.executeQuery();
+
+				rs.next();
+				notUniqueWhereJsDisabled = rs.getInt(1) - uniqueWhereJsDisabled;
+				rs.close();
+				select.close();
+			}		
+			int uniqueWhereJsEnabled;
+			{
+				String query = "SELECT COUNT(*) FROM (SELECT COUNT(*) AS `NumOccurrences` FROM `Samples` WHERE `TimeZone` IS NOT null AND `BrowserprintVersion` >= 19 GROUP BY `ContrastLevel`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetailsFlash`, `LanguageFlash`, `Fonts`, `FontsJS_CSS`, `FontsCSS`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `IndexedDBEnabled`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlockedGoogle`, `AdsBlockedBanner`, `AdsBlockedScript`, `LikeShareFacebook`, `LikeShareTwitter`, `LikeShareReddit`, `WebGLVendor`, `WebGLRenderer`, `TouchPoints`, `TouchEvent`, `TouchStart`) AS `NumOccurrencesTable` WHERE `NumOccurrences` = 1;";
+				PreparedStatement select = conn.prepareStatement(query);
+
+				ResultSet rs = select.executeQuery();
+
+				rs.next();
+				uniqueWhereJsEnabled = rs.getInt(1);
+				rs.close();
+				select.close();
+			}
+			int notUniqueWhereJsEnabled;
+			{
+				String query = "SELECT COUNT(*) FROM `Samples` WHERE `TimeZone` IS NOT null AND `BrowserprintVersion` >= 19";
+				PreparedStatement select = conn.prepareStatement(query);
+
+				ResultSet rs = select.executeQuery();
+
+				rs.next();
+				notUniqueWhereJsEnabled = rs.getInt(1) - uniqueWhereJsEnabled;
+				rs.close();
+				select.close();
+			}
+			
+			JSONObject retval = new JSONObject();
+			JSONObject unique = new JSONObject();
+			unique.put("JavaScript disabled", uniqueWhereJsDisabled);
+			unique.put("JavaScript enabled", uniqueWhereJsEnabled);
+			retval.put("Unique", unique);
+			JSONObject notUnique = new JSONObject();
+			notUnique.put("JavaScript disabled", notUniqueWhereJsDisabled);
+			notUnique.put("JavaScript enabled", notUniqueWhereJsEnabled);
+			retval.put("NotUnique", notUnique);
+
+			return retval.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			// Close the connection
+			// Finally triggers even if we return
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					// Ignore
+				}
+			}
+		}
+		return null;
+	}
 }

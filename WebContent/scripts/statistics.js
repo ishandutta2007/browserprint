@@ -17,6 +17,103 @@
  * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 $(function() {
+	/* Uniqueness */
+	jQuery.getJSON("json?chart=uniqueness", function(jsonData){
+		var nbTotal = 0;
+		$.each(jsonData, function(key, browser) {
+			$.each(browser, function(ver, numb) {
+				nbTotal += numb;
+			});
+		});
+
+		var uniquenessArray = [];
+		var verArray = [];
+		var colors = Highcharts.getOptions().colors;
+		var colorI = 0;
+		$.each(jsonData, function(key, uniqueness) {
+			var total = 0;
+			$.each(uniqueness, function(ver, numb) {
+				total += numb;
+				verArray.push({
+					name : ver,
+					y : numb * 100 / nbTotal,
+					color : Highcharts.Color(colors[colorI]).brighten(0.12)
+							.get(),
+					visible : true
+				});
+			});
+			uniquenessArray.push({
+				name : key,
+				y : total * 100 / nbTotal,
+				color : colors[colorI]
+			});
+			colorI += 1;
+		});
+
+		$('#uniquenessGraph').highcharts({
+			chart : {
+				type : 'pie'
+			},
+			title : {
+				text : 'Fingerprint uniqueness'
+			},
+			subtitle: {
+				text: 'Among samples taken from 2016-07-06 onwards.'
+			},
+			yAxis : {
+				title : {
+					text : 'Total percent'
+				}
+			},
+			plotOptions : {
+				pie : {
+					shadow : false,
+					center : [ '50%', '50%' ]
+				}
+			},
+			tooltip : {
+				valueSuffix : '%',
+				formatter : function() {
+					return '<b>' + this.point.name
+							+ '</b><br>Percentage : '
+							+ Highcharts.numberFormat(this.y, 2)
+							+ '%';
+				}
+			},
+			series : [
+					{
+						name : 'Percentage',
+						data : uniquenessArray,
+						size : '60%',
+						dataLabels : {
+							formatter : function() {
+								return this.y > 5 ? this.point.name
+										: null;
+							},
+							color : 'black',
+							distance : -30
+						}
+					},
+					{
+						name : 'Percentage',
+						data : verArray,
+						size : '80%',
+						innerSize : '60%',
+						dataLabels : {
+							formatter : function() {
+								// display only if larger than 1
+								return this.y > 1 ? '<b>'
+										+ this.point.name
+										+ ':</b> '
+										+ Highcharts.numberFormat(
+												this.y, 2) + '%'
+										: null;
+							}
+						}
+					} ]
+			})
+	});
+	
 	/* Percentage of Tor Users */
 	jQuery.getJSON("json?chart=usingTor", function(jsonData){
 		var nbTotal = 0;
@@ -182,7 +279,7 @@ $(function() {
 								return this.y > 5 ? this.point.name
 										: null;
 							},
-							color : 'white',
+							color : 'black',
 							distance : -30
 						}
 					},
@@ -279,7 +376,7 @@ $(function() {
 								return this.y > 5 ? this.point.name
 										: null;
 							},
-							color : 'white',
+							color : 'black',
 							distance : -30
 						}
 					},

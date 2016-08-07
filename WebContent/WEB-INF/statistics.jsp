@@ -19,14 +19,15 @@
 		Out of a total of ${ statisticsBean.numSamples } fingerprint samples:
 	</h1>
 	<div id="statisticsDiv">
-		<div id="torUsersGraph" style="height: auto; width: auto; float: left"></div>
-		<div id="cookiesGraph" style="height: auto; width: auto; float:right"></div>
-		<div id="osGraph" style="height: auto; width: auto; float: left"></div>
-		<div id="browserGraph" style="height: auto; width: auto; float:right"></div>
-		<div id="timezoneGraph" style="height: auto; width: auto; float: left"></div>
-		<div id="languageGraph" style="height: auto; width: auto; float:right"></div>
-		<div id="adsBlockedGoogleGraph" style="height: auto; width: auto; float: left"></div>
-		<div id="screenDetailsGraph" style="height: auto; width: auto; float:right"></div>
+		<div id="uniquenessGraph" style="height: auto; width: auto; float:left"></div>
+		<div id="torUsersGraph" style="height: auto; width: auto; float: right"></div>
+		<div id="cookiesGraph" style="height: auto; width: auto; float: left"></div>
+		<div id="osGraph" style="height: auto; width: auto; float: right"></div>
+		<div id="browserGraph" style="height: auto; width: auto; float: left"></div>
+		<div id="timezoneGraph" style="height: auto; width: auto; float: right"></div>
+		<div id="languageGraph" style="height: auto; width: auto; float: left"></div>
+		<div id="adsBlockedGoogleGraph" style="height: auto; width: auto; float: right"></div>
+		<div id="screenDetailsGraph" style="height: auto; width: auto; float: left"></div>
 	</div>
 <common:footer/>
 </body>

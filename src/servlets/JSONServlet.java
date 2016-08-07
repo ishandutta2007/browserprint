@@ -60,6 +60,9 @@ public class JSONServlet extends HttpServlet {
 		else if(chart.equals("screenDetails")){
 			out.print(JSONDAO.getScreenDetails());
 		}
+		else if(chart.equals("uniqueness")){
+			out.print(JSONDAO.getUniqueness());
+		}
 	}
 
 	/**
