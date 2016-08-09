@@ -1,6 +1,7 @@
 package servlets;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 
 import javax.servlet.ServletException;
@@ -78,7 +79,12 @@ public class ViewSampleServlet extends HttpServlet {
 					// Get the data associated with the SampleID.
 					CharacteristicsBean chrsbean = new CharacteristicsBean();
 					UniquenessBean uniquenessbean = new UniquenessBean();
-					Fingerprint fingerprint = FingerprintDAO.getFingerprintBeans(sampleUUID1, chrsbean, uniquenessbean);
+					Fingerprint fingerprint;
+					try {
+						fingerprint = FingerprintDAO.getFingerprintBeans(sampleUUID1, chrsbean, uniquenessbean);
+					} catch (NoSuchAlgorithmException e) {
+						throw new ServletException(e);
+					}
 					if (fingerprint != null) {
 						request.setAttribute("chrsBean1", chrsbean);
 						request.setAttribute("uniquenessBean1", uniquenessbean);
@@ -136,7 +142,12 @@ public class ViewSampleServlet extends HttpServlet {
 					// Get the data associated with the SampleUUID1.
 					CharacteristicsBean chrsbean1 = new CharacteristicsBean();
 					UniquenessBean uniquenessbean1 = new UniquenessBean();
-					Fingerprint fingerprint1 = FingerprintDAO.getFingerprintBeans(sampleUUID1, chrsbean1, uniquenessbean1);
+					Fingerprint fingerprint1;
+					try {
+						fingerprint1 = FingerprintDAO.getFingerprintBeans(sampleUUID1, chrsbean1, uniquenessbean1);
+					} catch (NoSuchAlgorithmException e) {
+						throw new ServletException(e);
+					}
 					if (fingerprint1 != null) {
 						request.setAttribute("chrsBean1", chrsbean1);
 						request.setAttribute("uniquenessBean1", uniquenessbean1);
@@ -148,7 +159,12 @@ public class ViewSampleServlet extends HttpServlet {
 						// Get the data associated with the SampleUUID2.
 						CharacteristicsBean chrsbean2 = new CharacteristicsBean();
 						UniquenessBean uniquenessbean2 = new UniquenessBean();
-						Fingerprint fingerprint2 = FingerprintDAO.getFingerprintBeans(sampleUUID2, chrsbean2, uniquenessbean2);
+						Fingerprint fingerprint2;
+						try {
+							fingerprint2 = FingerprintDAO.getFingerprintBeans(sampleUUID2, chrsbean2, uniquenessbean2);
+						} catch (NoSuchAlgorithmException e) {
+							throw new ServletException(e);
+						}
 						if (fingerprint2 != null) {
 							request.setAttribute("chrsBean2", chrsbean2);
 							request.setAttribute("uniquenessBean2", uniquenessbean2);

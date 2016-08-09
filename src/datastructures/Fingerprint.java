@@ -1,5 +1,8 @@
 package datastructures;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 
 public class Fingerprint {
 	private String sampleSetID;
@@ -110,6 +113,142 @@ public class Fingerprint {
 		audioFingerprintNtVc = null;
 		audioFingerprintCC = null;
 		audioFingerprintHybrid = null;
+	}
+	
+	/**
+	 * Get the hash of this fingerprint.
+	 * @return
+	 * @throws NoSuchAlgorithmException 
+	 */
+	public String getFingerprintHash() throws NoSuchAlgorithmException{
+		MessageDigest digest = MessageDigest.getInstance("SHA-1");
+		digest.reset();
+		if(this.getContrastLevel() != null){
+			digest.update(this.getContrastLevel().byteValue());
+		}
+		if(this.getUser_agent() != null){
+			digest.update(this.getUser_agent().getBytes());
+		}
+		if(this.getAccept_headers() != null){
+			digest.update(this.getAccept_headers().getBytes());
+		}
+		if(this.getPlatform() != null){
+			digest.update(this.getPlatform().getBytes());
+		}
+		if(this.getPlatformFlash() != null){
+			digest.update(this.getPlatformFlash().getBytes());
+		}
+		if(this.getPluginDetails() != null){
+			digest.update(this.getPluginDetails().getBytes());
+		}
+		if(this.getTimeZone() != null){
+			digest.update(this.getTimeZone().getBytes());
+		}
+		/*if(this.getScreenDetails() != null){
+			digest.update(this.getScreenDetails().getBytes());
+		}*/
+		if(this.getScreenDetailsFlash() != null){
+			digest.update(this.getScreenDetailsFlash().getBytes());
+		}
+		/*if(this.getScreenDetailsCSS() != null){
+			digest.update(this.getScreenDetailsCSS().getBytes());
+		}*/
+		if(this.getLanguageFlash() != null){
+			digest.update(this.getLanguageFlash().getBytes());
+		}
+		if(this.getFonts() != null){
+			digest.update(this.getFonts().getBytes());
+		}
+		if(this.getFontsJS_CSS() != null){
+			digest.update(this.getFontsJS_CSS().getBytes());
+		}
+		if(this.getFontsCSS() != null){
+			digest.update(this.getFontsCSS().getBytes());
+		}
+		/*if(this.getCharSizes() != null){
+			digest.update(this.getCharSizes().getBytes());
+		}*/
+		digest.update(Boolean.toString(this.isCookiesEnabled()).getBytes());
+		if(this.getSuperCookieLocalStorage() != null){
+			digest.update(Boolean.toString(this.getSuperCookieLocalStorage()).getBytes());
+		}
+		if(this.getSuperCookieSessionStorage() != null){
+			digest.update(Boolean.toString(this.getSuperCookieSessionStorage()).getBytes());
+		}
+		if(this.getSuperCookieUserData() != null){
+			digest.update(Boolean.toString(this.getSuperCookieUserData()).getBytes());
+		}
+		if(this.getIndexedDBEnabled() != null){
+			digest.update(Boolean.toString(this.getIndexedDBEnabled()).getBytes());
+		}
+		if(this.getDoNotTrack() != null){
+			digest.update(this.getDoNotTrack().getBytes());
+		}
+		if(this.getClockDifference() != null){
+			digest.update(Long.toString(this.getClockDifference()).getBytes());
+		}
+		if(this.getDateTime() != null){
+			digest.update(this.getDateTime().getBytes());
+		}
+		if(this.getMathTan() != null){
+			digest.update(this.getMathTan().getBytes());
+		}
+		digest.update(Boolean.toString(this.isUsingTor()).getBytes());
+		if(this.getTbbVersion() != null){
+			digest.update(this.getTbbVersion().getBytes());
+		}
+		if(this.getAdsBlockedGoogle() != null){
+			digest.update(Boolean.toString(this.getAdsBlockedGoogle()).getBytes());
+		}
+		if(this.getAdsBlockedBanner() != null){
+			digest.update(Boolean.toString(this.getAdsBlockedBanner()).getBytes());
+		}
+		if(this.getAdsBlockedScript() != null){
+			digest.update(Boolean.toString(this.getAdsBlockedScript()).getBytes());
+		}
+		if(this.getLikeShareFacebook() != null){
+			digest.update(Integer.toString(this.getLikeShareFacebook()).getBytes());
+		}
+		if(this.getLikeShareTwitter() != null){
+			digest.update(Integer.toString(this.getLikeShareTwitter()).getBytes());
+		}
+		if(this.getLikeShareReddit() != null){
+			digest.update(Integer.toString(this.getLikeShareReddit()).getBytes());
+		}
+		/*if(this.getCanvas() != null){
+			digest.update(this.getCanvas().getBytes());
+		}*/
+		if(this.getWebGLVendor() != null){
+			digest.update(this.getWebGLVendor().getBytes());
+		}
+		if(this.getWebGLRenderer() != null){
+			digest.update(this.getWebGLRenderer().getBytes());
+		}
+		if(this.getTouchPoints() != null){
+			digest.update(Integer.toString(this.getTouchPoints()).getBytes());
+		}
+		if(this.getTouchEvent() != null){
+			digest.update(Boolean.toString(this.getTouchEvent()).getBytes());
+		}
+		if(this.getTouchStart() != null){
+			digest.update(Boolean.toString(this.getTouchStart()).getBytes());
+		}
+		/*if(this.getAudioFingerprintPXI() != null){
+			digest.update(this.getAudioFingerprintPXI().getBytes());
+		}*/
+		/*if(this.getAudioFingerprintPXIFullBuffer() != null){
+			digest.update(this.getAudioFingerprintPXIFullBuffer().getBytes());
+		}*/
+		/*if(this.getAudioFingerprintNtVc() != null){
+			digest.update(this.getAudioFingerprintNtVc().getBytes());
+		}*/
+		/*if(this.getAudioFingerprintCC() != null){
+			digest.update(this.getAudioFingerprintCC().getBytes());
+		}*/
+		/*if(this.getAudioFingerprintHybrid() != null){
+			digest.update(this.getAudioFingerprintHybrid().getBytes());
+		}*/
+		return Base64.getEncoder().encodeToString(digest.digest());
 	}
 	
 	public String getSampleSetID() {

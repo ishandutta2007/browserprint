@@ -233,7 +233,7 @@ public class JSONDAO {
 
 			int uniqueWhereJsDisabled;
 			{
-				String query = "SELECT COUNT(*) FROM (SELECT COUNT(*) AS `NumOccurrences` FROM `Samples` WHERE `TimeZone` IS null AND `BrowserprintVersion` >= 19 GROUP BY `UserAgent`, `AcceptHeaders`, `ScreenDetailsCSS`, `FontsCSS`, `CookiesEnabled`, `DoNotTrack`) AS `NumOccurrencesTable` WHERE `NumOccurrences` = 1;";
+				String query = "SELECT COUNT(*) FROM (SELECT COUNT(*) AS `NumOccurrences` FROM `Samples` WHERE `TimeZone` IS null AND `BrowserprintVersion` >= 19 GROUP BY `FingerprintHash`) AS `NumOccurrencesTable` WHERE `NumOccurrences` = 1;";
 				PreparedStatement select = conn.prepareStatement(query);
 
 				ResultSet rs = select.executeQuery();
@@ -257,7 +257,7 @@ public class JSONDAO {
 			}		
 			int uniqueWhereJsEnabled;
 			{
-				String query = "SELECT COUNT(*) FROM (SELECT COUNT(*) AS `NumOccurrences` FROM `Samples` WHERE `TimeZone` IS NOT null AND `BrowserprintVersion` >= 19 GROUP BY `ContrastLevel`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetailsFlash`, `LanguageFlash`, `Fonts`, `FontsJS_CSS`, `FontsCSS`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `IndexedDBEnabled`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlockedGoogle`, `AdsBlockedBanner`, `AdsBlockedScript`, `LikeShareFacebook`, `LikeShareTwitter`, `LikeShareReddit`, `WebGLVendor`, `WebGLRenderer`, `TouchPoints`, `TouchEvent`, `TouchStart`) AS `NumOccurrencesTable` WHERE `NumOccurrences` = 1;";
+				String query = "SELECT COUNT(*) FROM (SELECT COUNT(*) AS `NumOccurrences` FROM `Samples` WHERE `TimeZone` IS NOT null AND `BrowserprintVersion` >= 19 GROUP BY `FingerprintHash`) AS `NumOccurrencesTable` WHERE `NumOccurrences` = 1;";
 				PreparedStatement select = conn.prepareStatement(query);
 
 				ResultSet rs = select.executeQuery();
