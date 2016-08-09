@@ -651,7 +651,7 @@ public class FingerprintDAO {
 	 * @throws SQLException
 	 * @throws NoSuchAlgorithmException 
 	 */
-	private static ImmutablePair<Integer, String> checkSampleChanged(Connection conn, Fingerprint fingerprint) throws SQLException, NoSuchAlgorithmException {
+	private static ImmutablePair<Integer, String> checkSampleChanged(Connection conn, Fingerprint fingerprint) throws SQLException {
 		if (fingerprint.getSampleSetID() == null) {
 			/*
 			 * We know we haven't seen this sample before because there's no SampleSetID.
@@ -663,14 +663,223 @@ public class FingerprintDAO {
 		 * We have seen this user before. Check if their fingerprint has changed.
 		 */
 		String query = "SELECT `Samples`.`SampleID`, `Samples`.`SampleUUID` FROM `SampleSets` INNER JOIN `Samples` ON `SampleSets`.`SampleID` = `Samples`.`SampleID` WHERE `SampleSetID` = ?"
-		 + " AND `FingerprintHash` = ?;";
+		 + " AND `ContrastLevel` = ?"
+		 + " AND `UserAgent`" + (fingerprint.getUser_agent() == null ? " IS NULL" : " = ?")
+		 + " AND `AcceptHeaders`" + (fingerprint.getAccept_headers() == null ? " IS NULL" : " = ?")
+		 + " AND `Platform`" + (fingerprint.getPlatform() == null ? " IS NULL" : " = ?")
+		 + " AND `PlatformFlash`" + (fingerprint.getPlatformFlash() == null ? " IS NULL" : " = ?")
+		 + " AND `PluginDetails`" + (fingerprint.getPluginDetails() == null ? " IS NULL" : " = ?")
+		 + " AND `TimeZone`" + (fingerprint.getTimeZone() == null ? " IS NULL" : " = ?")
+		 + " AND `ScreenDetails`" + (fingerprint.getScreenDetails() == null ? " IS NULL" : " = ?")
+		 + " AND `ScreenDetailsFlash`" + (fingerprint.getScreenDetailsFlash() == null ? " IS NULL" : " = ?")
+		 + " AND `ScreenDetailsCSS`" + (fingerprint.getScreenDetailsCSS() == null ? " IS NULL" : " = ?")
+		 + " AND `LanguageFlash`" + (fingerprint.getLanguageFlash() == null ? " IS NULL" : " = ?")
+		 + " AND `Fonts`" + (fingerprint.getFonts() == null ? " IS NULL" : " = ?")
+		 + " AND `FontsJS_CSS`" + (fingerprint.getFontsJS_CSS() == null ? " IS NULL" : " = ?")
+		 + " AND `FontsCSS`" + (fingerprint.getFontsCSS() == null ? " IS NULL" : " = ?")
+		 + " AND `CharSizes`" + (fingerprint.getCharSizes() == null ? " IS NULL" : " = ?")
+		 + " AND `CookiesEnabled` = ?"
+		 + " AND `SuperCookieLocalStorage`" + (fingerprint.getSuperCookieLocalStorage() == null ? " IS NULL" : " = ?")
+		 + " AND `SuperCookieSessionStorage`" + (fingerprint.getSuperCookieSessionStorage() == null ? " IS NULL" : " = ?")
+		 + " AND `SuperCookieUserData`" + (fingerprint.getSuperCookieUserData() == null ? " IS NULL" : " = ?")
+		 + " AND `IndexedDBEnabled`" + (fingerprint.getIndexedDBEnabled() == null ? " IS NULL" : " = ?")
+		 + " AND `DoNotTrack`" + (fingerprint.getDoNotTrack() == null ? " IS NULL" : " = ?")
+		 + " AND `ClockDifference`" + (fingerprint.getClockDifference() == null ? " IS NULL" : " = ?")
+		 + " AND `DateTime`" + (fingerprint.getDateTime() == null ? " IS NULL" : " = ?")
+		 + " AND `MathTan`" + (fingerprint.getMathTan() == null ? " IS NULL" : " = ?")
+		 + " AND `UsingTor` = ?"
+		 + " AND `TbbVersion`" + (fingerprint.getTbbVersion() == null ? " IS NULL" : " = ?")
+		 + " AND `AdsBlockedGoogle`" + (fingerprint.getAdsBlockedGoogle() == null ? " IS NULL" : " = ?")
+		 + " AND `AdsBlockedBanner`" + (fingerprint.getAdsBlockedBanner() == null ? " IS NULL" : " = ?")
+		 + " AND `AdsBlockedScript`" + (fingerprint.getAdsBlockedScript() == null ? " IS NULL" : " = ?")
+		 + " AND `LikeShareFacebook`" + (fingerprint.getLikeShareFacebook() == null ? " IS NULL" : " = ?")
+		 + " AND `LikeShareTwitter`" + (fingerprint.getLikeShareTwitter() == null ? " IS NULL" : " = ?")
+		 + " AND `LikeShareReddit`" + (fingerprint.getLikeShareReddit() == null ? " IS NULL" : " = ?")
+		 + " AND `Canvas`" + (fingerprint.getCanvas() == null ? " IS NULL" : " = ?")
+		 + " AND `WebGLVendor`" + (fingerprint.getWebGLVendor() == null ? " IS NULL" : " = ?")
+		 + " AND `WebGLRenderer`" + (fingerprint.getWebGLRenderer() == null ? " IS NULL" : " = ?")
+		 + " AND `TouchPoints`" + (fingerprint.getTouchPoints() == null ? " IS NULL" : " = ?")
+		 + " AND `TouchEvent`" + (fingerprint.getTouchEvent() == null ? " IS NULL" : " = ?")
+		 + " AND `TouchStart`" + (fingerprint.getTouchStart() == null ? " IS NULL" : " = ?")
+		 + " AND `AudioFingerprintPXI`" + (fingerprint.getAudioFingerprintPXI() == null ? " IS NULL" : " = ?")
+		 + " AND `AudioFingerprintPXIFullBuffer`" + (fingerprint.getAudioFingerprintPXIFullBuffer() == null ? " IS NULL" : " = ?")
+		 + " AND `AudioFingerprintNtVc`" + (fingerprint.getAudioFingerprintNtVc() == null ? " IS NULL" : " = ?")
+		 + " AND `AudioFingerprintCC`" + (fingerprint.getAudioFingerprintCC() == null ? " IS NULL" : " = ?")
+		 + " AND `AudioFingerprintHybrid`" + (fingerprint.getAudioFingerprintHybrid() == null ? " IS NULL" : " = ?") + ";";
 		PreparedStatement checkExists = conn.prepareStatement(query);
 
 		int index = 1;
 		checkExists.setString(index, fingerprint.getSampleSetID());
 		++index;
-		checkExists.setString(index, fingerprint.getFingerprintHash());
+
+		if (fingerprint.getContrastLevel() != null) {
+			checkExists.setInt(index, fingerprint.getContrastLevel());
+			++index;
+		}
+		if (fingerprint.getUser_agent() != null) {
+			checkExists.setString(index, fingerprint.getUser_agent());
+			++index;
+		}
+		if (fingerprint.getAccept_headers() != null) {
+			checkExists.setString(index, fingerprint.getAccept_headers());
+			++index;
+		}
+		if (fingerprint.getPlatform() != null) {
+			checkExists.setString(index, fingerprint.getPlatform());
+			++index;
+		}
+		if (fingerprint.getPlatformFlash() != null) {
+			checkExists.setString(index, fingerprint.getPlatformFlash());
+			++index;
+		}
+		if (fingerprint.getPluginDetails() != null) {
+			checkExists.setString(index, fingerprint.getPluginDetails());
+			++index;
+		}
+		if (fingerprint.getTimeZone() != null) {
+			checkExists.setString(index, fingerprint.getTimeZone());
+			++index;
+		}
+		if (fingerprint.getScreenDetails() != null) {
+			checkExists.setString(index, fingerprint.getScreenDetails());
+			++index;
+		}
+		if (fingerprint.getScreenDetailsFlash() != null) {
+			checkExists.setString(index, fingerprint.getScreenDetailsFlash());
+			++index;
+		}
+		if (fingerprint.getScreenDetailsCSS() != null) {
+			checkExists.setString(index, fingerprint.getScreenDetailsCSS());
+			++index;
+		}
+		if (fingerprint.getLanguageFlash() != null) {
+			checkExists.setString(index, fingerprint.getLanguageFlash());
+			++index;
+		}
+		if (fingerprint.getFonts() != null) {
+			checkExists.setString(index, fingerprint.getFonts());
+			++index;
+		}
+		if (fingerprint.getFontsJS_CSS() != null) {
+			checkExists.setString(index, fingerprint.getFontsJS_CSS());
+			++index;
+		}
+		if (fingerprint.getFontsCSS() != null) {
+			checkExists.setString(index, fingerprint.getFontsCSS());
+			++index;
+		}
+		if (fingerprint.getCharSizes() != null) {
+			checkExists.setString(index, fingerprint.getCharSizes());
+			++index;
+		}
+		checkExists.setBoolean(index, fingerprint.isCookiesEnabled());
 		++index;
+		if (fingerprint.getSuperCookieLocalStorage() != null) {
+			checkExists.setBoolean(index, fingerprint.getSuperCookieLocalStorage());
+			++index;
+		}
+		if (fingerprint.getSuperCookieSessionStorage() != null) {
+			checkExists.setBoolean(index, fingerprint.getSuperCookieSessionStorage());
+			++index;
+		}
+		if (fingerprint.getSuperCookieUserData() != null) {
+			checkExists.setBoolean(index, fingerprint.getSuperCookieUserData());
+			++index;
+		}
+		if (fingerprint.getIndexedDBEnabled() != null) {
+			checkExists.setBoolean(index, fingerprint.getIndexedDBEnabled());
+			++index;
+		}
+		if (fingerprint.getDoNotTrack() != null) {
+			checkExists.setString(index, fingerprint.getDoNotTrack());
+			++index;
+		}
+		if (fingerprint.getClockDifference() != null) {
+			checkExists.setLong(index, fingerprint.getClockDifference());
+			++index;
+		}
+		if (fingerprint.getDateTime() != null) {
+			checkExists.setString(index, fingerprint.getDateTime());
+			++index;
+		}
+		if (fingerprint.getMathTan() != null) {
+			checkExists.setString(index, fingerprint.getMathTan());
+			++index;
+		}
+		checkExists.setBoolean(index, fingerprint.isUsingTor());
+		++index;
+		if (fingerprint.getTbbVersion() != null) {
+			checkExists.setString(index, fingerprint.getTbbVersion());
+			++index;
+		}
+		if (fingerprint.getAdsBlockedGoogle() != null) {
+			checkExists.setBoolean(index, fingerprint.getAdsBlockedGoogle());
+			++index;
+		}
+		if (fingerprint.getAdsBlockedBanner() != null) {
+			checkExists.setBoolean(index, fingerprint.getAdsBlockedBanner());
+			++index;
+		}
+		if (fingerprint.getAdsBlockedScript() != null) {
+			checkExists.setBoolean(index, fingerprint.getAdsBlockedScript());
+			++index;
+		}
+		if (fingerprint.getLikeShareFacebook() != null) {
+			checkExists.setInt(index, fingerprint.getLikeShareFacebook());
+			++index;
+		}
+		if (fingerprint.getLikeShareTwitter() != null) {
+			checkExists.setInt(index, fingerprint.getLikeShareTwitter());
+			++index;
+		}
+		if (fingerprint.getLikeShareReddit() != null) {
+			checkExists.setInt(index, fingerprint.getLikeShareReddit());
+			++index;
+		}
+		if (fingerprint.getCanvas() != null) {
+			checkExists.setString(index, fingerprint.getCanvas());
+			++index;
+		}
+		if (fingerprint.getWebGLVendor() != null) {
+			checkExists.setString(index, fingerprint.getWebGLVendor());
+			++index;
+		}
+		if (fingerprint.getWebGLRenderer() != null) {
+			checkExists.setString(index, fingerprint.getWebGLRenderer());
+			++index;
+		}
+		if (fingerprint.getTouchPoints() != null) {
+			checkExists.setInt(index, fingerprint.getTouchPoints());
+			++index;
+		}
+		if (fingerprint.getTouchEvent() != null) {
+			checkExists.setBoolean(index, fingerprint.getTouchEvent());
+			++index;
+		}
+		if (fingerprint.getTouchStart() != null) {
+			checkExists.setBoolean(index, fingerprint.getTouchStart());
+			++index;
+		}
+		if (fingerprint.getAudioFingerprintPXI() != null) {
+			checkExists.setString(index, fingerprint.getAudioFingerprintPXI());
+			++index;
+		}
+		if (fingerprint.getAudioFingerprintPXIFullBuffer() != null) {
+			checkExists.setString(index, fingerprint.getAudioFingerprintPXIFullBuffer());
+			++index;
+		}
+		if (fingerprint.getAudioFingerprintNtVc() != null) {
+			checkExists.setString(index, fingerprint.getAudioFingerprintNtVc());
+			++index;
+		}
+		if (fingerprint.getAudioFingerprintCC() != null) {
+			checkExists.setString(index, fingerprint.getAudioFingerprintCC());
+			++index;
+		}
+		if (fingerprint.getAudioFingerprintHybrid() != null) {
+			checkExists.setString(index, fingerprint.getAudioFingerprintHybrid());
+			++index;
+		}
 
 		ResultSet rs = checkExists.executeQuery();
 
