@@ -47,6 +47,118 @@
 				<br>
 				<input type="submit" value="Continue">
 			</div>
+			<p>
+				<b>Optional info that can help us with our research</b>
+			</p>
+			<div id="questionnaire">
+				<table>
+					<tr>
+						<td>I'm using a VPN/Proxy/Tor:</td>
+						<td>
+							<select name="usingProxy"><%--
+								--%><c:choose><%--
+										--%><c:when test="${ sessionScope.usingProxy == null }">
+										<option value="" selected>Prefer not to say</option></c:when><%--
+										--%><c:otherwise>
+										<option value="">Prefer not to say</option></c:otherwise><%--
+								--%></c:choose><%--
+								--%><c:choose><%--
+										--%><c:when test="${ sessionScope.usingProxy == "1" }">
+										<option value="1" selected>Yes</option></c:when><%--
+										--%><c:otherwise>
+										<option value="1">Yes</option></c:otherwise><%--
+								--%></c:choose><%--
+								--%><c:choose><%--
+										--%><c:when test="${ sessionScope.usingProxy == "0" }">
+										<option value="0" selected>No</option></c:when><%--
+										--%><c:otherwise>
+										<option value="0">No</option></c:otherwise><%--
+								--%></c:choose>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>My browser is spoofing part of its fingerprint (e.g. user-agent string):</td>
+						<td>
+							<select name="isSpoofing"><%--
+								--%><c:choose><%--
+										--%><c:when test="${ sessionScope.isSpoofing == null }">
+										<option value="" selected>Prefer not to say</option></c:when><%--
+										--%><c:otherwise>
+										<option value="">Prefer not to say</option></c:otherwise><%--
+								--%></c:choose><%--
+								--%><c:choose><%--
+										--%><c:when test="${ sessionScope.isSpoofing == "1" }">
+										<option value="1" selected>Yes</option></c:when><%--
+										--%><c:otherwise>
+										<option value="1">Yes</option></c:otherwise><%--
+								--%></c:choose><%--
+								--%><c:choose><%--
+										--%><c:when test="${ sessionScope.isSpoofing == "0" }">
+										<option value="0" selected>No</option></c:when><%--
+										--%><c:otherwise>
+										<option value="0">No</option></c:otherwise><%--
+								--%></c:choose>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>My web browser is:</td>
+						<td>
+							<select name="whatBrowser"><%--
+							--%><%{	String browsers[][] = {
+										{"", "Prefer not to say"},
+										{"Firefox", "Firefox"},
+										{"Chrome", "Chrome"},
+										{"Opera", "Opera"},
+										{"Safari", "Safari"},
+										{"Edge", "Edge"},
+										{"IE", "IE"},
+										{"Other", "Other"}
+									};
+									String storedVal = (String)session.getAttribute("whatBrowser");
+									for(String browser[]: browsers){
+										if(browser[0].equals(storedVal)){%>
+								<option value="<%= browser[0] %>" selected><%= browser[1] %></option><%
+										}
+										else{%>
+								<option value="<%= browser[0] %>"><%= browser[1] %></option><%
+										}
+									}
+							}%>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>My operating system is:</td>
+						<td>
+							<select name="whatOS"><%--
+							--%><%{	String oses[][] = {
+										{"", "Prefer not to say"},
+										{"Windows", "Windows"},
+										{"Linux", "Linux"},
+										{"Mac OS", "Mac OS"},
+										{"Android", "Android"},
+										{"IOS", "IOS"},
+										{"BSD", "BSD"},
+										{"TempleOS", "TempleOS"},//You never know, Terry might evade the CIA long enough to visit browserprint.
+										{"Other", "Other"}
+									};
+									String storedVal = (String)session.getAttribute("whatOS");
+									for(String os[]: oses){
+										if(os[0].equals(storedVal)){%>
+								<option value="<%= os[0] %>" selected><%= os[1] %></option><%
+										}
+										else{%>
+								<option value="<%= os[0] %>"><%= os[1] %></option><%
+										}
+									}
+							}%>
+							</select>
+						</td>
+					</tr>
+				</table>
+			</div>
 		</form>
 	</div>
 	<div id="device-width"></div>

@@ -43,6 +43,12 @@ td.compareValue{
 	width: 500px;
 }
 
+div#questionnaire{
+	margin: 0 auto;
+	text-align: right;
+	width: 500px;
+}
+
 #testLink{
 	text-align: center;
 }

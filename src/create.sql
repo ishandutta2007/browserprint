@@ -82,3 +82,16 @@ CREATE TABLE `SampleSets` (
   PRIMARY KEY(`SampleSetID`,`SampleID`)
 )
 ENGINE=InnoDB;
+
+CREATE TABLE `SampleQuestionnaire` (
+  `SampleID` BIGINT UNSIGNED NOT NULL,
+  `usingProxy` TEXT,
+  `isSpoofing` TEXT,
+  `whatBrowser` TEXT,
+  `whatOS` TEXT,
+  FOREIGN KEY(`SampleID`) REFERENCES `Samples`(`SampleID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  PRIMARY KEY(`SampleID`)
+)
+ENGINE=InnoDB;

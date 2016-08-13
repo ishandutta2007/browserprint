@@ -169,7 +169,7 @@ public class CaptchaServlet extends HttpServlet {
 			}
 		}
 
-		session.setMaxInactiveInterval(240);//Session invalidates after 240 seconds.
+		session.setMaxInactiveInterval(6000);//Session invalidates after 60 minutes.
 		session.setAttribute("captcha", captchaSolution);
 		
 		//Prevent from caching

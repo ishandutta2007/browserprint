@@ -16,7 +16,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
+
 import DAOs.FingerprintDAO;
+import DAOs.QuestionnaireDAO;
 import beans.CharacteristicsBean;
 import beans.UniquenessBean;
 import datastructures.ContrastCaptcha;
@@ -57,6 +60,42 @@ public class TestServlet extends HttpServlet {
 			return;
 		}
 
+		/*
+		 * Get results of questionnaire and save them so they can be pre-filled in later.
+		 */
+		{
+			HttpSession session = request.getSession();
+			
+			String usingProxy = request.getParameter("usingProxy");
+			if(usingProxy == null || usingProxy.equals("")){
+				session.setAttribute("usingProxy", null);
+			}else if(usingProxy.length() < 20){
+				session.setAttribute("usingProxy", usingProxy);
+			}
+			
+			String isSpoofing = request.getParameter("isSpoofing");
+			if(isSpoofing == null || isSpoofing.equals("")){
+				session.setAttribute("isSpoofing", null);
+			}else if(isSpoofing.length() < 20){
+				session.setAttribute("isSpoofing", isSpoofing);
+			}
+			
+			String whatOS = request.getParameter("whatOS");
+			if(whatOS == null || whatOS.equals("")){
+				session.setAttribute("whatOS", null);
+			}else if(whatOS.length() < 20){
+				session.setAttribute("whatOS", whatOS);
+			}
+			
+			String whatBrowser = request.getParameter("whatBrowser");
+			if(whatBrowser == null || whatBrowser.equals("")){
+				session.setAttribute("whatBrowser", null);
+			}else if(whatBrowser.length() < 20){
+				session.setAttribute("whatBrowser", whatBrowser);
+			}
+		}
+		
+		
 		String js_enabled = request.getParameter("js_enabled");
 		if (js_enabled == null) {
 			Integer captchaResult = checkCaptcha(request);
@@ -103,6 +142,7 @@ public class TestServlet extends HttpServlet {
 			if(captcha == null){
 				throw new Exception("No CAPTCHA session attribute.");
 			}
+			session.setAttribute("captcha", null);
 		}
 		catch(Exception ex){
 			request.setAttribute("error", CAPTCHA_ERROR_MSG);
@@ -305,10 +345,10 @@ public class TestServlet extends HttpServlet {
 	private void serveRequest(HttpServletRequest request, HttpServletResponse response, Fingerprint fingerprint) throws ServletException, IOException {
 		CharacteristicsBean chrsBean = new CharacteristicsBean();
 		UniquenessBean uniquenessBean = new UniquenessBean();
-		String sampleUUID = FingerprintDAO.processFingerprint(fingerprint, chrsBean, uniquenessBean);
+		String sampleUUID = FingerprintDAO.processFingerprint(fingerprint, request.getSession(false), chrsBean, uniquenessBean).right;
 		request.setAttribute("sampleUUID", sampleUUID);
 		request.setAttribute("chrsBean", chrsBean);
-		request.setAttribute("uniquenessBean", uniquenessBean);
+		request.setAttribute("uniquenessBean", uniquenessBean);	
 
 		/*
 		 * Save SampleSetID in a cookie if we have one now.
@@ -371,8 +411,6 @@ public class TestServlet extends HttpServlet {
 					}
 				}
 				fingerprint.setFontsCSS(fontsStr);
-				
-				session.invalidate();
 			}
 		}
 		

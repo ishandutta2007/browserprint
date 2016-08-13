@@ -15,6 +15,7 @@ import java.util.UUID;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -38,7 +39,7 @@ public class FingerprintDAO {
 	private static final String NO_JAVASCRIPT = "No JavaScript";
 	private static final String NOT_SUPPORTED = "Not supported";
 
-	public static final String processFingerprint(Fingerprint fingerprint, CharacteristicsBean chrsbean, UniquenessBean uniquenessbean) {
+	public static final ImmutablePair<Integer, String> processFingerprint(Fingerprint fingerprint, HttpSession session, CharacteristicsBean chrsbean, UniquenessBean uniquenessbean) {
 		Connection conn = null;
 		try {
 			conn = Database.getConnection();
@@ -47,38 +48,34 @@ public class FingerprintDAO {
 			/*
 			 * Check if we've seen this sample before.
 			 */
-			Integer sampleID;
-			String sampleUUID;
+			ImmutablePair<Integer, String> sampleIDs;
 			{
-				ImmutablePair<Integer, String> ret = checkSampleChanged(conn, fingerprint);
-				sampleID = ret.left;
-				sampleUUID = ret.right;
+				sampleIDs = checkSampleChanged(conn, fingerprint);
 			}
 
-			if (sampleID == null) {
+			if (sampleIDs.left == null) {
 				/*
 				 * We haven't seen this sample before.
 				 * Record it.
 				 */
 				{
-					ImmutablePair<Integer, String> ret = insertSample(conn, fingerprint);
-					sampleID = ret.left;
-					sampleUUID = ret.right;
+					sampleIDs = insertSample(conn, fingerprint);					
+					QuestionnaireDAO.insertQuestionnaireAnswers(conn, session, sampleIDs.left);
 				}
 
 				/*
 				 * Insert SampleID into SampleSets table.
 				 */
-				insertSampleSet(conn, fingerprint, sampleID);
+				insertSampleSet(conn, fingerprint, sampleIDs.left);
 
 				/*
 				 * Save statistics of the fingerprint.
 				 */
-				StatisticsDAO.saveStatistics(sampleID, fingerprint);
+				StatisticsDAO.saveStatistics(sampleIDs.left, fingerprint);
 			}
 			getFingerprintBeans(conn, fingerprint, chrsbean, uniquenessbean);
 
-			return sampleUUID;
+			return new ImmutablePair<Integer, String>(sampleIDs.left, sampleIDs.right);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
