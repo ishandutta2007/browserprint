@@ -286,7 +286,7 @@ public class FingerprintDAO {
 			characteristics.add(bean);
 		}
 		{
-			CharacteristicBean bean = getCharacteristicBean(conn, totalSamples, "HstsEnabled", fingerprint.getHstsEnabled());
+			CharacteristicBean bean = getCharacteristicBean(conn, sampleCounts.lower(new VersionCount(21 + 1)).getCount(), "HstsEnabled", fingerprint.getHstsEnabled());
 			if(bean.getValue().equals(NO_JAVASCRIPT)){
 				bean.setValue("Unknown");
 			}
@@ -1710,16 +1710,16 @@ public class FingerprintDAO {
 			fingerprint.setSuperCookieUserData(null);
 		}
 		++index;
-		// IndexedDBEnabled
-		fingerprint.setIndexedDBEnabled(rs.getBoolean(index));
-		if (rs.wasNull()) {
-			fingerprint.setIndexedDBEnabled(null);
-		}
-		++index;
 		// HstsEnabled
 		fingerprint.setHstsEnabled(rs.getBoolean(index));
 		if (rs.wasNull()) {
 			fingerprint.setHstsEnabled(null);
+		}
+		++index;
+		// IndexedDBEnabled
+		fingerprint.setIndexedDBEnabled(rs.getBoolean(index));
+		if (rs.wasNull()) {
+			fingerprint.setIndexedDBEnabled(null);
 		}
 		++index;
 		// DoNotTrack
