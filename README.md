@@ -65,6 +65,10 @@ Whether cookies are enabled.
 Three tests of whether DOM storage is supported (and enabled) in the client's web browser.
 Tests for localStorage, sessionStorage, and Internet Explorer's userData.
 
+### HSTS enabled?
+HSTS is a web security enhancement that is used to make future connections to a domain exclusively HTTPS, not HTTP.
+HSTS can be abused to store a super cookie on your machine that can then be used to track you, theoretically without even needing JavaScript.
+
 ### IndexedDB Enabled Test
 Detects whether the browser supports IndexedDB, a database embedded within the browser.
 

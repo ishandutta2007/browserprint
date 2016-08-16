@@ -94,8 +94,8 @@
 	</p>
 	<h3>HSTS enabled?</h3>
 	<p>
-		HSTS is a web security enhancement that is used to make future connections to a domain exclusively HTTPS, not HTTP.
-		HSTS can be abused to store a super cookie on your machine that can then be used to track you, theoretically without even needing JavaScript.
+		Test suggested anonymously by someone who referenced <a href="http://ghacks.net">ghacks</a>.
+		A description of how you could plant a supercookie in someone's browser using HSTS can be found <a href="http://www.leviathansecurity.com/blog/the-double-edged-sword-of-hsts-persistence-and-privacy">here</a>.
 	</p>
 	<h3>IndexedDB enabled test</h3>
 	<p>
