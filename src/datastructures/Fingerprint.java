@@ -32,6 +32,7 @@ public class Fingerprint {
 	private Boolean superCookieLocalStorage;
 	private Boolean superCookieSessionStorage;
 	private Boolean superCookieUserData;
+	private Boolean hstsEnabled;
 	private Boolean indexedDBEnabled;
 	private String doNotTrack;
 
@@ -88,6 +89,7 @@ public class Fingerprint {
 		superCookieLocalStorage = null;
 		superCookieSessionStorage = null;
 		superCookieUserData = null;
+		hstsEnabled = null;
 		indexedDBEnabled = null;
 		doNotTrack = null;
 		clockDifference = null;
@@ -181,6 +183,9 @@ public class Fingerprint {
 		if(this.getIndexedDBEnabled() != null){
 			digest.update(Boolean.toString(this.getIndexedDBEnabled()).getBytes());
 		}
+		if(this.getHstsEnabled() != null){
+			digest.update(Boolean.toString(this.getHstsEnabled()).getBytes());
+		}		
 		if(this.getDoNotTrack() != null){
 			digest.update(this.getDoNotTrack().getBytes());
 		}
@@ -419,6 +424,14 @@ public class Fingerprint {
 		this.superCookieUserData = superCookieUserData;
 	}
 	
+	public Boolean getHstsEnabled() {
+		return hstsEnabled;
+	}
+
+	public void setHstsEnabled(Boolean hstsEnabled) {
+		this.hstsEnabled = hstsEnabled;
+	}
+
 	public Boolean getIndexedDBEnabled() {
 		return indexedDBEnabled;
 	}

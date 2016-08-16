@@ -4,21 +4,21 @@
 --%><?xml version="1.0" encoding="utf-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
-		<atom:link href="https://browserprint.info/blog/rss.xml" rel="self" type="application/rss+xml" />
+		<atom:link href="https://${ initParam['websiteBaseURL'] }/blog/rss.xml" rel="self" type="application/rss+xml" />
 		<title>Browserprint Blog</title>
-		<link>https://browserprint.info/</link>
+		<link>https://${ initParam['websiteBaseURL'] }/</link>
 		<description>Blog posts from Browserprint.</description>
 		<item>
 			<title>Defences against fingerprinting</title>
-			<link>${ initParam['websiteBaseURL'] }/blog/fingerprintingDefence</link>
-			<guid>${ initParam['websiteBaseURL'] }/blog/fingerprintingDefence</guid>
+			<link>https://${ initParam['websiteBaseURL'] }/blog/fingerprintingDefence</link>
+			<guid>https://${ initParam['websiteBaseURL'] }/blog/fingerprintingDefence</guid>
 			<pubDate>Mon, 5 Aug 2016 08:30:00 GMT</pubDate>
 			<description>A blog post discussing fingerprinting defences.</description>
 		</item>
 		<item>
 			<title>User fingerprinting via CAPTCHAs</title>
-			<link>${ initParam['websiteBaseURL'] }/blog/userFingerprinting</link>
-			<guid>${ initParam['websiteBaseURL'] }/blog/userFingerprinting</guid>
+			<link>https://${ initParam['websiteBaseURL'] }/blog/userFingerprinting</link>
+			<guid>https://${ initParam['websiteBaseURL'] }/blog/userFingerprinting</guid>
 			<pubDate>Mon, 27 Jun 2016 00:00:00 GMT</pubDate>
 			<description>A blog post discussing user fingerprinting via CAPTCHAs.</description>
 		</item>

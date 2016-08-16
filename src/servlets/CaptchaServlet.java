@@ -172,6 +172,8 @@ public class CaptchaServlet extends HttpServlet {
 		session.setMaxInactiveInterval(6000);//Session invalidates after 60 minutes.
 		session.setAttribute("captcha", captchaSolution);
 		
+		session.setAttribute("HstsEnabled", request.isSecure());//Set whether HSTS is enabled.
+		
 		//Prevent from caching
 		response.setHeader("Cache-Control", "private, no-store, no-cache, must-revalidate");
 		response.setHeader("Pragma", "no-cache");

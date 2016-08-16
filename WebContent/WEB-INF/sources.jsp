@@ -19,15 +19,15 @@
 	<p>
 		Note: We may not always cite the original source of a test. Please contact us if we misattribute a test.
 	</p>
-	<h3>Monitor Contrast Level</h3>
+	<h3>Monitor contrast level</h3>
 	<p>
 		Original.
 	</p>
-	<h3>Colour Vision</h3>
+	<h3>Colour vision</h3>
 	<p>
 		Original. [Test removed for ethics reasons]
 	</p>
-	<h3>User Agent</h3>
+	<h3>User-agent string</h3>
 	<p>
 		Panopticlick.
 	</p>
@@ -43,23 +43,23 @@
 	<p>
 		AmIUnique.
 	</p>
-	<h3>Browser Plugin Details</h3>
+	<h3>Browser plugin details</h3>
 	<p>
 		Panopticlick.
 	</p>
-	<h3>Time Zone</h3>
+	<h3>Time zone</h3>
 	<p>
 		Panopticlick.
 	</p>
-	<h3>Screen Size and Color Depth</h3>
+	<h3>Screen size and color depth</h3>
 	<p>
 		Panopticlick.
 	</p>
-	<h3>Screen Size (Flash)</h3>
+	<h3>Screen size (Flash)</h3>
 	<p>
 		AmIUnique.
 	</p>
-	<h3>Screen Size (CSS)</h3>
+	<h3>Screen size (CSS)</h3>
 	<p>
 		Based on a proof of concept from <a href="https://github.com/arthuredelstein">Arthur Edelstein</a>.
 	</p>
@@ -67,15 +67,15 @@
 	<p>	
 		AmIUnique.
 	</p>
-	<h3>System Fonts (Flash)</h3>
+	<h3>System fonts (Flash)</h3>
 	<p>
 		Panopticlick.
 	</p>
-	<h3>System Fonts (JS/CSS)</h3>
+	<h3>System fonts (JS/CSS)</h3>
 	<p>
 		Fingerprintjs2.
 	</p>
-	<h3>System Fonts (CSS)</h3>
+	<h3>System fonts (CSS)</h3>
 	<p>
 		Based on test in the <a href="http://ip-check.info">JonDonym IP check</a> test page.
 	</p>
@@ -84,7 +84,7 @@
 		Based on <a href="https://www.bamsoftware.com/talks/fc15-fontfp/fontfp.html">work</a> by David Fifield and Serge Egelmantalk.<br/>
 		Link to paper: <a href="https://www.bamsoftware.com/papers/fontfp.pdf">Fingerprinting web users through font metrics</a>
 	</p>
-	<h3>Are Cookies Enabled?</h3>
+	<h3>Are cookies enabled?</h3>
 	<p>
 		Panopticlick.
 	</p>
@@ -92,7 +92,12 @@
 	<p>
 		Panopticlick.
 	</p>
-	<h3>IndexedDB Enabled Test</h3>
+	<h3>HSTS enabled?</h3>
+	<p>
+		HSTS is a web security enhancement that is used to make future connections to a domain exclusively HTTPS, not HTTP.
+		HSTS can be abused to store a super cookie on your machine that can then be used to track you, theoretically without even needing JavaScript.
+	</p>
+	<h3>IndexedDB enabled test</h3>
 	<p>
 		Fingerprintjs2.
 	</p>
@@ -116,7 +121,7 @@
 	<p>
 		Original.
 	</p>
-	<h3>Blocking Ads?</h3>
+	<h3>Blocking ads?</h3>
 	<p>
 		Original, but also found on AmIUnique.
 	</p>
@@ -128,19 +133,19 @@
 	<p>
 		AmIUnique? and Fingerprintjs2.
 	</p>
-	<h3>WebGL Vendor</h3>
+	<h3>WebGL vendor</h3>
 	<p>
 		AmIUnique?
 	</p>
-	<h3>WebGL Renderer</h3>
+	<h3>WebGL renderer</h3>
 	<p>
 		AmIUnique?
 	</p>
-	<h3>Touch Support</h3>
+	<h3>Touch support</h3>
 	<p>
 		Fingerprintjs2.
 	</p>
-	<h3>Audio Fingerprints</h3>
+	<h3>Audio fingerprints</h3>
 	<p>
 		Code taken with permission from https://audiofingerprint.openwpm.com/
 		Tests discovered in the wild by Steven Englehardt and Arvind Narayanan in the paper Online tracking: A 1-million-site measurement and analysis.

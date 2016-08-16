@@ -30,10 +30,10 @@ import beans.UniquenessBean;
 import datastructures.Fingerprint;
 
 public class FingerprintDAO {
-	private static final String insertSampleStr = "INSERT INTO `Samples`(`SampleUUID`, `FingerprintHash`, `IP`, `TimeStamp`, `AllHeaders`, `ContrastLevel`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `ScreenDetailsCSS`, `LanguageFlash`, `Fonts`, `FontsJS_CSS`, `FontsCSS`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `IndexedDBEnabled`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlockedGoogle`, `AdsBlockedBanner`, `AdsBlockedScript`, `LikeShareFacebook`, `LikeShareTwitter`, `LikeShareReddit`, `Canvas`, `WebGLVendor`, `WebGLRenderer`, `TouchPoints`, `TouchEvent`, `TouchStart`, `AudioFingerprintPXI`, `AudioFingerprintPXIFullBuffer`, `AudioFingerprintNtVc`, `AudioFingerprintCC`, `AudioFingerprintHybrid`) VALUES(?, ?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+	private static final String insertSampleStr = "INSERT INTO `Samples`(`SampleUUID`, `FingerprintHash`, `IP`, `TimeStamp`, `AllHeaders`, `ContrastLevel`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `ScreenDetailsCSS`, `LanguageFlash`, `Fonts`, `FontsJS_CSS`, `FontsCSS`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `HstsEnabled`, `IndexedDBEnabled`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlockedGoogle`, `AdsBlockedBanner`, `AdsBlockedScript`, `LikeShareFacebook`, `LikeShareTwitter`, `LikeShareReddit`, `Canvas`, `WebGLVendor`, `WebGLRenderer`, `TouchPoints`, `TouchEvent`, `TouchStart`, `AudioFingerprintPXI`, `AudioFingerprintPXIFullBuffer`, `AudioFingerprintNtVc`, `AudioFingerprintCC`, `AudioFingerprintHybrid`) VALUES(?, ?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 	private static final String getSampleCountStr = "SELECT COUNT(*) FROM `Samples`;";
 	private static final String getSampleCountVersionAwareStr = "SELECT `BrowserprintVersion` AS `Version`, (SELECT COUNT(*) FROM `Samples` WHERE `BrowserprintVersion` >= `Version`) FROM `Samples` GROUP BY `BrowserprintVersion` UNION SELECT 1, COUNT(*) FROM `Samples`;";
-	private static final String selectSampleStr = "SELECT `ContrastLevel`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `ScreenDetailsCSS`, `LanguageFlash`, `Fonts`, `FontsJS_CSS`, `FontsCSS`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `IndexedDBEnabled`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlockedGoogle`, `AdsBlockedBanner`, `AdsBlockedScript`, `LikeShareFacebook`, `LikeShareTwitter`, `LikeShareReddit`, `Canvas`, `WebGLVendor`, `WebGLRenderer`, `TouchPoints`, `TouchEvent`, `TouchStart`, `AudioFingerprintPXI`, `AudioFingerprintPXIFullBuffer`, `AudioFingerprintNtVc`, `AudioFingerprintCC`, `AudioFingerprintHybrid` FROM `Samples` WHERE `SampleUUID` = ?;";
+	private static final String selectSampleStr = "SELECT `ContrastLevel`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `ScreenDetailsCSS`, `LanguageFlash`, `Fonts`, `FontsJS_CSS`, `FontsCSS`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `HstsEnabled`, `IndexedDBEnabled`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlockedGoogle`, `AdsBlockedBanner`, `AdsBlockedScript`, `LikeShareFacebook`, `LikeShareTwitter`, `LikeShareReddit`, `Canvas`, `WebGLVendor`, `WebGLRenderer`, `TouchPoints`, `TouchEvent`, `TouchStart`, `AudioFingerprintPXI`, `AudioFingerprintPXIFullBuffer`, `AudioFingerprintNtVc`, `AudioFingerprintCC`, `AudioFingerprintHybrid` FROM `Samples` WHERE `SampleUUID` = ?;";
 	private static final String selectSampleSetIDHistory = "SELECT `SampleUUID`, `Timestamp` FROM `SampleSets` INNER JOIN `Samples` USING (`SampleID`) WHERE `SampleSetID` = ? ORDER BY `Timestamp` DESC;";
 
 	private static final String NO_JAVASCRIPT = "No JavaScript";
@@ -286,6 +286,16 @@ public class FingerprintDAO {
 			characteristics.add(bean);
 		}
 		{
+			CharacteristicBean bean = getCharacteristicBean(conn, totalSamples, "HstsEnabled", fingerprint.getHstsEnabled());
+			if(bean.getValue().equals(NO_JAVASCRIPT)){
+				bean.setValue("Unknown");
+			}
+			bean.setName("Browser supports HSTS?");
+			bean.setNameHoverText("HSTS is a web security enhancement that is used to make future connections to a domain exclusively HTTPS, not HTTP."
+					+ " HSTS can be abused to store a super cookie on your machine that can then be used to track you, theoretically without even needing JavaScript.");
+			characteristics.add(bean);
+		}
+		{
 			CharacteristicBean bean = getCharacteristicBean(conn, sampleCounts.lower(new VersionCount(8 + 1)).getCount(), "IndexedDBEnabled", fingerprint.getIndexedDBEnabled());
 			bean.setName("Does the browser support IndexedDB?");
 			bean.setNameHoverText("Detects whether the browser supports IndexedDB, a database embedded within the browser.");
@@ -459,6 +469,12 @@ public class FingerprintDAO {
 		++index;
 		if(fingerprint.getSuperCookieUserData() != null){
 			insertSample.setBoolean(index, fingerprint.getSuperCookieUserData());
+		} else {
+			insertSample.setNull(index, java.sql.Types.BOOLEAN);
+		}
+		++index;
+		if(fingerprint.getHstsEnabled() != null){
+			insertSample.setBoolean(index, fingerprint.getHstsEnabled());
 		} else {
 			insertSample.setNull(index, java.sql.Types.BOOLEAN);
 		}
@@ -679,6 +695,7 @@ public class FingerprintDAO {
 		 + " AND `SuperCookieLocalStorage`" + (fingerprint.getSuperCookieLocalStorage() == null ? " IS NULL" : " = ?")
 		 + " AND `SuperCookieSessionStorage`" + (fingerprint.getSuperCookieSessionStorage() == null ? " IS NULL" : " = ?")
 		 + " AND `SuperCookieUserData`" + (fingerprint.getSuperCookieUserData() == null ? " IS NULL" : " = ?")
+		 + " AND `HstsEnabled`" + (fingerprint.getHstsEnabled() == null ? " IS NULL" : " = ?")
 		 + " AND `IndexedDBEnabled`" + (fingerprint.getIndexedDBEnabled() == null ? " IS NULL" : " = ?")
 		 + " AND `DoNotTrack`" + (fingerprint.getDoNotTrack() == null ? " IS NULL" : " = ?")
 		 + " AND `ClockDifference`" + (fingerprint.getClockDifference() == null ? " IS NULL" : " = ?")
@@ -781,6 +798,10 @@ public class FingerprintDAO {
 		}
 		if (fingerprint.getSuperCookieUserData() != null) {
 			checkExists.setBoolean(index, fingerprint.getSuperCookieUserData());
+			++index;
+		}
+		if (fingerprint.getHstsEnabled() != null) {
+			checkExists.setBoolean(index, fingerprint.getHstsEnabled());
 			++index;
 		}
 		if (fingerprint.getIndexedDBEnabled() != null) {
@@ -1693,6 +1714,12 @@ public class FingerprintDAO {
 		fingerprint.setIndexedDBEnabled(rs.getBoolean(index));
 		if (rs.wasNull()) {
 			fingerprint.setIndexedDBEnabled(null);
+		}
+		++index;
+		// HstsEnabled
+		fingerprint.setHstsEnabled(rs.getBoolean(index));
+		if (rs.wasNull()) {
+			fingerprint.setHstsEnabled(null);
 		}
 		++index;
 		// DoNotTrack

@@ -16,6 +16,7 @@
 	<common:fontDetectCSSTestBody/>
 	<%--This script tag needs to be after the fontDetectCSSTest tag otherwise the CSS font test breaks in Opera. No idea why.
 	--%><script type="text/javascript" src="scripts/jquery-1.11.2.min.js"></script>
+	<%-- This image is part of the HSTS test. --%>
 	<p>
 		Please type the letters from the image into the box below.
 	</p><%--
@@ -25,11 +26,11 @@
 	</p>
 	</c:if>
 	<div>
-		<img id="captchaImg" src="<c:url value="captcha.png"/>" alt="A text CAPTCHA"/>
+		<img id="captchaImg" src="http://${ initParam['websiteBaseURL'] }/<c:url value="captcha.png"/>" alt="A text CAPTCHA"/>
 		<br>
 		<script type="text/javascript">
 		function refresh(){
-			$("#captchaImg").attr("src", "<c:url value="captcha.png"/>?z=" + new Date().getTime());
+			$("#captchaImg").attr("src", "http://${ initParam['websiteBaseURL'] }/<c:url value="captcha.png"/>?z=" + new Date().getTime());
 		}
 		</script>
 		<a href="#" onclick="refresh()">refresh</a>

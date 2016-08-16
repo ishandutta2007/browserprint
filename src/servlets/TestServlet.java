@@ -345,7 +345,12 @@ public class TestServlet extends HttpServlet {
 	private void serveRequest(HttpServletRequest request, HttpServletResponse response, Fingerprint fingerprint) throws ServletException, IOException {
 		CharacteristicsBean chrsBean = new CharacteristicsBean();
 		UniquenessBean uniquenessBean = new UniquenessBean();
-		String sampleUUID = FingerprintDAO.processFingerprint(fingerprint, request.getSession(false), chrsBean, uniquenessBean).right;
+		ImmutablePair<Integer, String> sampleIds = FingerprintDAO.processFingerprint(fingerprint, request.getSession(false), chrsBean, uniquenessBean);
+		if(sampleIds == null){
+			response.sendError(500);
+			return;
+		}
+		String sampleUUID = sampleIds.right;
 		request.setAttribute("sampleUUID", sampleUUID);
 		request.setAttribute("chrsBean", chrsBean);
 		request.setAttribute("uniquenessBean", uniquenessBean);	
@@ -411,6 +416,8 @@ public class TestServlet extends HttpServlet {
 					}
 				}
 				fingerprint.setFontsCSS(fontsStr);
+				
+				fingerprint.setHstsEnabled((Boolean)session.getAttribute("HstsEnabled"));
 			}
 		}
 		

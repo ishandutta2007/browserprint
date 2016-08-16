@@ -69,6 +69,7 @@
 		<li>The heights and widths of a set of Unicode characters rendered in various styles (e.g. sans-serif).</li>
 		<li>Whether cookies are enabled, detected by creating a cookie and then retrieving it.</li>
 		<li>Whether localStorage, sessionStorage, and Internet Explorer's userData are available in the browser, detected using JavaScript.</li>
+		<li>Whether HSTS is supported by the browser.</li>
 		<li>Whether the browser supports IndexedDB, a database embedded within the browser.</li>
 		<li>The value of the DNT (Do Not Track) header from the HTTP request for the page.</li>
 		<li>The difference between the client and the server's clocks, in minutes, detected using JavaScript.</li>

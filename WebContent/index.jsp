@@ -37,6 +37,11 @@
 		This project would not be possible without these institutions' help.
 	</p>
 	<p>
+		<b>News 2016-08-16</b> We've added a new test. This one detects whether HSTS is supported by the browser.
+		HSTS is a web security policy that prevents browsers from accessing HTTPS sites via HTTP.
+		It can be abused to store supercookies in your browser potentially without the need for JavaScript.
+	</p>
+	<p>
 		<b>News 2016-08-05</b> We have written a <a href="blog/fingerprintingDefence">blog post</a> discussing what you can do against fingerprinting.
 	</p>
 	<p>

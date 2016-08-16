@@ -160,6 +160,46 @@
     <servlet-name>blogFingerprintingDefence</servlet-name>
     <url-pattern>/blog/fingerprintingDefence</url-pattern>
   </servlet-mapping>
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>HstsTest any protocol</web-resource-name>
+      <url-pattern>/captcha.png</url-pattern>
+    </web-resource-collection>
+    <user-data-constraint>
+      <transport-guarantee>NONE</transport-guarantee>
+    </user-data-constraint>
+  </security-constraint>
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>Rest of site HTTPS</web-resource-name>
+      <url-pattern>/*</url-pattern>
+    </web-resource-collection>
+    <user-data-constraint>
+      <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+    </user-data-constraint>
+  </security-constraint>
+  <filter>
+    <filter-name>httpHeaderSecurity</filter-name>
+    <filter-class>org.apache.catalina.filters.HttpHeaderSecurityFilter</filter-class>
+    <async-supported>true</async-supported>
+    <init-param>
+      <param-name>hstsEnabled</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <init-param>
+      <param-name>hstsMaxAgeSeconds</param-name>
+      <param-value>31536000</param-value>
+    </init-param>
+    <init-param>
+      <param-name>hstsIncludeSubDomains</param-name>
+      <param-value>true</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>httpHeaderSecurity</filter-name>
+    <url-pattern>/*</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+  </filter-mapping>
   <filter>
     <filter-name>UTF8Filter</filter-name>
     <filter-class>filters.UTF8Filter</filter-class>
@@ -204,7 +244,7 @@
   </context-param>
   <context-param>
     <param-name>websiteBaseURL</param-name>
-    <param-value>http://localhost:8080/browserprint</param-value>
+    <param-value>localhost/browserprint</param-value>
   </context-param>
   <context-param>
     <param-name>CaptchaEncryptionPassword</param-name>
