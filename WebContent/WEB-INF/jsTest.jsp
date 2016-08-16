@@ -69,7 +69,7 @@
 	<script type="text/javascript">
         google_ad_height = 90;
     </script> 
-	<div id="ad" style="display:none">
+	<div id="ad" style="display: none">
 		<script type="text/javascript" src="https://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
 	</div>
 	<img id="banner468x60" src="adtests/easylist/ads/banner468x60.png" style="display:none"/>
@@ -77,7 +77,7 @@
 		<div id="likeButton" class="fb-like" data-href="https://browserprint.info"></div>
 	</div>
 	<div id="fb-root"></div>
-	<div id="redditButtonDiv" style="display:none">
+	<div id="redditButtonDiv" style="display: none">
 		<script type="text/javascript">
 			//Set the details of the reddit button.
 			reddit_url='browserprint.info';
