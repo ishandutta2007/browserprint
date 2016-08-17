@@ -610,13 +610,14 @@ public class FingerprintDAO {
 		PreparedStatement insertSampleSet = conn.prepareStatement(insertQuery);
 		insertSampleSet.setInt(2, sampleID);
 		
+		String selectQuery = "SELECT 1 FROM `SampleSets` WHERE `SampleSetID` = ? LIMIT 1";
+		PreparedStatement selectSampleSet = conn.prepareStatement(selectQuery);
+		
 		if(fingerprint.getSampleSetID() != null){
 			/*
 			 * Check if the SampleSetID exists.
 			 * If it doesn't set fingerprint.sampleSetID to null so that it creates a new sampleSetID and inserts that.
 			 */
-			String selectQuery = "SELECT 1 FROM `SampleSets` WHERE `SampleSetID` = ? GROUP BY `SampleSetID`";
-			PreparedStatement selectSampleSet = conn.prepareStatement(selectQuery);
 			selectSampleSet.setString(1, fingerprint.getSampleSetID());
 			ResultSet rs = selectSampleSet.executeQuery();
 			if(!rs.next()){
@@ -635,21 +636,22 @@ public class FingerprintDAO {
 		
 		if(fingerprint.getSampleSetID() == null) {
 			/*
+			 * Try to generate a different random SampleSetUUID until a unique one is found.
 			 * Insert whole new SampleSetID.
-			 * Try to insert with a different random SampleSetUUID until a unique one is found.
 			 */
-			boolean foundUniqueUUID = false;
-			while (!foundUniqueUUID) {
-				String sampleSetID = UUID.randomUUID().toString();
-				insertSampleSet.setString(1, sampleSetID);
-				try {
-					insertSampleSet.execute();
-					foundUniqueUUID = true;
-					fingerprint.setSampleSetID(sampleSetID);
-				} catch (MySQLIntegrityConstraintViolationException ex) {
-					System.err.println("Duplicate SampleSetUUID: " + sampleSetID);
+			String sampleSetID;
+			while(true){
+				sampleSetID = UUID.randomUUID().toString();
+				selectSampleSet.clearParameters();
+				selectSampleSet.setString(1, sampleSetID);
+				ResultSet rs = selectSampleSet.executeQuery();
+				if(!rs.next()){
+					break;
 				}
 			}
+			insertSampleSet.setString(1, sampleSetID);
+			insertSampleSet.execute();
+			fingerprint.setSampleSetID(sampleSetID);
 			insertSampleSet.close();
 		}
 	}
