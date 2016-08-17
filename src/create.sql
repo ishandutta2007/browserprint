@@ -84,6 +84,16 @@ CREATE TABLE `SampleSets` (
 )
 ENGINE=InnoDB;
 
+CREATE TABLE `SuperSampleSets` (
+  `SampleSuperSetID` CHAR(36) NOT NULL,
+  `SampleSetID` CHAR(36) NOT NULL,
+  FOREIGN KEY(`SampleSetID`) REFERENCES `SampleSets`(`SampleSetID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  PRIMARY KEY(`SampleSuperSetID`, `SampleSetID`)
+)
+ENGINE=InnoDB;
+
 CREATE TABLE `SampleQuestionnaire` (
   `SampleID` BIGINT UNSIGNED NOT NULL,
   `usingProxy` TEXT,
