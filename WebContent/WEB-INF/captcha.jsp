@@ -26,11 +26,11 @@
 	</p>
 	</c:if>
 	<div>
-		<img id="captchaImg" src="http://${ initParam['websiteBaseURL'] }/<c:url value="captcha.png"/>" alt="A text CAPTCHA"/>
+		<img id="captchaImg" src="https://${ initParam['websiteBaseURL'] }/<c:url value="captcha.png"/>" alt="A text CAPTCHA"/>
 		<br>
 		<script type="text/javascript">
 		function refresh(){
-			$("#captchaImg").attr("src", "http://${ initParam['websiteBaseURL'] }/<c:url value="captcha.png"/>?z=" + new Date().getTime());
+			$("#captchaImg").attr("src", "https://${ initParam['websiteBaseURL'] }/<c:url value="captcha.png"/>?z=" + new Date().getTime());
 		}
 		</script>
 		<a href="#" onclick="refresh()">refresh</a>
@@ -164,5 +164,6 @@
 	</div>
 	<div id="device-width"></div>
 	<div id="device-height"></div>
+	<img src="http://${ initParam['websiteBaseURL'] }/<c:url value="hstsTest.png"/>" alt="A single pixel. Part of a test."/>
 </body>
 </html>

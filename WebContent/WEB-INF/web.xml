@@ -88,6 +88,15 @@
     <servlet-name>CaptchaServlet</servlet-name>
     <url-pattern>/captcha.png</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <display-name>HstsServlet</display-name>
+    <servlet-name>HstsServlet</servlet-name>
+    <servlet-class>servlets.HstsServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>HstsServlet</servlet-name>
+    <url-pattern>/hstsTest.png</url-pattern>
+  </servlet-mapping>
     <servlet>
     <display-name>CaptchaPage</display-name>
     <servlet-name>CaptchaPage</servlet-name>
@@ -163,7 +172,7 @@
   <security-constraint>
     <web-resource-collection>
       <web-resource-name>HstsTest any protocol</web-resource-name>
-      <url-pattern>/captcha.png</url-pattern>
+      <url-pattern>/hstsTest.png</url-pattern>
     </web-resource-collection>
     <user-data-constraint>
       <transport-guarantee>NONE</transport-guarantee>
