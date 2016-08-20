@@ -28,6 +28,7 @@ public class Main {
 		
 		PreparedStatement getSampleTimes = conn.prepareStatement("SELECT `Samples`.`IP`, `SampleSets`.`SampleSetID`, `Samples`.`TimeStamp`"
 				+ " FROM `Samples` INNER JOIN `SampleSets` ON `Samples`.`SampleID` = `SampleSets`.`SampleID`"
+				+ " WHERE `Samples`.`CookiesEnabled` = TRUE"
 				+ " ORDER BY `Samples`.`IP`, `Samples`.`TimeStamp`;");
 		
 		System.out.println("-----START-----");
