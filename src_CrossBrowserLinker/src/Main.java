@@ -26,10 +26,10 @@ public class Main {
 
 		conn = DriverManager.getConnection("jdbc:mysql://localhost/browserprint", connectionProps);
 		
-		PreparedStatement getSampleTimes = conn.prepareStatement("SELECT `Samples`.`IP`, `SampleSets`.`SampleSetID`, `Samples`.`TimeStamp`"
+		PreparedStatement getSampleTimes = conn.prepareStatement("SELECT `Samples`.`IP`, `SampleSets`.`SampleSetID`, `Samples`.`Platform`, `Samples`.`TimeStamp`"
 				+ " FROM `Samples` INNER JOIN `SampleSets` ON `Samples`.`SampleID` = `SampleSets`.`SampleID`"
-				+ " WHERE `Samples`.`CookiesEnabled` = TRUE"
-				+ " ORDER BY `Samples`.`IP`, `Samples`.`TimeStamp`;");
+				+ " WHERE `Samples`.`CookiesEnabled` = TRUE AND `Samples`.`Platform` IS NOT null"
+				+ " ORDER BY `Samples`.`IP`, `Samples`.`Platform`, `Samples`.`TimeStamp`;");
 		
 		System.out.println("-----START-----");
 		
@@ -42,7 +42,7 @@ public class Main {
 		while(rs.next()){
 			RsObject tmp2 = new RsObject(rs);
 			
-			if(tmp1.ip.equals(tmp2.ip) && !tmp1.sampleSetID.equals(tmp2.sampleSetID)){
+			if(tmp1.ip.equals(tmp2.ip) && !tmp1.sampleSetID.equals(tmp2.sampleSetID) && tmp1.platform.equals(tmp2.platform)){
 				if(tmp2.dateTime.getTime() - tmp1.dateTime.getTime() < LINKAGE_THRESHOLD_MILLISECONDS){
 					//System.out.println("Linked " + tmp1.sampleSetID + " to " + tmp2.sampleSetID);
 					
@@ -122,11 +122,13 @@ public class Main {
 class RsObject{
 	public String ip;
 	public String sampleSetID;
+	public String platform;
 	public Timestamp dateTime;
 	
 	public RsObject(ResultSet rs) throws SQLException {
 		this.ip = rs.getString(1);
 		this.sampleSetID = rs.getString(2);
-		this.dateTime = rs.getTimestamp(3);
+		this.platform = rs.getString(3);
+		this.dateTime = rs.getTimestamp(4);
 	}
 }
