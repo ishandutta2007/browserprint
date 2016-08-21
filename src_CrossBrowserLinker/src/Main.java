@@ -26,29 +26,35 @@ public class Main {
 
 		conn = DriverManager.getConnection("jdbc:mysql://localhost/browserprint", connectionProps);
 		
-		PreparedStatement getSampleTimes = conn.prepareStatement("SELECT `Samples`.`IP`, `SampleSets`.`SampleSetID`, `Samples`.`Platform`, `Samples`.`TimeStamp`"
-				+ " FROM `Samples` INNER JOIN `SampleSets` ON `Samples`.`SampleID` = `SampleSets`.`SampleID`"
-				+ " WHERE `Samples`.`CookiesEnabled` = TRUE AND `Samples`.`Platform` IS NOT null"
-				+ " ORDER BY `Samples`.`IP`, `Samples`.`Platform`, `Samples`.`TimeStamp`;");
+		PreparedStatement getSampleTimes = conn.prepareStatement(
+				  "SELECT `IP`, `SampleSetID`, `SampleID`, `OSName`, `TimeStamp`"
+				+ " FROM `SampleSets`"
+				+ " INNER JOIN (SELECT `SampleID`, `IP`, `OSName`, `TimeStamp`"
+				+ "  FROM `Samples`"
+				+ "  INNER JOIN `SampleStatistics`"
+				+ "  USING(`SampleID`)"
+				+ "  WHERE `CookiesEnabled` = TRUE) AS `SampleJoinStatistics`"
+				+ " USING(`SampleID`)"
+				+ " ORDER BY `IP`, `OSName`, `TimeStamp`;");
 		
 		System.out.println("-----START-----");
 		
 		//https://stackoverflow.com/questions/3389348/parse-any-date-in-java
 		
-		HashMap<String, LinkedHashSet<String>> graph = new HashMap<String, LinkedHashSet<String>>();
+		HashMap<Long, LinkedHashSet<Long>> graph = new HashMap<Long, LinkedHashSet<Long>>();
 		ResultSet rs = getSampleTimes.executeQuery();
 		rs.next();
 		RsObject tmp1 = new RsObject(rs);
 		while(rs.next()){
 			RsObject tmp2 = new RsObject(rs);
 			
-			if(tmp1.ip.equals(tmp2.ip) && !tmp1.sampleSetID.equals(tmp2.sampleSetID) && tmp1.platform.equals(tmp2.platform)){
+			if(tmp1.ip.equals(tmp2.ip) && !tmp1.sampleSetID.equals(tmp2.sampleSetID) && tmp1.osName.equals(tmp2.osName)){
 				if(tmp2.dateTime.getTime() - tmp1.dateTime.getTime() < LINKAGE_THRESHOLD_MILLISECONDS){
 					//System.out.println("Linked " + tmp1.sampleSetID + " to " + tmp2.sampleSetID);
 					
 					//See if either of these samples are part of a SampleSuperSet yet, if so get their UUID.
-					addConnection(graph, tmp1.sampleSetID, tmp2.sampleSetID);
-					addConnection(graph, tmp2.sampleSetID, tmp1.sampleSetID);
+					addConnection(graph, tmp1.sampleID, tmp2.sampleID);
+					addConnection(graph, tmp2.sampleID, tmp1.sampleID);
 				}
 			}
 			tmp1 = tmp2;
@@ -56,22 +62,22 @@ public class Main {
 		
 		//Traverse the connections assigning labels as you go
 		PreparedStatement checkSuperSampleSetExists = conn.prepareStatement("SELECT 1 FROM `SuperSampleSets` WHERE `SampleSuperSetID` = ? LIMIT 1");
-		PreparedStatement checkSampleSetHasLabel = conn.prepareStatement("SELECT 1 FROM `SuperSampleSets` WHERE `SampleSetID` = ? LIMIT 1");
-		PreparedStatement insertSuperSampleSet = conn.prepareStatement("INSERT INTO `SuperSampleSets`(`SampleSuperSetID`, `SampleSetID`) VALUES(?, ?);");
-		for(String sampleSetID: graph.keySet()){
+		PreparedStatement checkSampleSetHasLabel = conn.prepareStatement("SELECT 1 FROM `SuperSampleSets` WHERE `SampleID` = ? LIMIT 1");
+		PreparedStatement insertSuperSampleSet = conn.prepareStatement("INSERT INTO `SuperSampleSets`(`SampleSuperSetID`, `SampleID`) VALUES(?, ?);");
+		for(Long sampleID: graph.keySet()){
 			//Get a fresh, unused sampleSuperSetID
 			String sampleSuperSetID = getUnusedSampleSuperSetID(checkSuperSampleSetExists);
 			//Traverse the graph
-			f(graph, sampleSuperSetID, checkSampleSetHasLabel, sampleSetID, insertSuperSampleSet);
+			f(graph, sampleSuperSetID, checkSampleSetHasLabel, sampleID, insertSuperSampleSet);
 		}
 		
 		System.out.println("------END------");
 	}
 	
-	public static void f(HashMap<String, LinkedHashSet<String>> graph, String sampleSuperSetID, PreparedStatement checkSampleSetHasLabel, String sampleSetID, PreparedStatement insertSuperSampleSet) throws SQLException{
+	public static void f(HashMap<Long, LinkedHashSet<Long>> graph, String sampleSuperSetID, PreparedStatement checkSampleSetHasLabel, Long sampleID, PreparedStatement insertSuperSampleSet) throws SQLException{
 		//Check whether this sampleSet has a label yet.
 		{
-			checkSampleSetHasLabel.setString(1, sampleSetID);
+			checkSampleSetHasLabel.setLong(1, sampleID);
 			ResultSet rs = checkSampleSetHasLabel.executeQuery();
 			checkSampleSetHasLabel.clearParameters();
 			boolean sampleSetHasLabel = rs.next();
@@ -84,11 +90,11 @@ public class Main {
 		
 		//Store label in database
 		insertSuperSampleSet.setString(1, sampleSuperSetID);
-		insertSuperSampleSet.setString(2, sampleSetID);
+		insertSuperSampleSet.setLong(2, sampleID);
 		insertSuperSampleSet.executeUpdate();
 		insertSuperSampleSet.clearParameters();
 		
-		Iterator<String> it = graph.get(sampleSetID).iterator();
+		Iterator<Long> it = graph.get(sampleID).iterator();
 		while(it.hasNext()){
 			f(graph, sampleSuperSetID, checkSampleSetHasLabel, it.next(), insertSuperSampleSet);
 		}
@@ -109,26 +115,28 @@ public class Main {
 		return sampleSuperSetID;
 	}
 	
-	public static void addConnection(HashMap<String, LinkedHashSet<String>> graph, String sampleSetID1, String sampleSetID2){
-		LinkedHashSet<String> neighbors;
-		if((neighbors = graph.get(sampleSetID1)) == null){
-			neighbors = new LinkedHashSet<String>();
-			graph.put(sampleSetID1, neighbors);
+	public static void addConnection(HashMap<Long, LinkedHashSet<Long>> graph, Long sampleID1, Long sampleID2){
+		LinkedHashSet<Long> neighbors;
+		if((neighbors = graph.get(sampleID1)) == null){
+			neighbors = new LinkedHashSet<Long>();
+			graph.put(sampleID1, neighbors);
 		}
-		neighbors.add(sampleSetID2);
+		neighbors.add(sampleID2);
 	}
 }
 
 class RsObject{
 	public String ip;
 	public String sampleSetID;
-	public String platform;
+	public Long sampleID;
+	public String osName;
 	public Timestamp dateTime;
 	
 	public RsObject(ResultSet rs) throws SQLException {
 		this.ip = rs.getString(1);
 		this.sampleSetID = rs.getString(2);
-		this.platform = rs.getString(3);
-		this.dateTime = rs.getTimestamp(4);
+		this.sampleID = rs.getLong(3);
+		this.osName = rs.getString(4);
+		this.dateTime = rs.getTimestamp(5);
 	}
 }

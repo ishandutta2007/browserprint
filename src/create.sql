@@ -86,11 +86,11 @@ ENGINE=InnoDB;
 
 CREATE TABLE `SuperSampleSets` (
   `SampleSuperSetID` CHAR(36) NOT NULL,
-  `SampleSetID` CHAR(36) NOT NULL,
-  FOREIGN KEY(`SampleSetID`) REFERENCES `SampleSets`(`SampleSetID`)
+  `SampleID` BIGINT UNSIGNED NOT NULL,
+  FOREIGN KEY(`SampleID`) REFERENCES `Samples`(`SampleID`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
-  PRIMARY KEY(`SampleSuperSetID`, `SampleSetID`)
+  PRIMARY KEY(`SampleSuperSetID`, `SampleID`)
 )
 ENGINE=InnoDB;
 
