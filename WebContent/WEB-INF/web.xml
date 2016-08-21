@@ -97,7 +97,7 @@
     <servlet-name>HstsServlet</servlet-name>
     <url-pattern>/hstsTest.png</url-pattern>
   </servlet-mapping>
-    <servlet>
+  <servlet>
     <display-name>CaptchaPage</display-name>
     <servlet-name>CaptchaPage</servlet-name>
     <jsp-file>/WEB-INF/captcha.jsp</jsp-file>
