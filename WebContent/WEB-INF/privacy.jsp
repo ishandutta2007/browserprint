@@ -76,6 +76,7 @@
 		<li>The value returned by the JavaScript function toLocaleString() called on the UNIX epoch.</li>
 		<li>The output of the JavaScript Math.tan(-1e300).</li>
 		<li>Whether the client is thought to be using Tor or not. Detected by performing a TorDNSEL request.</li>
+		<li>What version of the Tor Browser Bundle is being used, if its used.</li>
 		<li>Whether ads are blocked by the browser.</li>
 		<li>Whether like/share buttons are blocked or modified by the browser.</li>
 		<li>An image created by the client's browser using a HTML5 canvas.</li>

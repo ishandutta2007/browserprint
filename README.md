@@ -100,6 +100,9 @@ For instance on a 64bit Linux machine it produces the value -1.4214488238747245 
 Checks whether a client's request came from a Tor exit node, and hence whether they're using Tor.
 It does so by performing a TorDNSEL request for each client.
 
+### Tor Browser Bundle version
+The version of the Tor Browser Bundle (TBB) you are using (if you're using the TBB).
+
 ### Blocking Ads?
 Checks whether ad blocking software is installed.
 It does so by attempting to display 2 ads and trying to call a function from a script named like an ad serving script.

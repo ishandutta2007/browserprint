@@ -121,6 +121,10 @@
 	<p>
 		Original.
 	</p>
+	<h3>Tor Browser Bundle version</h3>
+	<p>
+		Original.
+	</p>
 	<h3>Blocking ads?</h3>
 	<p>
 		Original, but also found on AmIUnique.
