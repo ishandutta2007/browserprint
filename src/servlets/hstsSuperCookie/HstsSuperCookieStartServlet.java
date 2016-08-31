@@ -28,7 +28,7 @@ public class HstsSuperCookieStartServlet extends HttpServlet {
 	public HstsSuperCookieStartServlet() {
 		super();
 		
-		this.uriPattern = Pattern.compile("/hstsSuperCookie/(start|midpoint)/(\\d+)$");
+		this.uriPattern = Pattern.compile("/hstsSuperCookie/(start|midpoint)/(\\d+)(:?;jsessionid=.*)?$");
 	}
 
 	/**
@@ -38,7 +38,7 @@ public class HstsSuperCookieStartServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		if(request.getServerName().equals("hsts0.browserprint.info") == false){
+		if(request.getServerName().startsWith("hsts0.") == false){
 			System.err.println("HstsSuperCookieStartServlet: Unexpected domain. Start page must be subdomain hsts0. Subdomain = <" + request.getServerName() + ">.");
 			response.sendError(404);
 			return;
@@ -61,11 +61,8 @@ public class HstsSuperCookieStartServlet extends HttpServlet {
 		
 		if(request.getServerPort() == 80){
 			//New client. Generate them a new, unused ID, and encode it in the redirect URL.
-			String redirectUrl = "https://hsts" + hstsGroupStartSubdomainNumber + ".browserprint.info/hstsSuperCookie/newID/";
-			
-			redirectUrl = redirectUrl + generateNewUnassignedIdChunk();
-			
-			response.sendRedirect(response.encodeRedirectURL(redirectUrl));
+			response.sendRedirect("https://hsts" + hstsGroupStartSubdomainNumber + "." + getServletContext().getInitParameter("websiteBaseURL")
+					+ response.encodeRedirectURL("/hstsSuperCookie/newID/" + generateNewUnassignedIdChunk()));	
 			return;
 		}
 		else if(request.getServerPort() == 443){
@@ -76,6 +73,7 @@ public class HstsSuperCookieStartServlet extends HttpServlet {
 				HttpSession session = request.getSession();
 				synchronized(session){
 					Integer numIdChainsCompleted = (Integer) session.getAttribute("numIdChainsCompleted");
+					System.out.println("numIdChainsCompleted = " + numIdChainsCompleted + ", hsts" + hstsGroup);
 					if(numIdChainsCompleted == null){
 						numIdChainsCompleted = 0;
 					}
@@ -98,7 +96,7 @@ public class HstsSuperCookieStartServlet extends HttpServlet {
 			
 			//Redirect to extracting ID.
 			//Redirect to the first in the chain for extracting IDs.
-			response.sendRedirect("http://hsts" + hstsGroupStartSubdomainNumber + ".browserprint.info/hstsSuperCookie/existingID/");
+			response.sendRedirect("http://hsts" + hstsGroupStartSubdomainNumber + "." + getServletContext().getInitParameter("websiteBaseURL") + "/hstsSuperCookie/existingID/");
 			return;
 		}
 		else{

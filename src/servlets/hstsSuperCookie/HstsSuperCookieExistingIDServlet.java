@@ -49,7 +49,7 @@ public class HstsSuperCookieExistingIDServlet extends HttpServlet {
 		int subdomainNumber;
 		{
 			String subdomain = request.getServerName();
-			Matcher domainRegexMatcher = Pattern.compile("^hsts(\\d+).browserprint.info$").matcher(subdomain);
+			Matcher domainRegexMatcher = Pattern.compile("^hsts(\\d+)\\..*$").matcher(subdomain);
 			if(domainRegexMatcher.matches() == false){
 				System.err.println("HstsSuperCookieExistingIDServlet: Invalid subdomain <" + subdomain + ">.");
 				response.sendError(404);
@@ -61,7 +61,7 @@ public class HstsSuperCookieExistingIDServlet extends HttpServlet {
 		
 		if(subdomainGroupIndex < HstsSuperCookieStartServlet.ID_LENGTH){
 			//Redirect the client to the next subdomain in the chain.
-			response.sendRedirect("http://hsts" + (subdomainNumber + 1) + ".browserprint.info" + request.getRequestURI() + extractedBit);
+			response.sendRedirect("http://hsts" + (subdomainNumber + 1) + "." + getServletContext().getInitParameter("websiteBaseURL") + request.getRequestURI() + extractedBit);
 		}
 		else{//Must be == ID_LENGTH
 			//This is the last subdomain in the ID extraction chain.

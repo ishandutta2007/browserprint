@@ -14,14 +14,14 @@
 <div id="content">
 	I see you found my secret page.<br>
 	I'm testing a feature that will be released later.<br>
-	<img src="<c:url value="http://hsts0.browserprint.info/hstsSuperCookie/start/1"/>"></img>
-	<img src="<c:url value="http://hsts0.browserprint.info/hstsSuperCookie/start/2"/>"></img>
-	<img src="<c:url value="http://hsts0.browserprint.info/hstsSuperCookie/start/3"/>"></img>
-	<img src="<c:url value="http://hsts0.browserprint.info/hstsSuperCookie/start/4"/>"></img>
-	<img src="<c:url value="http://hsts0.browserprint.info/hstsSuperCookie/start/5"/>"></img>
-	<img src="<c:url value="http://hsts0.browserprint.info/hstsSuperCookie/start/6"/>"></img>
-	<img src="<c:url value="http://hsts0.browserprint.info/hstsSuperCookie/start/7"/>"></img>
-	<img src="<c:url value="http://hsts0.browserprint.info/hstsSuperCookie/start/8"/>"></img>
+	<img src="http://hsts0.${ initParam['websiteBaseURL'] }/<c:url value="hstsSuperCookie/start/1"/>"/>
+	<img src="http://hsts0.${ initParam['websiteBaseURL'] }/<c:url value="hstsSuperCookie/start/2"/>"/>
+	<img src="http://hsts0.${ initParam['websiteBaseURL'] }/<c:url value="hstsSuperCookie/start/3"/>"/>
+	<img src="http://hsts0.${ initParam['websiteBaseURL'] }/<c:url value="hstsSuperCookie/start/4"/>"/>
+	<img src="http://hsts0.${ initParam['websiteBaseURL'] }/<c:url value="hstsSuperCookie/start/5"/>"/>
+	<img src="http://hsts0.${ initParam['websiteBaseURL'] }/<c:url value="hstsSuperCookie/start/6"/>"/>
+	<img src="http://hsts0.${ initParam['websiteBaseURL'] }/<c:url value="hstsSuperCookie/start/7"/>"/>
+	<img src="http://hsts0.${ initParam['websiteBaseURL'] }/<c:url value="hstsSuperCookie/start/8"/>"/>
 </div>
 <common:footer/>
 </body>

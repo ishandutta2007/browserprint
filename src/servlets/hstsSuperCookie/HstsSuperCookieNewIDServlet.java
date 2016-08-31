@@ -24,7 +24,7 @@ public class HstsSuperCookieNewIDServlet extends HttpServlet {
 	public HstsSuperCookieNewIDServlet() {
 		super();
 		this.domainRegexPattern = Pattern.compile("^hsts(\\d+).browserprint.info$");
-		this.pathRegexPattern = Pattern.compile("^/hstsSuperCookie/newID/([01]{" + HstsSuperCookieStartServlet.ID_LENGTH + "})$");
+		this.pathRegexPattern = Pattern.compile("^/hstsSuperCookie/newID/([01]{" + HstsSuperCookieStartServlet.ID_LENGTH + "})(:?;jsessionid=.*)?$");
 	}
 
 	/**
@@ -65,12 +65,12 @@ public class HstsSuperCookieNewIDServlet extends HttpServlet {
 		
 		if(subdomainGroupIndex < HstsSuperCookieStartServlet.ID_LENGTH){
 			//Redirect the client to the next subdomain in the chain.
-			response.sendRedirect("https://hsts" + (subdomainNumber + 1) + ".browserprint.info/hstsSuperCookie/newID/" + id);
+			response.sendRedirect("https://hsts" + (subdomainNumber + 1) + "." + getServletContext().getInitParameter("websiteBaseURL") + response.encodeRedirectURL("/hstsSuperCookie/newID/" + id));
 			return;
 		}
 		else{//subdomainGroupIndex == HstsSuperCookieStartServlet.ID_LENGTH
 			//This is the last subdomain in the ID assignment chain, redirect the client for ID extraction.
-			response.sendRedirect("https://hsts0.browserprint.info/hstsSuperCookie/midpoint/" + subdomainGroup);
+			response.sendRedirect("https://hsts0." + getServletContext().getInitParameter("websiteBaseURL") + response.encodeRedirectURL("/hstsSuperCookie/midpoint/" + subdomainGroup));
 			return;
 		}
 	}
