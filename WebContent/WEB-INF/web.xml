@@ -133,6 +133,33 @@
     <servlet-name>FontCSSServlet</servlet-name>
     <url-pattern>/CSSFont/*</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <display-name>HstsSuperCookieStartServlet</display-name>
+    <servlet-name>HstsSuperCookieStartServlet</servlet-name>
+    <servlet-class>servlets.hstsSuperCookie.HstsSuperCookieStartServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>HstsSuperCookieStartServlet</servlet-name>
+    <url-pattern>/hstsSuperCookie/start</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <display-name>HstsSuperCookieNewIDServlet</display-name>
+    <servlet-name>HstsSuperCookieNewIDServlet</servlet-name>
+    <servlet-class>servlets.hstsSuperCookie.HstsSuperCookieNewIDServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>HstsSuperCookieNewIDServlet</servlet-name>
+    <url-pattern>/hstsSuperCookie/newID/*</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <display-name>HstsSuperCookieExistingIDServlet</display-name>
+    <servlet-name>HstsSuperCookieExistingIDServlet</servlet-name>
+    <servlet-class>servlets.hstsSuperCookie.HstsSuperCookieExistingIDServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>HstsSuperCookieExistingIDServlet</servlet-name>
+    <url-pattern>/hstsSuperCookie/existingID/*</url-pattern>
+  </servlet-mapping>
   <servlet-mapping>
     <servlet-name>BlogRSSXML</servlet-name>
     <url-pattern>/blog/rss.xml</url-pattern>
@@ -180,6 +207,15 @@
   </security-constraint>
   <security-constraint>
     <web-resource-collection>
+      <web-resource-name>HstsSuperCookie demonstrator</web-resource-name>
+      <url-pattern>/hstsSuperCookie/*</url-pattern>
+    </web-resource-collection>
+    <user-data-constraint>
+      <transport-guarantee>NONE</transport-guarantee>
+    </user-data-constraint>
+  </security-constraint>
+  <security-constraint>
+    <web-resource-collection>
       <web-resource-name>Rest of site HTTPS</web-resource-name>
       <url-pattern>/*</url-pattern>
     </web-resource-collection>
@@ -188,24 +224,11 @@
     </user-data-constraint>
   </security-constraint>
   <filter>
-    <filter-name>httpHeaderSecurity</filter-name>
-    <filter-class>org.apache.catalina.filters.HttpHeaderSecurityFilter</filter-class>
-    <async-supported>true</async-supported>
-    <init-param>
-      <param-name>hstsEnabled</param-name>
-      <param-value>true</param-value>
-    </init-param>
-    <init-param>
-      <param-name>hstsMaxAgeSeconds</param-name>
-      <param-value>31536000</param-value>
-    </init-param>
-    <init-param>
-      <param-name>hstsIncludeSubDomains</param-name>
-      <param-value>true</param-value>
-    </init-param>
+    <filter-name>HstsFilter</filter-name>
+    <filter-class>filters.HstsFilter</filter-class>
   </filter>
   <filter-mapping>
-    <filter-name>httpHeaderSecurity</filter-name>
+    <filter-name>HstsFilter</filter-name>
     <url-pattern>/*</url-pattern>
     <dispatcher>REQUEST</dispatcher>
   </filter-mapping>

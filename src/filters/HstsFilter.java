@@ -1,6 +1,8 @@
 package filters;
 
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -8,18 +10,21 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet Filter implementation class UTF8Filter.
- * Sets the character encoding of the request to UTF-8.
+ * Servlet Filter implementation class HstsFilter.
+ * Enabled HSTS on domains other than the ones hsts\d+\..*
+ * We want to exclude those domains since HSTS is used to demonstrate HSTS supercookies on them.
  */
-public class UTF8Filter implements Filter {
-
+public class HstsFilter implements Filter {
+	private Pattern domainPattern;
+	
 	/**
 	 * Default constructor.
 	 */
-	public UTF8Filter() {
-		// TODO Auto-generated constructor stub
+	public HstsFilter() {
+		this.domainPattern = Pattern.compile("^hsts\\d+\\..*$");
 	}
 
 	/**
@@ -40,8 +45,14 @@ public class UTF8Filter implements Filter {
 	 * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
 	 */
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		//response.setContentType("text/html; charset=UTF-8");
-		request.setCharacterEncoding("UTF-8");
+		if(request.getServerPort() == 443){
+			Matcher m = domainPattern.matcher(request.getServerName());
+	
+			//Enable HSTS for domains other than ones starting with hsts\d+.
+			if(m.matches() == false){
+				((HttpServletResponse)response).setHeader("Strict-Transport-Security", "max-age=31622400");
+			}
+		}
 
 		// pass the request along the filter chain
 		chain.doFilter(request, response);
