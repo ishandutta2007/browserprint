@@ -15,11 +15,16 @@ import javax.servlet.http.HttpServletResponse;
 public class HstsSuperCookieNewIDServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
+	private Pattern domainRegexPattern;
+	private Pattern pathRegexPattern;
+	
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
 	public HstsSuperCookieNewIDServlet() {
 		super();
+		this.domainRegexPattern = Pattern.compile("^hsts(\\d+).browserprint.info$");
+		this.pathRegexPattern = Pattern.compile("^/hstsSuperCookie/newID/([01]{" + HstsSuperCookieStartServlet.ID_LENGTH + "})$");
 	}
 
 	/**
@@ -32,7 +37,7 @@ public class HstsSuperCookieNewIDServlet extends HttpServlet {
 		int subdomainNumber;
 		{
 			String subdomain = request.getServerName();
-			Matcher domainRegexMatcher = Pattern.compile("^hsts(\\d+).browserprint.info$").matcher(subdomain);
+			Matcher domainRegexMatcher = domainRegexPattern.matcher(subdomain);
 			if(domainRegexMatcher.matches() == false){
 				System.err.println("HstsSuperCookieNewIDServlet: Invalid subdomain <" + subdomain + ">.");
 				response.sendError(404);
@@ -40,8 +45,10 @@ public class HstsSuperCookieNewIDServlet extends HttpServlet {
 			}
 			subdomainNumber = Integer.parseInt(domainRegexMatcher.group(1));
 		}
+		int subdomainGroup = (subdomainNumber - 1) / HstsSuperCookieStartServlet.ID_LENGTH + 1;//1,2,3,4 = 1; 5,6,7,8 = 2; ...
+		int subdomainGroupIndex = (subdomainNumber - 1) % HstsSuperCookieStartServlet.ID_LENGTH + 1;//1 = 1; 2 = 2; 3 = 3; 4 = 4; 5 = 1
 		
-		Matcher pathRegexMatcher = Pattern.compile("^/hstsSuperCookie/newID/([10]{" + HstsSuperCookieStartServlet.ID_LENGTH + "})$").matcher(request.getRequestURI());
+		Matcher pathRegexMatcher = pathRegexPattern.matcher(request.getRequestURI());
 		if(pathRegexMatcher.matches() == false){
 			System.err.println("HstsSuperCookieNewIDServlet: Invalid path. Must contain valid ID. Path = <" + request.getRequestURI() + ">.");
 			response.sendError(404);
@@ -49,19 +56,21 @@ public class HstsSuperCookieNewIDServlet extends HttpServlet {
 		}
 		
 		String id = pathRegexMatcher.group(1);
-		if(id.charAt(subdomainNumber - 1) == '1'){
+		if(id.charAt(subdomainGroupIndex - 1) == '1'){
 			//Enable HSTS so next time the client visits contacts this subdomain it will be using HTTPS.
 			response.setHeader("Strict-Transport-Security", "max-age=31622400");
 		}
+		/*else{//Bit is 0, so don't do anything
+		}*/
 		
-		if(subdomainNumber < HstsSuperCookieStartServlet.ID_LENGTH){
+		if(subdomainGroupIndex < HstsSuperCookieStartServlet.ID_LENGTH){
 			//Redirect the client to the next subdomain in the chain.
 			response.sendRedirect("https://hsts" + (subdomainNumber + 1) + ".browserprint.info/hstsSuperCookie/newID/" + id);
 			return;
 		}
-		else{
+		else{//subdomainGroupIndex == HstsSuperCookieStartServlet.ID_LENGTH
 			//This is the last subdomain in the ID assignment chain, redirect the client for ID extraction.
-			response.sendRedirect("https://hsts0.browserprint.info/hstsSuperCookie/start");
+			response.sendRedirect("https://hsts0.browserprint.info/hstsSuperCookie/midpoint/" + subdomainGroup);
 			return;
 		}
 	}

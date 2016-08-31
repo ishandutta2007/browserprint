@@ -14,12 +14,16 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class HstsSuperCookieExistingIDServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	
+	private Pattern pathRegexPattern;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
 	public HstsSuperCookieExistingIDServlet() {
 		super();
+		
+		this.pathRegexPattern = Pattern.compile("^/hstsSuperCookie/existingID/([10]{" + (HstsSuperCookieStartServlet.ID_LENGTH - 1) + "})$");
 	}
 
 	/**
@@ -53,8 +57,9 @@ public class HstsSuperCookieExistingIDServlet extends HttpServlet {
 			}
 			subdomainNumber = Integer.parseInt(domainRegexMatcher.group(1));
 		}
+		int subdomainGroupIndex = (subdomainNumber - 1) % HstsSuperCookieStartServlet.ID_LENGTH + 1;//1 = 1; 2 = 2; 3 = 3; 4 = 4; 5 = 1
 		
-		if(subdomainNumber < HstsSuperCookieStartServlet.ID_LENGTH){
+		if(subdomainGroupIndex < HstsSuperCookieStartServlet.ID_LENGTH){
 			//Redirect the client to the next subdomain in the chain.
 			response.sendRedirect("http://hsts" + (subdomainNumber + 1) + ".browserprint.info" + request.getRequestURI() + extractedBit);
 		}
@@ -62,16 +67,15 @@ public class HstsSuperCookieExistingIDServlet extends HttpServlet {
 			//This is the last subdomain in the ID extraction chain.
 			
 			//First, get the full ID.
-			Matcher pathRegexMatcher = Pattern.compile("^/hstsSuperCookie/existingID/([10]{" + (HstsSuperCookieStartServlet.ID_LENGTH - 1) + "})$").matcher(request.getRequestURI());
+			Matcher pathRegexMatcher = pathRegexPattern.matcher(request.getRequestURI());
 			if(pathRegexMatcher.matches() == false){
 				System.err.println("HstsSuperCookieExistingIDServlet: Invalid path. Must contain valid ID of length " + HstsSuperCookieStartServlet.ID_LENGTH + ". Path = <" + request.getRequestURI() + ">.");
 				response.sendError(404);
 				return;
 			}
-			String id = pathRegexMatcher.group(1);
-			id = id + extractedBit;
+			String id = pathRegexMatcher.group(1) + extractedBit;
 			
-			response.sendRedirect("http://dummyimage.com/500x30/fff/000&text=" + id);
+			response.sendRedirect("http://dummyimage.com/50x30/fff/000&text=" + id);
 			return;
 		}
 	}

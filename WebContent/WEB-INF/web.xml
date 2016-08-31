@@ -140,7 +140,8 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>HstsSuperCookieStartServlet</servlet-name>
-    <url-pattern>/hstsSuperCookie/start</url-pattern>
+    <url-pattern>/hstsSuperCookie/start/*</url-pattern>
+    <url-pattern>/hstsSuperCookie/midpoint/*</url-pattern>
   </servlet-mapping>
   <servlet>
     <display-name>HstsSuperCookieNewIDServlet</display-name>
