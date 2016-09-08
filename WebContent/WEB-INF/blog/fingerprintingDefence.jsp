@@ -53,7 +53,8 @@
 		Lastly fingerprinting attacks and defences are an arms race.
 		For defences to be developed attacks first need to be discovered.
 		An attack could be used in the wild for months or even years until a researcher discovers it and defences are created.
-		For instance AudioContext fingerprinting was discovered in the wild [<a href="#ref2">2</a>] after having been active for who knows how long and defences are not yet widely available months later.
+		For instance AudioContext fingerprinting was discovered in the wild [<a href="#ref2">2</a>] after having been active for who knows how long and defences are not yet widely available months later
+		 (<b>Update 2016-09-08:</b> Mozilla plans to <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1288359">give users the option of disabling the Web Audio API</a> in Firefox 51).
 	</p>
 	<h3>Method 2: Disable JavaScript universally</h3>
 	<p>
