@@ -11,6 +11,19 @@
 <body>
 <common:header/>
 <div id="content">
+	<h2><a href="hstsSupercookie">Revisiting HSTS supercookies</a></h2>
+	<h4>Posted: 2016-09-08<br/>
+	By <a href="mailto:${initParam['devEmail']}?subject=Blog%20-%20HSTS%20supercookies">Lachlan Kang</a></h4>
+	<p>
+		Supercookies are a class of techniques for storing data in your browser that tends to be difficult to remove and can be used to track you.
+		Recently we've been exploring HSTS based supercookies after an email tipped us off to their existence.
+		Our interest in them stems from how they can be used to track and potentially deanonymise users of VPNs or Tor.
+		HSTS is a browser feature that allows websites to specify that future visits to a domain should only ever be via HTTPS, never HTTP.
+		This behaviour can be used to store a single bit of data per domain, whether HSTS was enabled for the domain or not.
+	</p>
+	<p class="continueReading">
+		<a href="hstsSupercookie">Continue reading ...</a>
+	</p>
 	<h2><a href="fingerprintingDefence">Defences against fingerprinting</a></h2>
 	<h4>Posted: 2016-08-05<br/>
 	By <a href="mailto:${initParam['devEmail']}?subject=Blog%20-%20Fingerprinting%20defence">Lachlan Kang</a></h4>

@@ -37,6 +37,9 @@
 		This project would not be possible without these institutions' help.
 	</p>
 	<p>
+		<b>News 2016-09-08</b> New <a href="blog/hstsSupercookie">blog post</a> discussing HSTS supercookies.
+	</p>
+	<p>
 		<b>News 2016-08-16</b> We've added a new test. This one detects whether HSTS is supported by the browser.
 		HSTS is a web security policy that prevents browsers from accessing HTTPS sites via HTTP.
 		It can be abused to store supercookies in your browser potentially without the need for JavaScript.

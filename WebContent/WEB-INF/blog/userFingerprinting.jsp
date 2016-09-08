@@ -8,7 +8,7 @@
 <title>Browserprint - Blog - User fingerprinting via CAPTCHAs</title>
 <link type="text/css" href="../style.css" rel="stylesheet">
 </head>
-<body>
+<body style="width:596px;margin:auto">
 <common:header/>
 <div id="content">
 	<h2><a href="userFingerprinting">User fingerprinting via CAPTCHAs</a></h2>
@@ -76,7 +76,9 @@
 		The right-most plate in Figure 1 is Ishihara plate number 16;
 		 someone with normal colour vision will see 26, someone with protanopia will see 6, and someone with deuteranomalia will see 2.
 	</p>
-	<img src="../images/blog/colour.vision.captcha.png" style="display: block; margin-left: auto; margin-right: auto" alt="An image of the proof of concept colour vision CAPTCHA"/>
+	<div style="position:relative;left:-48px">
+		<img src="../images/blog/colour.vision.captcha.png" alt="An image of the proof of concept colour vision CAPTCHA"/>
+	</div>
 	<p>
 		<b>Fig. 1.</b> A screenshot of the first prototype.
 		This implementation is not very covert, the plates are obviously from a colour vision test;

@@ -9,10 +9,17 @@
 		<link>https://${ initParam['websiteBaseURL'] }/</link>
 		<description>Blog posts from Browserprint.</description>
 		<item>
+			<title>Revisiting HSTS supercookies</title>
+			<link>https://${ initParam['websiteBaseURL'] }/blog/hstsSupercookie</link>
+			<guid>https://${ initParam['websiteBaseURL'] }/blog/hstsSupercookie</guid>
+			<pubDate>Thu, 8 Sep 2016 05:30:00 GMT</pubDate>
+			<description>A blog post discussing HSTS supercookies.</description>
+		</item>
+		<item>
 			<title>Defences against fingerprinting</title>
 			<link>https://${ initParam['websiteBaseURL'] }/blog/fingerprintingDefence</link>
 			<guid>https://${ initParam['websiteBaseURL'] }/blog/fingerprintingDefence</guid>
-			<pubDate>Mon, 5 Aug 2016 08:30:00 GMT</pubDate>
+			<pubDate>Fri, 5 Aug 2016 08:30:00 GMT</pubDate>
 			<description>A blog post discussing fingerprinting defences.</description>
 		</item>
 		<item>

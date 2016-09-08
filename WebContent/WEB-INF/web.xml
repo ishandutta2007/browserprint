@@ -197,6 +197,15 @@
     <servlet-name>blogFingerprintingDefence</servlet-name>
     <url-pattern>/blog/fingerprintingDefence</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <display-name>blogHstsSupercookie</display-name>
+    <servlet-name>blogHstsSupercookie</servlet-name>
+    <jsp-file>/WEB-INF/blog/hstsSupercookie.jsp</jsp-file>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>blogHstsSupercookie</servlet-name>
+    <url-pattern>/blog/hstsSupercookie</url-pattern>
+  </servlet-mapping>
   <security-constraint>
     <web-resource-collection>
       <web-resource-name>HstsTest any protocol</web-resource-name>

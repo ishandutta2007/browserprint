@@ -73,7 +73,7 @@ public class HstsSuperCookieStartServlet extends HttpServlet {
 				HttpSession session = request.getSession();
 				synchronized(session){
 					Integer numIdChainsCompleted = (Integer) session.getAttribute("numIdChainsCompleted");
-					System.out.println("numIdChainsCompleted = " + numIdChainsCompleted + ", hsts" + hstsGroup);
+
 					if(numIdChainsCompleted == null){
 						numIdChainsCompleted = 0;
 					}

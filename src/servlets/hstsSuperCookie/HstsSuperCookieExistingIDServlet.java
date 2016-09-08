@@ -1,9 +1,14 @@
 package servlets.hstsSuperCookie;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +22,12 @@ public class HstsSuperCookieExistingIDServlet extends HttpServlet {
 	
 	private Pattern pathRegexPattern;
 
+	private static final int ID_IMAGE_WIDTH_PER_CHAR = 19;
+	private static final int ID_IMAGE_HEIGHT = 30;
+	private static final int ID_IMAGE_FONT_SIZE = 30;
+	private static final int ID_IMAGE_TEXT_X_POSITION = 0;
+	private static final int ID_IMAGE_TEXT_Y_POSITION = ID_IMAGE_HEIGHT - 5;
+	
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -75,7 +86,26 @@ public class HstsSuperCookieExistingIDServlet extends HttpServlet {
 			}
 			String id = pathRegexMatcher.group(1) + extractedBit;
 			
-			response.sendRedirect("http://dummyimage.com/50x30/fff/000&text=" + id);
+			//Output the ID.
+			if(id.length() % 4 == 0){
+				//We've got a multiple of 4 bits so we can convert the ID bit string to something more compact, a hex.
+				id = Integer.toHexString(Integer.parseInt(id, 2));
+			}
+			
+			int image_width = id.length() * ID_IMAGE_WIDTH_PER_CHAR;
+			BufferedImage bImage = new BufferedImage(image_width, ID_IMAGE_HEIGHT, BufferedImage.TYPE_INT_RGB);
+			Graphics2D g2d = bImage.createGraphics();
+			g2d.setBackground(Color.WHITE);
+			g2d.clearRect(0, 0, image_width, ID_IMAGE_HEIGHT);
+			g2d.setColor(Color.black);
+			g2d.setFont(new Font("Liberation Mono", Font.PLAIN, ID_IMAGE_FONT_SIZE));
+			g2d.drawString(id, ID_IMAGE_TEXT_X_POSITION, ID_IMAGE_TEXT_Y_POSITION);
+			
+			response.setContentType("image/png");
+			ImageIO.write(bImage, "png", response.getOutputStream());
+			
+			//response.sendRedirect("http://dummyimage.com/50x30/fff/000&text=" + id);
+			
 			return;
 		}
 	}
