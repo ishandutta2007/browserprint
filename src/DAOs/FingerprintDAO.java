@@ -225,7 +225,7 @@ public class FingerprintDAO {
 			CharacteristicBean bean = getCharacteristicBean(conn, sampleCounts.lower(new VersionCount(13 + 1)).getCount(), "ScreenDetailsCSS", fingerprint.getScreenDetailsCSS());
 			bean.setColour(CharacteristicBean.DEPRECATED_COLOUR);
 			bean.setName("Screen Size (CSS) [DEPRECATED]");
-			bean.setNameHoverText("The screen size and colour depth of the monitor displaying the client's web browser, detected using CSS."
+			bean.setNameHoverText("The screen size of the monitor displaying the client's web browser, detected using CSS."
 					+ " Deprecated because in the current implementation zooming changes the result in newer browsers.");
 			characteristics.add(bean);
 		}
