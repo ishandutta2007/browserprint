@@ -151,7 +151,7 @@
 	</p>
 	<h3>Audio fingerprints</h3>
 	<p>
-		Code taken with permission from https://audiofingerprint.openwpm.com/
+		Code taken with permission from <a href="https://audiofingerprint.openwpm.com/">https://audiofingerprint.openwpm.com/</a>.
 		Tests discovered in the wild by Steven Englehardt and Arvind Narayanan in the paper Online tracking: A 1-million-site measurement and analysis.
 	</p>
 </div>

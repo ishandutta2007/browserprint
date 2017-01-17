@@ -81,7 +81,7 @@ The value of the DNT (Do Not Track) header from the HTTP request.
 
 ### Client/server time difference (minutes)
 The approximate amount of difference between the time on the client's computer and the clock on the server.
-i.e., the clock on the client's computer is 5 minutes ahead of the clock on the server.
+e.g., the clock on the client's computer is 5 minutes ahead of the clock on the server.
 
 ### Date/Time format test
 When the JavaScript function toLocaleString() is called on a date it can reveal information about the language of the browser via the names of days and months.
@@ -128,30 +128,3 @@ Primative touch screen detection.
 ### Audio Fingerprints
 A set of fingerprinting tests that work using the AudioContext API.
 Based on fingerprinting code from the wild.
-
-## Installation
-Here we give a quick overview of one way the project can be deployed.
-You need to have Apache Tomcat and MariaDB installed for this to work.
-
-  * Start MariaDB.
-  * (optional but recommended) [Configure your database to support UTF-8](http://stackoverflow.com/a/3513812)
-  * Run the `create.sql` file found in the `src` directory of the repository through MariaDB.
-  * Delete (or move) everything from the Tomcat `webapps` directory.
-  * Download the file `browserprint.war` from the repository or build it yourself for a (possibly) more update version (we build it using the Eclipse IDE and a project consisting of the `src` and `WebContent` directories of the repository).
-  * Copy the file `browserprint.war` to your `<TomcatDirectory>/webapps` directory.
-  * Add the line `<Context path="" docBase="browserprint" debug="0" reloadable="true"></Context>` inside the Host tags to `<TomcatDirectory>/conf/server.xml`.
-  * Start Tomcat (`<TomcatDirectory>/bin/startup.sh`). The `.war` file will be automatically unpacked by Tomcat.
-  * Stop Tomcat (`<TomcatDirectory>/bin/shutdown.sh`).
-  * Delete the file `browserprint.war` from your `webapps` directory.
-  * Edit `<TomcatDirectory>/webapps/browserprint/META-INFO/context.xml` to fit your database.
-  * Configure the server's public IP address as serversPublicIP in `browserprint/WEB-INF/web.xml`.
-  * Check `web.xml.README` for other configurable options you may (and probably should) want to use in `browserprint/WEB-INF/web.xml`.
-  * Start Tomcat.
-
-The page can now be accessed at http://localhost:8080/ (assuming default Tomcat settings).
-
-This project was created using the Eclipse IDE configured to use Tomcat and can be easily set up and modified using them.
-
-### Optional
-* Remove or replace the Creative Commons license on the output of the web application in `WebContent/WEB-INF/footer.jsp`.
-  You are only required to retain the MIT license on the code, not the CC license on the web application output.

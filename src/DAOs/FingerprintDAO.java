@@ -218,7 +218,7 @@ public class FingerprintDAO {
 			CharacteristicBean bean = getCharacteristicBean(conn, totalSamples, "ScreenDetailsFlash", fingerprint.getScreenDetailsFlash());
 			bean.setName("Screen Size (Flash)");
 			bean.setNameHoverText("The resolution of the client's monitor(s)."
-					+ " Different from the other screen size test in that this number can be the cumulative resolution of the monitors in multiple monitor set ups.");
+					+ " Different from the other screen size test in that this number <i>can</i> be the cumulative resolution of the monitors in multiple monitor set ups.");
 			characteristics.add(bean);
 		}
 		{
@@ -314,7 +314,7 @@ public class FingerprintDAO {
 			CharacteristicBean bean = getCharacteristicBean(conn, totalSamples, "ClockDifference", fingerprint.getClockDifference());
 			bean.setName("Client/server time difference (minutes)");
 			bean.setNameHoverText("The approximate amount of difference between the time on the client's computer and the clock on the server."
-					+ " i.e., the clock on the client's computer is 5 minutes ahead of the clock on the server.");
+					+ " e.g., the clock on the client's computer is 5 minutes ahead of the clock on the server.");
 			characteristics.add(bean);
 		}
 		{
@@ -389,7 +389,7 @@ public class FingerprintDAO {
 		{
 			CharacteristicBean bean = getTouchCharacteristicBean(conn, sampleCounts.lower(new VersionCount(8 + 1)).getCount(), fingerprint);
 			bean.setName("Touch Support");
-			bean.setNameHoverText("Primative touch screen detection.");
+			bean.setNameHoverText("Primitive touch screen detection.");
 			characteristics.add(bean);
 		}
 		{
