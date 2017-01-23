@@ -9,6 +9,13 @@
 		<link>https://${ initParam['websiteBaseURL'] }/</link>
 		<description>Blog posts from Browserprint.</description>
 		<item>
+			<title>Finding independent clusters of fingerprint features</title>
+			<link>https://${ initParam['websiteBaseURL'] }/blog/mutualInfoClustering</link>
+			<guid>https://${ initParam['websiteBaseURL'] }/blog/mutualInfoClustering</guid>
+			<pubDate>Mon, 23 Jan 2017 10:30:00 GMT</pubDate>
+			<description>A blog post where we explore how fingerprint features have shared information.</description>
+		</item>
+		<item>
 			<title>Revisiting HSTS supercookies</title>
 			<link>https://${ initParam['websiteBaseURL'] }/blog/hstsSupercookie</link>
 			<guid>https://${ initParam['websiteBaseURL'] }/blog/hstsSupercookie</guid>

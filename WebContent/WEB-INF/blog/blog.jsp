@@ -11,6 +11,19 @@
 <body>
 <common:header/>
 <div id="content">
+	<h2><a href="mutualInfoClustering">Finding independent clusters of fingerprint features</a></h2>
+	<h4>Posted: 2017-01-24<br/>
+	By <a href="mailto:${initParam['devEmail']}?subject=Blog%20-%20Mutual%20info%20clustering">Lachlan Kang</a></h4>
+	<p>
+		Today we'll examine how features of the fingerprint taken by Browserprint are related.
+		Our goal is to see if there are any hidden relationships between features that we weren't aware of,
+		 to see if we can find clusters of features that are more or less independent of each other, and perhaps see if there are any redundancies that we could remove.
+		To this end we're going to do clustering on fingerprint features using the amount of information they share as the distance metric.
+		We'll start by presenting the results, then we'll discuss how we got them.
+	</p>
+	<p class="continueReading">
+		<a href="mutualInfoClustering">Continue reading ...</a>
+	</p>
 	<h2><a href="hstsSupercookie">Revisiting HSTS supercookies</a></h2>
 	<h4>Posted: 2016-09-08<br/>
 	By <a href="mailto:${initParam['devEmail']}?subject=Blog%20-%20HSTS%20supercookies">Lachlan Kang</a></h4>

@@ -206,6 +206,15 @@
     <servlet-name>blogHstsSupercookie</servlet-name>
     <url-pattern>/blog/hstsSupercookie</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <display-name>blogMutualInfoClustering</display-name>
+    <servlet-name>blogMutualInfoClustering</servlet-name>
+    <jsp-file>/WEB-INF/blog/mutualInfoClustering.jsp</jsp-file>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>blogMutualInfoClustering</servlet-name>
+    <url-pattern>/blog/mutualInfoClustering</url-pattern>
+  </servlet-mapping>
   <security-constraint>
     <web-resource-collection>
       <web-resource-name>HstsTest any protocol</web-resource-name>
@@ -286,7 +295,7 @@
   </context-param>
   <context-param>
     <param-name>websiteBaseURL</param-name>
-    <param-value>localhost/browserprint</param-value>
+    <param-value>localhost:8443/browserprint</param-value>
   </context-param>
   <context-param>
     <param-name>CaptchaEncryptionPassword</param-name>
