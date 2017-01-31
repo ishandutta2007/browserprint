@@ -86,3 +86,8 @@ START TRANSACTION;
 ALTER TABLE `Samples` ADD `HstsEnabled` BOOL AFTER `SuperCookieUserData`;
 ALTER TABLE `Samples` MODIFY COLUMN `BrowserprintVersion` SMALLINT UNSIGNED NOT NULL DEFAULT 21;
 COMMIT;
+
+--Increment version number because we streamlined the CSS fonts test.
+START TRANSACTION;
+ALTER TABLE `Samples` MODIFY COLUMN `BrowserprintVersion` SMALLINT UNSIGNED NOT NULL DEFAULT 22;
+COMMIT;

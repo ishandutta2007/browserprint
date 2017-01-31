@@ -52,4 +52,23 @@ public class Fonts {
 			"TypoUpright BT", "Unicorn", "Univers", "Univers CE 55 Medium", "Univers Condensed", "Utsaah", "Vagabond", "Vani", "Vijaya", "Viner Hand ITC", "VisualUI", "Vivaldi", "Vladimir Script", "Vrinda", "Westminster", "WHITNEY", "Wide Latin",
 			"ZapfEllipt BT", "ZapfHumnst BT", "ZapfHumnst Dm BT", "Zapfino", "Zurich BlkEx BT", "Zurich Ex BT", "ZWAdobeF"
 	};
+	public static final String fontsEfficient[] = new String[] {
+			"ARCHER", "SILKSCREEN", "Univers", "Galliard BT", "Maiandra GD", "Tahoma", "Technical", "Copperplate Gothic", "Savoye LET",
+			"MS Mincho", "Lucida Console", "Palatino", "Goudy Old Style", "Gill Sans Ultra Bold", "DIN", "ARNO PRO", "Synchro LET",
+			"CG Omega", "Sketch Rockwell", "Trajan", "GulimChe", "OSAKA", "Andale Mono", "Swiss911 XCm BT", "Bradley Hand ITC", "Thonburi",
+			"MS PMincho", "MS PGothic", "Elephant", "Broadway", "Helvetica Neue", "Matisse ITC", "MT Extra", "Verdana", "MS Reference Specialty",
+			"Academy Engraved LET", "AvantGarde Bk BT", "Segoe UI", "Century Gothic", "WHITNEY", "Brush Script MT", "BankGothic Md BT", "Staccato222 BT",
+			"Pristina", "Kartika", "Old English Text MT", "Edwardian Script ITC", "Levenim MT", "Trebuchet MS", "Westminster", "Tamil Sangam MN", "News Gothic",
+			"MS Gothic", "SimSun", "LUCIDA GRANDE", "Lucida Sans Typewriter", "Swis721 BlkEx BT", "Book Antiqua", "Bookshelf Symbol 7", "Bitstream Vera Sans Mono",
+			"Segoe Print", "Clarendon", "PRINCETOWN LET", "Bauhaus 93", "David", "Lucida Bright", "Serifa", "Garamond", "Vladimir Script", "BlairMdITC TT",
+			"ZWAdobeF", "Microsoft JhengHei", "Arial MT", "Sherwood", "MUSEO", "Futura Md BT", "TRAJAN PRO", "Gill Sans MT Condensed", "FRUTIGER", "Georgia",
+			"FONTIN", "Segoe UI Symbol", "Calibri", "Courier", "Cambria", "Unicorn", "MingLiU-ExtB", "Futura Bk BT", "AVENIR", "GOTHAM BOLD", "NEVIS", "Gabriola",
+			"Playbill", "French Script MT", "Meiryo", "ADOBE CASLON PRO", "Gill Sans MT", "Kaufmann BT", "Monotype Corsiva", "ADOBE GARAMOND PRO", "Courier New",
+			"Arial Narrow", "BrowalliaUPC", "MONO", "Letter Gothic", "Minion Pro", "Latha", "Wingdings", "Humanst521 BT", "OCR A Extended", "Candara", "INCONSOLATA",
+			"VisualUI", "GOTHAM", "Microsoft Uighur", "Albertus Medium", "Leelawadee", "Wingdings 3", "Wingdings 2", "Kristen ITC", "NewsGoth BT",
+			"Matura MT Script Capitals", "Baskerville", "CG Times", "Lucida Sans", "MS LineDraw", "Palace Script MT", "Amazone BT", "MingLiU", "Chalkboard SE",
+			"Haettenschweiler", "Monaco", "Imprint MT Shadow", "Consolas", "Impact", "Script", "Arial", "Mangal", "Agency FB", "Futura", "Cornerstone", "KaiTi",
+			"Stencil", "EUROSTILE", "Arabic Typesetting", "MYRIAD PRO", "MS Outlook", "Arial Unicode MS", "Snap ITC", "SCRIPTINA", "BernhardMod BT",
+			"Plantagenet Cherokee", "Times"
+	};
 }

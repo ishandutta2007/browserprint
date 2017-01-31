@@ -258,9 +258,9 @@ public class FingerprintDAO {
 			if (bean.getValue().equals("")) {
 				bean.setValue("No fonts detected");
 			}
-			bean.setName("Fonts (CSS only)");
+			bean.setName("Fonts (CSS only) [streamlined]");
 			bean.setNameHoverText("The fonts installed on the client's machine, detected using CSS without JavaScript." 
-					+ " Fonts list may be incomplete."
+					+ " Fonts list may be incomplete, and this test checks for less fonts than other tests for efficiency."
 					+ " CSS font fingerprinting can be blocked by disabling CSS or by disabling JavaScript using the NoScript extension (despite the test not using JavaScript).");
 			characteristics.add(bean);
 		}
