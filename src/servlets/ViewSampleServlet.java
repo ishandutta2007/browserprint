@@ -1,8 +1,6 @@
 package servlets;
 
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -10,11 +8,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import DAOs.FingerprintDAO;
+import beans.BrowserPredictionBean;
 import beans.CharacteristicsBean;
 import beans.HistoryListBean;
 import beans.UniquenessBean;
 import datastructures.Fingerprint;
 import util.SampleIDs;
+import util.browserPrediction.BrowserPredictor;
 
 /**
  * Servlet implementation class HistoryServlet
@@ -75,25 +75,23 @@ public class ViewSampleServlet extends HttpServlet {
 		
 		if (action == null || action.equals("View")) {
 			if (sampleUUID1 != null && !sampleUUID1.equals("")) {
+				// Get the data associated with the SampleID.
+				CharacteristicsBean chrsbean = new CharacteristicsBean();
+				UniquenessBean uniquenessbean = new UniquenessBean();
+				BrowserPredictionBean predictionBean;
+				Fingerprint fingerprint;
 				try {
-					// Get the data associated with the SampleID.
-					CharacteristicsBean chrsbean = new CharacteristicsBean();
-					UniquenessBean uniquenessbean = new UniquenessBean();
-					Fingerprint fingerprint;
-					try {
-						fingerprint = FingerprintDAO.getFingerprintBeans(sampleUUID1, chrsbean, uniquenessbean);
-					} catch (NoSuchAlgorithmException e) {
-						throw new ServletException(e);
-					}
-					if (fingerprint != null) {
-						request.setAttribute("chrsBean1", chrsbean);
-						request.setAttribute("uniquenessBean1", uniquenessbean);
-					} else {
-						throw new ServletException("No sample associated with given sampleUUID1: " + sampleUUID1);
-					}
-				} catch (SQLException ex) {
-					// Database error.
-					throw new ServletException(ex);
+					fingerprint = FingerprintDAO.getFingerprintBeans(sampleUUID1, chrsbean, uniquenessbean);
+					predictionBean = BrowserPredictor.getPredictionBean(fingerprint);
+				} catch (Exception e) {
+					throw new ServletException(e);
+				}
+				if (fingerprint != null) {
+					request.setAttribute("chrsBean1", chrsbean);
+					request.setAttribute("uniquenessBean1", uniquenessbean);
+					request.setAttribute("predictionBean1", predictionBean);
+				} else {
+					throw new ServletException("No sample associated with given sampleUUID1: " + sampleUUID1);
 				}
 
 				// Forward to the history display page.
@@ -138,47 +136,48 @@ public class ViewSampleServlet extends HttpServlet {
 			
 			// Were the SampleUUIDs specified?
 			if (sampleUUID1 != null && !sampleUUID1.equals("")) {
+				// Get the data associated with the SampleUUID1.
+				CharacteristicsBean chrsbean1 = new CharacteristicsBean();
+				UniquenessBean uniquenessbean1 = new UniquenessBean();
+				BrowserPredictionBean predictionBean1;
+				Fingerprint fingerprint1;
 				try {
-					// Get the data associated with the SampleUUID1.
-					CharacteristicsBean chrsbean1 = new CharacteristicsBean();
-					UniquenessBean uniquenessbean1 = new UniquenessBean();
-					Fingerprint fingerprint1;
+					fingerprint1 = FingerprintDAO.getFingerprintBeans(sampleUUID1, chrsbean1, uniquenessbean1);
+					predictionBean1 = BrowserPredictor.getPredictionBean(fingerprint1);
+				} catch (Exception e) {
+					throw new ServletException(e);
+				}
+				if (fingerprint1 != null) {
+					request.setAttribute("chrsBean1", chrsbean1);
+					request.setAttribute("uniquenessBean1", uniquenessbean1);
+					request.setAttribute("predictionBean1", predictionBean1);
+				} else {
+					throw new ServletException("No sample associated with given sampleUUID1: " + sampleUUID1);
+				}
+				
+				if(sampleUUID2 != null && !sampleUUID2.equals("")){
+					// Get the data associated with the SampleUUID2.
+					CharacteristicsBean chrsbean2 = new CharacteristicsBean();
+					UniquenessBean uniquenessbean2 = new UniquenessBean();
+					BrowserPredictionBean predictionBean2;
+					Fingerprint fingerprint2;
 					try {
-						fingerprint1 = FingerprintDAO.getFingerprintBeans(sampleUUID1, chrsbean1, uniquenessbean1);
-					} catch (NoSuchAlgorithmException e) {
+						fingerprint2 = FingerprintDAO.getFingerprintBeans(sampleUUID2, chrsbean2, uniquenessbean2);
+						predictionBean2 = BrowserPredictor.getPredictionBean(fingerprint2);
+					} catch (Exception e) {
 						throw new ServletException(e);
 					}
-					if (fingerprint1 != null) {
-						request.setAttribute("chrsBean1", chrsbean1);
-						request.setAttribute("uniquenessBean1", uniquenessbean1);
+					if (fingerprint2 != null) {
+						request.setAttribute("chrsBean2", chrsbean2);
+						request.setAttribute("uniquenessBean2", uniquenessbean2);
+						request.setAttribute("predictionBean2", predictionBean2);
 					} else {
-						throw new ServletException("No sample associated with given sampleUUID1: " + sampleUUID1);
+						throw new ServletException("No sample associated with given sampleUUID2: " + sampleUUID2);
 					}
-					
-					if(sampleUUID2 != null && !sampleUUID2.equals("")){
-						// Get the data associated with the SampleUUID2.
-						CharacteristicsBean chrsbean2 = new CharacteristicsBean();
-						UniquenessBean uniquenessbean2 = new UniquenessBean();
-						Fingerprint fingerprint2;
-						try {
-							fingerprint2 = FingerprintDAO.getFingerprintBeans(sampleUUID2, chrsbean2, uniquenessbean2);
-						} catch (NoSuchAlgorithmException e) {
-							throw new ServletException(e);
-						}
-						if (fingerprint2 != null) {
-							request.setAttribute("chrsBean2", chrsbean2);
-							request.setAttribute("uniquenessBean2", uniquenessbean2);
-						} else {
-							throw new ServletException("No sample associated with given sampleUUID2: " + sampleUUID2);
-						}
-						request.setAttribute("compare", true);
-					}
-					request.getRequestDispatcher("/WEB-INF/viewSampleDisplay.jsp").forward(request, response);
-					return;
-				} catch (SQLException ex) {
-					// Database error.
-					throw new ServletException(ex);
+					request.setAttribute("compare", true);
 				}
+				request.getRequestDispatcher("/WEB-INF/viewSampleDisplay.jsp").forward(request, response);
+				return;
 			} else {
 				request.setAttribute("errorMessage", "Both sampleUUID1 and sampleUUID2 must be specified during a compare.");
 				throw new ServletException("sampleUUID1 or sampleUUID2 not specified in a compare.");

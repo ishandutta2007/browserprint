@@ -5,6 +5,7 @@
 --%><%@taglib prefix="common" tagdir="/WEB-INF/tags"%><%--
 --%><jsp:useBean id="chrsBean" class="beans.CharacteristicsBean" scope="request" /><%--
 --%><jsp:useBean id="uniquenessBean" class="beans.UniquenessBean" scope="request" /><%--
+--%><jsp:useBean id="predictionBean" class="beans.BrowserPredictionBean" scope="request" /><%--
 --%><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
@@ -19,7 +20,7 @@
 	<p>
 		<a href=".">Back</a>
 	</p>
-	<common:uniquenessText uniquenessBean="${ uniquenessBean }"/>
+	<common:uniquenessText uniquenessBean="${ uniquenessBean }" predictionBean="${ predictionBean }"/>
 	<p>
 		Your fingerprint&#39;s UUID is <c:out value="${ requestScope.sampleUUID }"></c:out>;<br>
 		you can share this to show others your fingerprint and let them compare it against their own.<br>

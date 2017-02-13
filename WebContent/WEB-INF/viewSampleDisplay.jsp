@@ -5,6 +5,7 @@
 --%><jsp:useBean id="historyListBean" class="beans.HistoryListBean" scope="request" /><%--
 --%><jsp:useBean id="chrsBean1" class="beans.CharacteristicsBean" scope="request" /><%--
 --%><jsp:useBean id="uniquenessBean1" class="beans.UniquenessBean" scope="request" /><%--
+--%><jsp:useBean id="predictionBean1" class="beans.BrowserPredictionBean" scope="request" /><%--
 --%><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
@@ -155,10 +156,10 @@
 	</div>
 <c:choose>
 	<c:when test="${ requestScope.compare }">
-		<common:compareFingerprints uniquenessBean1="${ uniquenessBean1 }" chrsBean1="${ chrsBean1 }" uniquenessBean2="${ uniquenessBean2 }" chrsBean2="${ chrsBean2 }"/>
+		<common:compareFingerprints uniquenessBean1="${ uniquenessBean1 }" chrsBean1="${ chrsBean1 }" predictionBean1="${ predictionBean1 }" uniquenessBean2="${ uniquenessBean2 }" chrsBean2="${ chrsBean2 }" predictionBean2="${ predictionBean2 }"/>
 	</c:when>
 	<c:otherwise>
-		<common:uniquenessText uniquenessBean="${ uniquenessBean1 }"/>
+		<common:uniquenessText uniquenessBean="${ uniquenessBean1 }" predictionBean="${ predictionBean1 }"/>
 		<common:displayFingerprint chrsBean="${ chrsBean1 }"/>
 	</c:otherwise>
 </c:choose>

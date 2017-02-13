@@ -263,7 +263,7 @@ public class Fingerprint {
 	public void setSampleSetID(String sampleSetID) {
 		this.sampleSetID = sampleSetID;
 	}
-	
+
 	public String getAllHeaders() {
 		return allHeaders;
 	}

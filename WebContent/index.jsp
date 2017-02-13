@@ -37,6 +37,13 @@
 		This project would not be possible without these institutions' help.
 	</p>
 	<p>
+		<b>News 2017-02-13</b> Browserprint now tries to guess what family of browser you're using (e.g. Firefox, Chrome, ...) by running part of your fingerprint (not including user-agent, that's cheating) through a machine learning algorithm.
+		Theoretically this can be used to detect and defeat fingerprint spoofing.
+	</p>
+	<p>
+		<b>News 2017-01-24</b> New <a href="blog/mutualInfoClustering">blog post</a> discussing the how fingerprint properties are intertwined.
+	</p>
+	<p>
 		<b>News 2016-09-08</b> New <a href="blog/hstsSupercookie">blog post</a> discussing HSTS supercookies.
 	</p>
 	<p>

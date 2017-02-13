@@ -19,13 +19,14 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import DAOs.FingerprintDAO;
-import DAOs.QuestionnaireDAO;
+import beans.BrowserPredictionBean;
 import beans.CharacteristicsBean;
 import beans.UniquenessBean;
 import datastructures.ContrastCaptcha;
 import datastructures.Fingerprint;
 import util.SampleIDs;
 import util.TorCheck;
+import util.browserPrediction.BrowserPredictor;
 
 /**
  * Servlet implementation class TestServlet
@@ -56,7 +57,11 @@ public class TestServlet extends HttpServlet {
 				request.getRequestDispatcher("/captcha").forward(request, response);
 				return;
 			}
-			show_js_fingerprint(request, response, captchaResult);
+			try {
+				show_js_fingerprint(request, response, captchaResult);
+			} catch (Exception e) {
+				throw new ServletException(e);
+			}
 			return;
 		}
 
@@ -112,7 +117,11 @@ public class TestServlet extends HttpServlet {
 			 */
 			Fingerprint fingerprint = getBasicFingerprint(request);
 			fingerprint.setContrastLevel(captchaResult);
-			serveRequest(request, response, fingerprint);
+			try {
+				serveRequest(request, response, fingerprint);
+			} catch (Exception e) {
+				throw new ServletException(e);
+			}
 			return;
 		} else {
 			/*
@@ -167,9 +176,10 @@ public class TestServlet extends HttpServlet {
 	}
 
 	/**
+	 * @throws Exception 
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	private void show_js_fingerprint(HttpServletRequest request, HttpServletResponse response, Integer captchaResult) throws ServletException, IOException {
+	private void show_js_fingerprint(HttpServletRequest request, HttpServletResponse response, Integer captchaResult) throws Exception {
 		Fingerprint fingerprint = getBasicFingerprint(request);
 		fingerprint.setContrastLevel(captchaResult);
 
@@ -339,12 +349,12 @@ public class TestServlet extends HttpServlet {
 	 * @param request
 	 * @param response
 	 * @param fingerprint
-	 * @throws ServletException
-	 * @throws IOException
+	 * @throws Exception 
 	 */
-	private void serveRequest(HttpServletRequest request, HttpServletResponse response, Fingerprint fingerprint) throws ServletException, IOException {
+	private void serveRequest(HttpServletRequest request, HttpServletResponse response, Fingerprint fingerprint) throws Exception {
 		CharacteristicsBean chrsBean = new CharacteristicsBean();
 		UniquenessBean uniquenessBean = new UniquenessBean();
+		BrowserPredictionBean predictionBean = BrowserPredictor.getPredictionBean(fingerprint);
 		ImmutablePair<Integer, String> sampleIds = FingerprintDAO.processFingerprint(fingerprint, request.getSession(false), chrsBean, uniquenessBean);
 		if(sampleIds == null){
 			response.sendError(500);
@@ -353,7 +363,8 @@ public class TestServlet extends HttpServlet {
 		String sampleUUID = sampleIds.right;
 		request.setAttribute("sampleUUID", sampleUUID);
 		request.setAttribute("chrsBean", chrsBean);
-		request.setAttribute("uniquenessBean", uniquenessBean);	
+		request.setAttribute("uniquenessBean", uniquenessBean);
+		request.setAttribute("predictionBean", predictionBean);
 
 		/*
 		 * Save SampleSetID in a cookie if we have one now.
@@ -403,6 +414,7 @@ public class TestServlet extends HttpServlet {
 				//Get fontsCSS
 				String fontsStr = null;
 				{
+					@SuppressWarnings("unchecked")
 					TreeSet<String> fonts = (TreeSet<String>)session.getAttribute("fontsNotRequested");
 					if(fonts != null){
 						fontsStr = "";

@@ -5,15 +5,17 @@
 --%><%@taglib prefix="common" tagdir="/WEB-INF/tags"%><%--
 --%><%@attribute name="chrsBean1" required="true" type="beans.CharacteristicsBean" rtexprvalue="true"%><%--
 --%><%@attribute name="uniquenessBean1" required="true" type="beans.UniquenessBean" rtexprvalue="true"%><%--
+--%><%@attribute name="predictionBean1" required="true" type="beans.BrowserPredictionBean" rtexprvalue="true"%><%--
 --%><%@attribute name="chrsBean2" required="true" type="beans.CharacteristicsBean" rtexprvalue="true"%><%--
 --%><%@attribute name="uniquenessBean2" required="true" type="beans.UniquenessBean" rtexprvalue="true"%><%--
+--%><%@attribute name="predictionBean2" required="true" type="beans.BrowserPredictionBean" rtexprvalue="true"%><%--
 --%><div id="comparisonDiv">
 	<div class="comparisonUniqueness" style="margin-left: 8%;">
-		<common:uniquenessText uniquenessBean="${ uniquenessBean1 }"/>
+		<common:uniquenessText uniquenessBean="${ uniquenessBean1 }" predictionBean="${ predictionBean2 }"/>
 	</div>
 	<div style="display: inline-block; border-left: thin solid black; height: 80px;"></div>
 	<div class="comparisonUniqueness">
-		<common:uniquenessText uniquenessBean="${ uniquenessBean2 }"/>
+		<common:uniquenessText uniquenessBean="${ uniquenessBean2 }" predictionBean="${ predictionBean1 }"/>
 	</div>
 	<table id="comparisonTable">
 		<tr>
