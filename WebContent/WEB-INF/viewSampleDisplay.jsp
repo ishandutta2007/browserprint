@@ -5,7 +5,7 @@
 --%><jsp:useBean id="historyListBean" class="beans.HistoryListBean" scope="request" /><%--
 --%><jsp:useBean id="chrsBean1" class="beans.CharacteristicsBean" scope="request" /><%--
 --%><jsp:useBean id="uniquenessBean1" class="beans.UniquenessBean" scope="request" /><%--
---%><jsp:useBean id="predictionBean1" class="beans.BrowserPredictionBean" scope="request" /><%--
+--%><jsp:useBean id="predictionBean1" class="beans.PredictionBean" scope="request" /><%--
 --%><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>

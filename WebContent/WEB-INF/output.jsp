@@ -5,7 +5,7 @@
 --%><%@taglib prefix="common" tagdir="/WEB-INF/tags"%><%--
 --%><jsp:useBean id="chrsBean" class="beans.CharacteristicsBean" scope="request" /><%--
 --%><jsp:useBean id="uniquenessBean" class="beans.UniquenessBean" scope="request" /><%--
---%><jsp:useBean id="predictionBean" class="beans.BrowserPredictionBean" scope="request" /><%--
+--%><jsp:useBean id="predictionBean" class="beans.PredictionBean" scope="request" /><%--
 --%><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>

@@ -8,13 +8,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import DAOs.FingerprintDAO;
-import beans.BrowserPredictionBean;
+import beans.PredictionBean;
 import beans.CharacteristicsBean;
 import beans.HistoryListBean;
 import beans.UniquenessBean;
 import datastructures.Fingerprint;
 import util.SampleIDs;
-import util.browserPrediction.BrowserPredictor;
+import util.browserPrediction.Predictor;
 
 /**
  * Servlet implementation class HistoryServlet
@@ -78,11 +78,11 @@ public class ViewSampleServlet extends HttpServlet {
 				// Get the data associated with the SampleID.
 				CharacteristicsBean chrsbean = new CharacteristicsBean();
 				UniquenessBean uniquenessbean = new UniquenessBean();
-				BrowserPredictionBean predictionBean;
+				PredictionBean predictionBean;
 				Fingerprint fingerprint;
 				try {
 					fingerprint = FingerprintDAO.getFingerprintBeans(sampleUUID1, chrsbean, uniquenessbean);
-					predictionBean = BrowserPredictor.getPredictionBean(fingerprint);
+					predictionBean = Predictor.getPredictionBean(fingerprint);
 				} catch (Exception e) {
 					throw new ServletException(e);
 				}
@@ -139,11 +139,11 @@ public class ViewSampleServlet extends HttpServlet {
 				// Get the data associated with the SampleUUID1.
 				CharacteristicsBean chrsbean1 = new CharacteristicsBean();
 				UniquenessBean uniquenessbean1 = new UniquenessBean();
-				BrowserPredictionBean predictionBean1;
+				PredictionBean predictionBean1;
 				Fingerprint fingerprint1;
 				try {
 					fingerprint1 = FingerprintDAO.getFingerprintBeans(sampleUUID1, chrsbean1, uniquenessbean1);
-					predictionBean1 = BrowserPredictor.getPredictionBean(fingerprint1);
+					predictionBean1 = Predictor.getPredictionBean(fingerprint1);
 				} catch (Exception e) {
 					throw new ServletException(e);
 				}
@@ -159,11 +159,11 @@ public class ViewSampleServlet extends HttpServlet {
 					// Get the data associated with the SampleUUID2.
 					CharacteristicsBean chrsbean2 = new CharacteristicsBean();
 					UniquenessBean uniquenessbean2 = new UniquenessBean();
-					BrowserPredictionBean predictionBean2;
+					PredictionBean predictionBean2;
 					Fingerprint fingerprint2;
 					try {
 						fingerprint2 = FingerprintDAO.getFingerprintBeans(sampleUUID2, chrsbean2, uniquenessbean2);
-						predictionBean2 = BrowserPredictor.getPredictionBean(fingerprint2);
+						predictionBean2 = Predictor.getPredictionBean(fingerprint2);
 					} catch (Exception e) {
 						throw new ServletException(e);
 					}

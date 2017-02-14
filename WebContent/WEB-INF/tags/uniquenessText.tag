@@ -3,7 +3,7 @@
 --%><%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%><%--
 --%><%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%><%--
 --%><%@attribute name="uniquenessBean" required="true" type="beans.UniquenessBean" rtexprvalue="true"%><%---
---%><%@attribute name="predictionBean" required="true" type="beans.BrowserPredictionBean" rtexprvalue="true"%><%--
+--%><%@attribute name="predictionBean" required="true" type="beans.PredictionBean" rtexprvalue="true"%><%--
 --%><p><c:choose><c:when test='${ uniquenessBean.isUnique }'>
 	Your browser fingerprint <strong>appears to be unique</strong> among the <fmt:formatNumber value="${ uniquenessBean.inX }" maxFractionDigits="0"/> tested so far.
 </c:when><c:otherwise>
@@ -18,7 +18,9 @@
 <p>
 	Your user-agent string specifies your browser as being a variant of <b>${ predictionBean.useragentSpecifiedBrowser }</b>.<br>
 	Judging by your fingerprint we believe your browser is a variant of <b>${ predictionBean.browserPrediction }</b>.<br>
-	Note: This is experimental so correct results are not guaranteed.
+	Your user-agent string specifies your operating system as being a variant of <b>${ predictionBean.useragentSpecifiedOs }</b>.<br>
+	Judging by your fingerprint we believe your operating system is a variant of <b>${ predictionBean.osPrediction }</b>.<br>
+	Note: This is experimental so correct results are not guaranteed, especially when JavaScript is disabled.
 </p>
 <p>
 	The measurements we used to obtain this result are listed below.

@@ -19,14 +19,14 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import DAOs.FingerprintDAO;
-import beans.BrowserPredictionBean;
+import beans.PredictionBean;
 import beans.CharacteristicsBean;
 import beans.UniquenessBean;
 import datastructures.ContrastCaptcha;
 import datastructures.Fingerprint;
 import util.SampleIDs;
 import util.TorCheck;
-import util.browserPrediction.BrowserPredictor;
+import util.browserPrediction.Predictor;
 
 /**
  * Servlet implementation class TestServlet
@@ -354,7 +354,7 @@ public class TestServlet extends HttpServlet {
 	private void serveRequest(HttpServletRequest request, HttpServletResponse response, Fingerprint fingerprint) throws Exception {
 		CharacteristicsBean chrsBean = new CharacteristicsBean();
 		UniquenessBean uniquenessBean = new UniquenessBean();
-		BrowserPredictionBean predictionBean = BrowserPredictor.getPredictionBean(fingerprint);
+		PredictionBean predictionBean = Predictor.getPredictionBean(fingerprint);
 		ImmutablePair<Integer, String> sampleIds = FingerprintDAO.processFingerprint(fingerprint, request.getSession(false), chrsBean, uniquenessBean);
 		if(sampleIds == null){
 			response.sendError(500);

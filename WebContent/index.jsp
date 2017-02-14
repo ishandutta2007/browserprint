@@ -37,6 +37,10 @@
 		This project would not be possible without these institutions' help.
 	</p>
 	<p>
+		<b>News 2017-02-15</b> Browserprint now tries to guess what operating system you're using in the same way that it guesses your browser.
+		This can also theoretically be used to detect and defeat fingerprint spoofing.
+	</p>
+	<p>
 		<b>News 2017-02-13</b> Browserprint now tries to guess what family of browser you're using (e.g. Firefox, Chrome, ...) by running part of your fingerprint (not including user-agent, that's cheating) through a machine learning algorithm.
 		Theoretically this can be used to detect and defeat fingerprint spoofing.
 	</p>
