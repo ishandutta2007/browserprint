@@ -93,6 +93,7 @@ ALTER TABLE `Samples` MODIFY COLUMN `BrowserprintVersion` SMALLINT UNSIGNED NOT 
 COMMIT;
 
 --Add indexes to (hopefully) speed up Browserprint
+ALTER TABLE `Samples` ADD INDEX `FingerprintHash`(`FingerprintHash`(28)) USING HASH;
 ALTER TABLE `Samples` ADD INDEX `UserAgent`(`UserAgent`(200)) USING HASH;
 ALTER TABLE `Samples` ADD INDEX `AcceptHeaders` (`AcceptHeaders`(200)) USING HASH;
 ALTER TABLE `Samples` ADD INDEX `Platform` (`Platform`(40)) USING HASH;

@@ -108,6 +108,7 @@ CREATE TABLE `SampleQuestionnaire` (
 )
 ENGINE=InnoDB;
 
+ALTER TABLE `Samples` ADD INDEX `FingerprintHash`(`FingerprintHash`(28)) USING HASH;
 ALTER TABLE `Samples` ADD INDEX `UserAgent`(`UserAgent`(200)) USING HASH;
 ALTER TABLE `Samples` ADD INDEX `AcceptHeaders` (`AcceptHeaders`(200)) USING HASH;
 ALTER TABLE `Samples` ADD INDEX `Platform` (`Platform`(40)) USING HASH;
