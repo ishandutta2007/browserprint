@@ -111,19 +111,14 @@ ALTER TABLE `Samples` ADD INDEX `ClockDifference` (`ClockDifference`) USING HASH
 ALTER TABLE `Samples` ADD INDEX `DateTime` (`DateTime`(50)) USING HASH;
 ALTER TABLE `Samples` ADD INDEX `MathTan` (`MathTan`(20)) USING HASH;
 ALTER TABLE `Samples` ADD INDEX `TbbVersion` (`TbbVersion`(5)) USING HASH;
-ALTER TABLE `Samples` ADD INDEX `AdsBlockedGoogle` (`AdsBlockedGoogle`) USING HASH;
-ALTER TABLE `Samples` ADD INDEX `AdsBlockedBanner` (`AdsBlockedBanner`) USING HASH;
-ALTER TABLE `Samples` ADD INDEX `AdsBlockedScript` (`AdsBlockedScript`) USING HASH;
-ALTER TABLE `Samples` ADD INDEX `LikeShareFacebook` (`LikeShareFacebook`) USING HASH;
-ALTER TABLE `Samples` ADD INDEX `LikeShareTwitter` (`LikeShareTwitter`) USING HASH;
-ALTER TABLE `Samples` ADD INDEX `LikeShareReddit` (`LikeShareReddit`) USING HASH;
+ALTER TABLE `Samples` ADD INDEX `AdsBlocked` (`AdsBlockedGoogle`,`AdsBlockedBanner`,`AdsBlockedScript`) USING HASH;
+ALTER TABLE `Samples` ADD INDEX `LikeShareDetails` (`LikeShareFacebook`,`LikeShareTwitter`,`LikeShareReddit`) USING HASH;
 ALTER TABLE `Samples` ADD INDEX `Canvas` (`Canvas`(15000)) USING HASH;
 ALTER TABLE `Samples` ADD INDEX `WebGLVendor` (`WebGLVendor`(15)) USING HASH;
 ALTER TABLE `Samples` ADD INDEX `WebGLRenderer` (`WebGLRenderer`(30)) USING HASH;
-ALTER TABLE `Samples` ADD INDEX `TouchPoints` (`TouchPoints`) USING HASH;
+ALTER TABLE `Samples` ADD INDEX `TouchDetails` (`TouchPoints`,`TouchEvent`,`TouchStart`) USING HASH;
 ALTER TABLE `Samples` ADD INDEX `AudioFingerprintPXI` (`AudioFingerprintPXI`(20)) USING HASH;
 ALTER TABLE `Samples` ADD INDEX `AudioFingerprintPXIFullBuffer` (`AudioFingerprintPXIFullBuffer`(40)) USING HASH;
 ALTER TABLE `Samples` ADD INDEX `AudioFingerprintNtVc` (`AudioFingerprintNtVc`(600)) USING HASH;
 ALTER TABLE `Samples` ADD INDEX `AudioFingerprintCC` (`AudioFingerprintCC`(600)) USING HASH;
 ALTER TABLE `Samples` ADD INDEX `AudioFingerprintHybrid` (`AudioFingerprintHybrid`(600)) USING HASH;
-
