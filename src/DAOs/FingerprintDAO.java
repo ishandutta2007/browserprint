@@ -20,8 +20,6 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
-import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
-
 import beans.CharacteristicBean;
 import beans.CharacteristicsBean;
 import beans.HistoryBean;
@@ -582,7 +580,7 @@ public class FingerprintDAO {
 			try {
 				insertSample.execute();
 				foundUniqueUUID = true;
-			} catch (MySQLIntegrityConstraintViolationException ex) {
+			} catch (Exception ex) {
 				System.err.println("Duplicate SampleUUID: " + sampleUUID);
 			}
 		}
