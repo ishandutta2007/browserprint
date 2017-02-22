@@ -1,6 +1,7 @@
 package DAOs;
 
 import java.security.NoSuchAlgorithmException;
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,6 +10,7 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.TimeZone;
 import java.util.TreeSet;
 import java.util.UUID;
@@ -30,7 +32,7 @@ import datastructures.Fingerprint;
 public class FingerprintDAO {
 	private static final String insertSampleStr = "INSERT INTO `Samples`(`SampleUUID`, `FingerprintHash`, `IP`, `TimeStamp`, `AllHeaders`, `ContrastLevel`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `ScreenDetailsCSS`, `LanguageFlash`, `Fonts`, `FontsJS_CSS`, `FontsCSS`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `HstsEnabled`, `IndexedDBEnabled`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlockedGoogle`, `AdsBlockedBanner`, `AdsBlockedScript`, `LikeShareFacebook`, `LikeShareTwitter`, `LikeShareReddit`, `Canvas`, `WebGLVendor`, `WebGLRenderer`, `TouchPoints`, `TouchEvent`, `TouchStart`, `AudioFingerprintPXI`, `AudioFingerprintPXIFullBuffer`, `AudioFingerprintNtVc`, `AudioFingerprintCC`, `AudioFingerprintHybrid`) VALUES(?, ?, ?, NOW(), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 	private static final String getSampleCountStr = "SELECT COUNT(*) FROM `Samples`;";
-	private static final String getSampleCountVersionAwareStr = "SELECT `BrowserprintVersion` AS `Version`, (SELECT COUNT(*) FROM `Samples` WHERE `BrowserprintVersion` >= `Version`) FROM `Samples` GROUP BY `BrowserprintVersion` UNION SELECT 1, COUNT(*) FROM `Samples`;";
+	private static final String getSampleCountVersionAwareStr = "SELECT `BrowserprintVersion`, `Count` FROM `CountBrowserprintVersion`;";
 	private static final String selectSampleStr = "SELECT `AllHeaders`, `ContrastLevel`, `UserAgent`, `AcceptHeaders`, `Platform`, `PlatformFlash`, `PluginDetails`, `TimeZone`, `ScreenDetails`, `ScreenDetailsFlash`, `ScreenDetailsCSS`, `LanguageFlash`, `Fonts`, `FontsJS_CSS`, `FontsCSS`, `CharSizes`, `CookiesEnabled`, `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `HstsEnabled`, `IndexedDBEnabled`, `DoNotTrack`, `ClockDifference`, `DateTime`, `MathTan`, `UsingTor`, `TbbVersion`, `AdsBlockedGoogle`, `AdsBlockedBanner`, `AdsBlockedScript`, `LikeShareFacebook`, `LikeShareTwitter`, `LikeShareReddit`, `Canvas`, `WebGLVendor`, `WebGLRenderer`, `TouchPoints`, `TouchEvent`, `TouchStart`, `AudioFingerprintPXI`, `AudioFingerprintPXIFullBuffer`, `AudioFingerprintNtVc`, `AudioFingerprintCC`, `AudioFingerprintHybrid` FROM `Samples` WHERE `SampleUUID` = ?;";
 	private static final String selectSampleSetIDHistory = "SELECT `SampleUUID`, `Timestamp` FROM `SampleSets` INNER JOIN `Samples` USING (`SampleID`) WHERE `SampleSetID` = ? ORDER BY `Timestamp` DESC;";
 
@@ -580,8 +582,14 @@ public class FingerprintDAO {
 			try {
 				insertSample.execute();
 				foundUniqueUUID = true;
-			} catch (Exception ex) {
-				System.err.println("Duplicate SampleUUID: " + sampleUUID);
+			} catch (SQLException ex) {
+				final int MYSQL_DUPLICATE_PK = 1062;
+				if(ex.getErrorCode() == MYSQL_DUPLICATE_PK){
+					System.err.println("Duplicate SampleUUID: " + sampleUUID);
+				}
+				else{
+					throw ex;
+				}
 			}
 		}
 
@@ -913,6 +921,7 @@ public class FingerprintDAO {
 		}
 		rs.close();
 		checkExists.close();
+
 		return new ImmutablePair<Integer, String>(sampleID, sampleUUID);
 	}
 
@@ -943,7 +952,16 @@ public class FingerprintDAO {
 		while(rs.next()){
 			counts.add(new VersionCount(rs.getInt(1), rs.getInt(2)));
 		}
+		Iterator<VersionCount> it = counts.descendingIterator();
+		int total = 0;
+		while(it.hasNext()){
+			VersionCount vc = it.next();
+			total += vc.getCount();
+			vc.setCount(total);
+		}
+		counts.add(new VersionCount(0, total));
 		rs.close();
+
 		return counts;
 	}
 
@@ -961,7 +979,7 @@ public class FingerprintDAO {
 		/*
 		 * We have seen this user before. Check if their fingerprint has changed.
 		 */
-		String query = "SELECT COUNT(*) FROM `Samples` WHERE `FingerprintHash` = ?;";
+		String query = "SELECT `Count` FROM `CountFingerprintHash` WHERE `FingerprintHash` = ?";
 		PreparedStatement checkExists = conn.prepareStatement(query);
 		
 		checkExists.setString(1, fingerprint.getFingerprintHash());
@@ -972,6 +990,7 @@ public class FingerprintDAO {
 		int count = rs.getInt(1);
 		rs.close();
 		checkExists.close();
+		
 		return count;
 	}
 
@@ -991,7 +1010,7 @@ public class FingerprintDAO {
 		CharacteristicBean chrbean = new CharacteristicBean();
 
 		PreparedStatement getCount;
-		String querystr = "SELECT COUNT(*) FROM `Samples` WHERE `" + dbname + "`";
+		String querystr = "SELECT `Count` FROM `Count" + dbname + "` WHERE `" + dbname + "`";
 		if (value != null) {
 			if (value) {
 				chrbean.setValue("Yes");
@@ -1034,21 +1053,16 @@ public class FingerprintDAO {
 	 */
 	private static CharacteristicBean getCharacteristicBean(Connection conn, int num_samples, String dbname, String value) throws SQLException {
 		CharacteristicBean chrbean = new CharacteristicBean();
-
+	
 		PreparedStatement getCount;
-		String querystr = "SELECT COUNT(*) FROM `Samples` WHERE `" + dbname + "`";
+		String querystr = "SELECT `Count` FROM `Count" + dbname + "` WHERE `" + dbname + "Hash` = SHA2(?, 256);";
+		getCount = conn.prepareStatement(querystr);
 		if (value != null) {
 			chrbean.setValue(StringEscapeUtils.escapeHtml4(value));
-			querystr += " = ?;";
-
-			getCount = conn.prepareStatement(querystr);
-			getCount.setString(1, value);
 		} else {
 			chrbean.setValue(NO_JAVASCRIPT);
-
-			querystr += " IS NULL;";
-			getCount = conn.prepareStatement(querystr);
 		}
+		getCount.setString(1, value);
 
 		ResultSet rs = getCount.executeQuery();
 		rs.next();
@@ -1077,7 +1091,7 @@ public class FingerprintDAO {
 		CharacteristicBean chrbean = new CharacteristicBean();
 
 		PreparedStatement getCount;
-		String querystr = "SELECT COUNT(*) FROM `Samples` WHERE `" + dbname + "`";
+		String querystr = "SELECT `Count` FROM `Count" + dbname + "` WHERE `" + dbname + "`";
 		if (value != null) {
 			chrbean.setValue(value.toString());
 			querystr += " = ?;";
@@ -1118,7 +1132,7 @@ public class FingerprintDAO {
 		CharacteristicBean chrbean = new CharacteristicBean();
 
 		PreparedStatement getCount;
-		String querystr = "SELECT COUNT(*) FROM `Samples` WHERE `" + dbname + "`";
+		String querystr = "SELECT `Count` FROM `Count" + dbname + "` WHERE `" + dbname + "`";
 		if (value != null) {
 			chrbean.setValue(value.toString());
 			querystr += " = ?;";
@@ -1159,7 +1173,7 @@ public class FingerprintDAO {
 		CharacteristicBean chrbean = new CharacteristicBean();
 
 		PreparedStatement getCount;
-		String querystr = "SELECT COUNT(*) FROM `Samples` WHERE"
+		String querystr = "SELECT `Count` FROM `CountSuperCookie` WHERE"
 		+ " `SuperCookieLocalStorage`" + (fingerprint.getSuperCookieLocalStorage() == null ? " IS NULL": " = ?")
 		+ " AND `SuperCookieSessionStorage`" + (fingerprint.getSuperCookieSessionStorage() == null ? " IS NULL": " = ?")
 		+ " AND `SuperCookieUserData`" + (fingerprint.getSuperCookieUserData() == null ? " IS NULL": " = ?");
@@ -1244,7 +1258,7 @@ public class FingerprintDAO {
 		CharacteristicBean chrbean = new CharacteristicBean();
 
 		PreparedStatement getCount;
-		String querystr = "SELECT COUNT(*) FROM `Samples` WHERE"
+		String querystr = "SELECT `Count` FROM `CountAdsBlocked` WHERE"
 		+ " `AdsBlockedGoogle`" + (fingerprint.getAdsBlockedGoogle() == null ? " IS NULL": " = ?")
 		+ " AND `AdsBlockedBanner`" + (fingerprint.getAdsBlockedBanner() == null ? " IS NULL": " = ?")
 		+ " AND `AdsBlockedScript`" + (fingerprint.getAdsBlockedScript() == null ? " IS NULL": " = ?");
@@ -1329,7 +1343,7 @@ public class FingerprintDAO {
 		CharacteristicBean chrbean = new CharacteristicBean();
 
 		PreparedStatement getCount;
-		String querystr = "SELECT COUNT(*) FROM `Samples` WHERE"
+		String querystr = "SELECT `Count` FROM `CountLikeShare` WHERE"
 		+ " `LikeShareFacebook`" + (fingerprint.getLikeShareFacebook() == null ? " IS NULL": " = ?")
 		+ " AND `LikeShareTwitter`" + (fingerprint.getLikeShareTwitter() == null ? " IS NULL": " = ?")
 		+ " AND `LikeShareReddit`" + (fingerprint.getLikeShareReddit() == null ? " IS NULL": " = ?");
@@ -1437,7 +1451,7 @@ public class FingerprintDAO {
 		CharacteristicBean chrbean = new CharacteristicBean();
 
 		PreparedStatement getCount;
-		String querystr = "SELECT COUNT(*) FROM `Samples` WHERE"
+		String querystr = "SELECT `Count` FROM `CountTouchDetails` WHERE"
 		+ " `TouchPoints`" + (fingerprint.getTouchPoints() == null ? " IS NULL": " = ?")
 		+ " AND `TouchEvent`" + (fingerprint.getTouchEvent() == null ? " IS NULL": " = ?")
 		+ " AND `TouchStart`" + (fingerprint.getTouchStart() == null ? " IS NULL": " = ?");
@@ -1509,12 +1523,8 @@ public class FingerprintDAO {
 		CharacteristicBean chrbean = new CharacteristicBean();
 
 		PreparedStatement getCount;
-		String querystr = "SELECT COUNT(*) FROM `Samples` WHERE"
-		+ " `AudioFingerprintPXI`" + (fingerprint.getAudioFingerprintPXI() == null ? " IS NULL": " = ?")
-		+ " AND `AudioFingerprintPXIFullBuffer`" + (fingerprint.getAudioFingerprintPXIFullBuffer() == null ? " IS NULL": " = ?")
-		+ " AND `AudioFingerprintNtVc`" + (fingerprint.getAudioFingerprintNtVc() == null ? " IS NULL": " = ?")
-		+ " AND `AudioFingerprintCC`" + (fingerprint.getAudioFingerprintCC() == null ? " IS NULL": " = ?")
-		+ " AND `AudioFingerprintHybrid`" + (fingerprint.getAudioFingerprintHybrid() == null ? " IS NULL": " = ?");
+		String querystr = "SELECT `Count` FROM `CountAudioFingerprint` WHERE"
+		+ " `AudioFingerprintHash` = SHA2(CONCAT_WS('', ?, ?, ?, ?, ?), 256);";
 		getCount = conn.prepareStatement(querystr);
 		
 		int index = 1;

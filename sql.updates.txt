@@ -132,3 +132,374 @@ ALTER TABLE `Samples` ADD INDEX `AudioFingerprintPXIFullBuffer` (`AudioFingerpri
 ALTER TABLE `Samples` ADD INDEX `AudioFingerprintNtVc` (`AudioFingerprintNtVc`(600)) USING HASH;
 ALTER TABLE `Samples` ADD INDEX `AudioFingerprintCC` (`AudioFingerprintCC`(600)) USING HASH;
 ALTER TABLE `Samples` ADD INDEX `AudioFingerprintHybrid` (`AudioFingerprintHybrid`(600)) USING HASH;
+
+--Delete indexes because we're working on a new speed improvement technique
+DROP INDEX `FingerprintHash` ON `Samples`;
+DROP INDEX `UserAgent` ON `Samples`;
+DROP INDEX `AcceptHeaders` ON `Samples`;
+DROP INDEX `Platform` ON `Samples`;
+DROP INDEX `PlatformFlash` ON `Samples`;
+DROP INDEX `PluginDetails` ON `Samples`;
+DROP INDEX `TimeZone` ON `Samples`;
+DROP INDEX `ScreenDetails` ON `Samples`;
+DROP INDEX `ScreenDetailsFlash` ON `Samples`;
+DROP INDEX `ScreenDetailsCSS` ON `Samples`;
+DROP INDEX `LanguageFlash` ON `Samples`;
+DROP INDEX `Fonts` ON `Samples`;
+DROP INDEX `FontsJS_CSS` ON `Samples`;
+DROP INDEX `FontsCSS` ON `Samples`;
+DROP INDEX `CharSizes` ON `Samples`;
+DROP INDEX `CookiesEnabled` ON `Samples`;
+DROP INDEX `SuperCookieLocalStorage` ON `Samples`;
+DROP INDEX `SuperCookieSessionStorage` ON `Samples`;
+DROP INDEX `SuperCookieUserData` ON `Samples`;
+DROP INDEX `HstsEnabled` ON `Samples`;
+DROP INDEX `IndexedDBEnabled` ON `Samples`;
+DROP INDEX `DoNotTrack` ON `Samples`;
+DROP INDEX `ClockDifference` ON `Samples`;
+DROP INDEX `DateTime` ON `Samples`;
+DROP INDEX `MathTan` ON `Samples`;
+DROP INDEX `UsingTor` ON `Samples`;
+DROP INDEX `TbbVersion` ON `Samples`;
+DROP INDEX `AdsBlocked` ON `Samples`;
+DROP INDEX `LikeShareDetails` ON `Samples`;
+DROP INDEX `Canvas` ON `Samples`;
+DROP INDEX `WebGLVendor` ON `Samples`;
+DROP INDEX `WebGLRenderer` ON `Samples`;
+DROP INDEX `ContrastLevel` ON `Samples`;
+DROP INDEX `TouchDetails` ON `Samples`;
+DROP INDEX `AudioFingerprintPXI` ON `Samples`;
+DROP INDEX `AudioFingerprintPXIFullBuffer` ON `Samples`;
+DROP INDEX `AudioFingerprintNtVc` ON `Samples`;
+DROP INDEX `AudioFingerprintCC` ON `Samples`;
+DROP INDEX `AudioFingerprintHybrid` ON `Samples`;
+
+--CREATE COUNT TABLES AND UPDATE THEM WITH COUNTS THEN INSTALL TRIGGER TO KEEP THE COUNTS CORRECT
+--Stuff to keep track of version counts for efficiency's sake
+CREATE TABLE `CountBrowserprintVersion` (
+	`BrowserprintVersion` INT NOT NULL,
+	`Count` BIGINT UNSIGNED NOT NULL DEFAULT 0,
+	PRIMARY KEY(`BrowserprintVersion`)
+)
+ENGINE=InnoDB;
+
+--Stuff for keep track of occurrence counts for efficiency's sake
+--Note: This doesn't keep track of composite yet
+CREATE TABLE `CountFingerprintHash` (
+    `FingerprintHash` VARCHAR(28),
+    `Count` INT UNSIGNED NOT NULL DEFAULT 0,
+    PRIMARY KEY(`FingerprintHash`)
+)
+ENGINE=InnoDB;
+CREATE TABLE `CountUserAgent` (
+    `UserAgentHash` VARCHAR(64),
+    `Count` INT UNSIGNED NOT NULL DEFAULT 0,
+    PRIMARY KEY(`UserAgentHash`)
+)
+ENGINE=InnoDB;
+CREATE TABLE `CountAcceptHeaders` (
+    `AcceptHeadersHash` VARCHAR(64),
+    `Count` INT UNSIGNED NOT NULL DEFAULT 0,
+    PRIMARY KEY(`AcceptHeadersHash`)
+)
+ENGINE=InnoDB;
+CREATE TABLE `CountPlatform` (
+    `PlatformHash` VARCHAR(64),
+    `Count` INT UNSIGNED NOT NULL DEFAULT 0,
+    PRIMARY KEY(`PlatformHash`)
+)
+ENGINE=InnoDB;
+CREATE TABLE `CountPlatformFlash` (
+    `PlatformFlashHash` VARCHAR(64),
+    `Count` INT UNSIGNED NOT NULL DEFAULT 0,
+    PRIMARY KEY(`PlatformFlashHash`)
+)
+ENGINE=InnoDB;
+CREATE TABLE `CountPluginDetails` (
+    `PluginDetailsHash` VARCHAR(64),
+    `Count` INT UNSIGNED NOT NULL DEFAULT 0,
+    PRIMARY KEY(`PluginDetailsHash`)
+)
+ENGINE=InnoDB;
+CREATE TABLE `CountTimeZone` (
+    `TimeZoneHash` VARCHAR(64),
+    `Count` INT UNSIGNED NOT NULL DEFAULT 0,
+    PRIMARY KEY(`TimeZoneHash`)
+)
+ENGINE=InnoDB;
+CREATE TABLE `CountScreenDetails` (
+    `ScreenDetailsHash` VARCHAR(64),
+    `Count` INT UNSIGNED NOT NULL DEFAULT 0,
+    PRIMARY KEY(`ScreenDetailsHash`)
+)
+ENGINE=InnoDB;
+CREATE TABLE `CountScreenDetailsFlash` (
+    `ScreenDetailsFlashHash` VARCHAR(64),
+    `Count` INT UNSIGNED NOT NULL DEFAULT 0,
+    PRIMARY KEY(`ScreenDetailsFlashHash`)
+)
+ENGINE=InnoDB;
+CREATE TABLE `CountScreenDetailsCSS` (
+    `ScreenDetailsCSSHash` VARCHAR(64),
+    `Count` INT UNSIGNED NOT NULL DEFAULT 0,
+    PRIMARY KEY(`ScreenDetailsCSSHash`)
+)
+ENGINE=InnoDB;
+CREATE TABLE `CountLanguageFlash` (
+    `LanguageFlashHash` VARCHAR(64),
+    `Count` INT UNSIGNED NOT NULL DEFAULT 0,
+    PRIMARY KEY(`LanguageFlashHash`)
+)
+ENGINE=InnoDB;
+CREATE TABLE `CountFonts` (
+    `FontsHash` VARCHAR(64),
+    `Count` INT UNSIGNED NOT NULL DEFAULT 0,
+    PRIMARY KEY(`FontsHash`)
+)
+ENGINE=InnoDB;
+CREATE TABLE `CountFontsJS_CSS` (
+    `FontsJS_CSSHash` VARCHAR(64),
+    `Count` INT UNSIGNED NOT NULL DEFAULT 0,
+    PRIMARY KEY(`FontsJS_CSSHash`)
+)
+ENGINE=InnoDB;
+CREATE TABLE `CountFontsCSS` (
+    `FontsCSSHash` VARCHAR(64),
+    `Count` INT UNSIGNED NOT NULL DEFAULT 0,
+    PRIMARY KEY(`FontsCSSHash`)
+)
+ENGINE=InnoDB;
+CREATE TABLE `CountCharSizes` (
+    `CharSizesHash` VARCHAR(64),
+    `Count` INT UNSIGNED NOT NULL DEFAULT 0,
+    PRIMARY KEY(`CharSizesHash`)
+)
+ENGINE=InnoDB;
+CREATE TABLE `CountDoNotTrack` (
+    `DoNotTrackHash` VARCHAR(64),
+    `Count` INT UNSIGNED NOT NULL DEFAULT 0,
+    PRIMARY KEY(`DoNotTrackHash`)
+)
+ENGINE=InnoDB;
+CREATE TABLE `CountDateTime` (
+    `DateTimeHash` VARCHAR(64),
+    `Count` INT UNSIGNED NOT NULL DEFAULT 0,
+    PRIMARY KEY(`DateTimeHash`)
+)
+ENGINE=InnoDB;
+CREATE TABLE `CountMathTan` (
+    `MathTanHash` VARCHAR(64),
+    `Count` INT UNSIGNED NOT NULL DEFAULT 0,
+    PRIMARY KEY(`MathTanHash`)
+)
+ENGINE=InnoDB;
+CREATE TABLE `CountTbbVersion` (
+    `TbbVersionHash` VARCHAR(64),
+    `Count` INT UNSIGNED NOT NULL DEFAULT 0,
+    PRIMARY KEY(`TbbVersionHash`)
+)
+ENGINE=InnoDB;
+CREATE TABLE `CountAdsBlocked` (
+    `AdsBlockedGoogle` BOOL,
+    `AdsBlockedBanner` BOOL,
+    `AdsBlockedScript` BOOL,
+    `Count` INT UNSIGNED NOT NULL DEFAULT 0,
+    UNIQUE(`AdsBlockedGoogle`, `AdsBlockedBanner`, `AdsBlockedScript`)
+)
+ENGINE=InnoDB;
+CREATE TABLE `CountLikeShare` (
+    `LikeShareFacebook` INTEGER,
+    `LikeShareTwitter` INTEGER,
+    `LikeShareReddit` INTEGER,
+    `Count` INT UNSIGNED NOT NULL DEFAULT 0,
+    UNIQUE(`LikeShareFacebook`, `LikeShareTwitter`, `LikeShareReddit`)
+)
+ENGINE=InnoDB;
+CREATE TABLE `CountCanvas` (
+    `CanvasHash` VARCHAR(64),
+    `Count` INT UNSIGNED NOT NULL DEFAULT 0,
+    PRIMARY KEY(`CanvasHash`)
+)
+ENGINE=InnoDB;
+CREATE TABLE `CountWebGLVendor` (
+    `WebGLVendorHash` VARCHAR(64),
+    `Count` INT UNSIGNED NOT NULL DEFAULT 0,
+    PRIMARY KEY(`WebGLVendorHash`)
+)
+ENGINE=InnoDB;
+CREATE TABLE `CountWebGLRenderer` (
+    `WebGLRendererHash` VARCHAR(64),
+    `Count` INT UNSIGNED NOT NULL DEFAULT 0,
+    PRIMARY KEY(`WebGLRendererHash`)
+)
+ENGINE=InnoDB;
+CREATE TABLE `CountCookiesEnabled` (
+    `CookiesEnabled` BOOL UNIQUE,
+    `Count` INT UNSIGNED NOT NULL DEFAULT 0
+)
+ENGINE=InnoDB;
+CREATE TABLE `CountSuperCookie` (
+    `SuperCookieLocalStorage` BOOL,
+    `SuperCookieSessionStorage` BOOL,
+    `SuperCookieUserData` BOOL,
+    `Count` INT UNSIGNED NOT NULL DEFAULT 0,
+    UNIQUE(`SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`)
+)
+ENGINE=InnoDB;
+CREATE TABLE `CountHstsEnabled` (
+    `HstsEnabled` BOOL UNIQUE,
+    `Count` INT UNSIGNED NOT NULL DEFAULT 0
+)
+ENGINE=InnoDB;
+CREATE TABLE `CountIndexedDBEnabled` (
+    `IndexedDBEnabled` BOOL UNIQUE,
+    `Count` INT UNSIGNED NOT NULL DEFAULT 0
+)
+ENGINE=InnoDB;
+CREATE TABLE `CountClockDifference` (
+    `ClockDifference` BIGINT UNIQUE,
+    `Count` INT UNSIGNED NOT NULL DEFAULT 0
+)
+ENGINE=InnoDB;
+CREATE TABLE `CountUsingTor` (
+    `UsingTor` BOOL UNIQUE,
+    `Count` INT UNSIGNED NOT NULL DEFAULT 0
+)
+ENGINE=InnoDB;
+CREATE TABLE `CountContrastLevel` (
+    `ContrastLevel` INT UNIQUE,
+    `Count` INT UNSIGNED NOT NULL DEFAULT 0
+)
+ENGINE=InnoDB;
+CREATE TABLE `CountTouchDetails` (
+    `TouchPoints` INTEGER,
+    `TouchEvent` BOOL,
+    `TouchStart` BOOL,
+    `Count` INT UNSIGNED NOT NULL DEFAULT 0,
+    UNIQUE(`TouchPoints`, `TouchEvent`, `TouchStart`)
+)
+ENGINE=InnoDB;
+CREATE TABLE `CountAudioFingerprint` (
+    `AudioFingerprintHash` VARCHAR(64),
+    `Count` INT UNSIGNED NOT NULL DEFAULT 0,
+    PRIMARY KEY(`AudioFingerprintHash`)
+)
+ENGINE=InnoDB;
+
+DELIMITER $$
+CREATE TRIGGER `CountProperties` AFTER INSERT ON `Samples`
+FOR EACH ROW BEGIN
+    INSERT INTO `CountBrowserprintVersion` (`BrowserprintVersion`, `Count`) VALUES(`NEW`.`BrowserprintVersion`, 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountFingerprintHash` (`FingerprintHash`, `Count`) VALUES(`NEW`.`FingerprintHash`, 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountUserAgent` (`UserAgentHash`, `Count`) VALUES(SHA2(`NEW`.`UserAgent`, 256), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountAcceptHeaders` (`AcceptHeadersHash`, `Count`) VALUES(SHA2(`NEW`.`AcceptHeaders`, 256), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountPlatform` (`PlatformHash`, `Count`) VALUES(SHA2(`NEW`.`Platform`, 256), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountPlatformFlash` (`PlatformFlashHash`, `Count`) VALUES(SHA2(`NEW`.`PlatformFlash`, 256), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountPluginDetails` (`PluginDetailsHash`, `Count`) VALUES(SHA2(`NEW`.`PluginDetails`, 256), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountTimeZone` (`TimeZoneHash`, `Count`) VALUES(SHA2(`NEW`.`TimeZone`, 256), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountScreenDetails` (`ScreenDetailsHash`, `Count`) VALUES(SHA2(`NEW`.`ScreenDetails`, 256), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountScreenDetailsFlash` (`ScreenDetailsFlashHash`, `Count`) VALUES(SHA2(`NEW`.`ScreenDetailsFlash`, 256), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountScreenDetailsCSS` (`ScreenDetailsCSSHash`, `Count`) VALUES(SHA2(`NEW`.`ScreenDetailsCSS`, 256), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountLanguageFlash` (`LanguageFlashHash`, `Count`) VALUES(SHA2(`NEW`.`LanguageFlash`, 256), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountFonts` (`FontsHash`, `Count`) VALUES(SHA2(`NEW`.`Fonts`, 256), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountFontsJS_CSS` (`FontsJS_CSSHash`, `Count`) VALUES(SHA2(`NEW`.`FontsJS_CSS`, 256), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountFontsCSS` (`FontsCSSHash`, `Count`) VALUES(SHA2(`NEW`.`FontsCSS`, 256), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountCharSizes` (`CharSizesHash`, `Count`) VALUES(SHA2(`NEW`.`CharSizes`, 256), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountDoNotTrack` (`DoNotTrackHash`, `Count`) VALUES(SHA2(`NEW`.`DoNotTrack`, 256), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountDateTime` (`DateTimeHash`, `Count`) VALUES(SHA2(`NEW`.`DateTime`, 256), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountMathTan` (`MathTanHash`, `Count`) VALUES(SHA2(`NEW`.`MathTan`, 256), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountTbbVersion` (`TbbVersionHash`, `Count`) VALUES(SHA2(`NEW`.`TbbVersion`, 256), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountAdsBlocked` (`AdsBlockedGoogle`, `AdsBlockedBanner`, `AdsBlockedScript`, `Count`) VALUES(`NEW`.`AdsBlockedGoogle`, `NEW`.`AdsBlockedBanner`, `NEW`.`AdsBlockedScript`, 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountLikeShare` (`LikeShareFacebook`, `LikeShareTwitter`, `LikeShareReddit`, `Count`) VALUES(`NEW`.`LikeShareFacebook`, `NEW`.`LikeShareTwitter`, `NEW`.`LikeShareReddit`, 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountCanvas` (`CanvasHash`, `Count`) VALUES(SHA2(`NEW`.`Canvas`, 256), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountWebGLVendor` (`WebGLVendorHash`, `Count`) VALUES(SHA2(`NEW`.`WebGLVendor`, 256), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountWebGLRenderer` (`WebGLRendererHash`, `Count`) VALUES(SHA2(`NEW`.`WebGLRenderer`, 256), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountTouchDetails` (`TouchPoints`, `TouchEvent`, `TouchStart`, `Count`) VALUES(`NEW`.`TouchPoints`, `NEW`.`TouchEvent`, `NEW`.`TouchStart`, 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountAudioFingerprint` (`AudioFingerprintHash`, `Count`) VALUES(SHA2(CONCAT_WS('', `NEW`.`AudioFingerprintPXI`, `NEW`.`AudioFingerprintPXIFullBuffer`, `NEW`.`AudioFingerprintNtVc`, `NEW`.`AudioFingerprintCC`, `NEW`.`AudioFingerprintHybrid`), 256), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;    
+    INSERT INTO `CountCookiesEnabled` (`CookiesEnabled`, `Count`) VALUES(`NEW`.`CookiesEnabled`, 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountSuperCookie` (`SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `Count`) VALUES(`NEW`.`SuperCookieLocalStorage`, `NEW`.`SuperCookieSessionStorage`, `NEW`.`SuperCookieUserData`, 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountHstsEnabled` (`HstsEnabled`, `Count`) VALUES(`NEW`.`HstsEnabled`, 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountIndexedDBEnabled` (`IndexedDBEnabled`, `Count`) VALUES(`NEW`.`IndexedDBEnabled`, 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountClockDifference` (`ClockDifference`, `Count`) VALUES(`NEW`.`ClockDifference`, 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountUsingTor` (`UsingTor`, `Count`) VALUES(`NEW`.`UsingTor`, 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountContrastLevel` (`ContrastLevel`, `Count`) VALUES(`NEW`.`ContrastLevel`, 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+END$$
+DELIMITER ;
+
+INSERT INTO `CountBrowserprintVersion` (`BrowserprintVersion`, `Count`)
+    SELECT `BrowserprintVersion`, COUNT(*) FROM `Samples` GROUP BY `BrowserprintVersion`;
+INSERT INTO `CountFingerprintHash` (`FingerprintHash`, `Count`)
+    SELECT `FingerprintHash`, COUNT(*) FROM `Samples` GROUP BY `FingerprintHash`;
+INSERT INTO `CountUserAgent` (`UserAgentHash`, `Count`)
+    SELECT SHA2(`UserAgent`, 256), COUNT(*) FROM `Samples` GROUP BY SHA2(`UserAgent`, 256);
+INSERT INTO `CountAcceptHeaders` (`AcceptHeadersHash`, `Count`)
+    SELECT SHA2(`AcceptHeaders`, 256), COUNT(*) FROM `Samples` GROUP BY SHA2(`AcceptHeaders`, 256);
+INSERT INTO `CountPlatform` (`PlatformHash`, `Count`)
+    SELECT SHA2(`Platform`, 256), COUNT(*) FROM `Samples` GROUP BY SHA2(`Platform`, 256);
+INSERT INTO `CountPlatformFlash` (`PlatformFlashHash`, `Count`)
+    SELECT SHA2(`PlatformFlash`, 256), COUNT(*) FROM `Samples` GROUP BY SHA2(`PlatformFlash`, 256);
+INSERT INTO `CountPluginDetails` (`PluginDetailsHash`, `Count`)
+    SELECT SHA2(`PluginDetails`, 256), COUNT(*) FROM `Samples` GROUP BY SHA2(`PluginDetails`, 256);
+INSERT INTO `CountTimeZone` (`TimeZoneHash`, `Count`)
+    SELECT SHA2(`TimeZone`, 256), COUNT(*) FROM `Samples` GROUP BY SHA2(`TimeZone`, 256);
+INSERT INTO `CountScreenDetails` (`ScreenDetailsHash`, `Count`)
+    SELECT SHA2(`ScreenDetails`, 256), COUNT(*) FROM `Samples` GROUP BY SHA2(`ScreenDetails`, 256);
+INSERT INTO `CountScreenDetailsFlash` (`ScreenDetailsFlashHash`, `Count`)
+    SELECT SHA2(`ScreenDetailsFlash`, 256), COUNT(*) FROM `Samples` GROUP BY SHA2(`ScreenDetailsFlash`, 256);
+INSERT INTO `CountScreenDetailsCSS` (`ScreenDetailsCSSHash`, `Count`)
+    SELECT SHA2(`ScreenDetailsCSS`, 256), COUNT(*) FROM `Samples` GROUP BY SHA2(`ScreenDetailsCSS`, 256);
+INSERT INTO `CountLanguageFlash` (`LanguageFlashHash`, `Count`)
+    SELECT SHA2(`LanguageFlash`, 256), COUNT(*) FROM `Samples` GROUP BY SHA2(`LanguageFlash`, 256);
+INSERT INTO `CountFonts` (`FontsHash`, `Count`)
+    SELECT SHA2(`Fonts`, 256), COUNT(*) FROM `Samples` GROUP BY SHA2(`Fonts`, 256);
+INSERT INTO `CountFontsJS_CSS` (`FontsJS_CSSHash`, `Count`)
+    SELECT SHA2(`FontsJS_CSS`, 256), COUNT(*) FROM `Samples` GROUP BY SHA2(`FontsJS_CSS`, 256);
+INSERT INTO `CountFontsCSS` (`FontsCSSHash`, `Count`)
+    SELECT SHA2(`FontsCSS`, 256), COUNT(*) FROM `Samples` GROUP BY SHA2(`FontsCSS`, 256);
+INSERT INTO `CountCharSizes` (`CharSizesHash`, `Count`)
+    SELECT SHA2(`CharSizes`, 256), COUNT(*) FROM `Samples` GROUP BY SHA2(`CharSizes`, 256);
+INSERT INTO `CountDoNotTrack` (`DoNotTrackHash`, `Count`)
+    SELECT SHA2(`DoNotTrack`, 256), COUNT(*) FROM `Samples` GROUP BY SHA2(`DoNotTrack`, 256);
+INSERT INTO `CountDateTime` (`DateTimeHash`, `Count`)
+    SELECT SHA2(`DateTime`, 256), COUNT(*) FROM `Samples` GROUP BY SHA2(`DateTime`, 256);
+INSERT INTO `CountMathTan` (`MathTanHash`, `Count`)
+    SELECT SHA2(`MathTan`, 256), COUNT(*) FROM `Samples` GROUP BY SHA2(`MathTan`, 256);
+INSERT INTO `CountTbbVersion` (`TbbVersionHash`, `Count`)
+    SELECT SHA2(`TbbVersion`, 256), COUNT(*) FROM `Samples` GROUP BY SHA2(`TbbVersion`, 256);
+INSERT INTO `CountAdsBlocked` (`AdsBlockedGoogle`, `AdsBlockedBanner`, `AdsBlockedScript`, `Count`)
+    SELECT `AdsBlockedGoogle`, `AdsBlockedBanner`, `AdsBlockedScript`, COUNT(*)
+FROM `Samples` GROUP BY `AdsBlockedGoogle`, `AdsBlockedBanner`, `AdsBlockedScript`;
+INSERT INTO `CountLikeShare` (`LikeShareFacebook`, `LikeShareTwitter`, `LikeShareReddit`, `Count`)
+    SELECT `LikeShareFacebook`, `LikeShareTwitter`, `LikeShareReddit`, COUNT(*)
+FROM `Samples` GROUP BY `LikeShareFacebook`, `LikeShareTwitter`, `LikeShareReddit`;
+INSERT INTO `CountCanvas` (`CanvasHash`, `Count`)
+    SELECT SHA2(`Canvas`, 256), COUNT(*) FROM `Samples` GROUP BY SHA2(`Canvas`, 256);
+INSERT INTO `CountWebGLVendor` (`WebGLVendorHash`, `Count`)
+    SELECT SHA2(`WebGLVendor`, 256), COUNT(*) FROM `Samples` GROUP BY SHA2(`WebGLVendor`, 256);
+INSERT INTO `CountWebGLRenderer` (`WebGLRendererHash`, `Count`)
+    SELECT SHA2(`WebGLRenderer`, 256), COUNT(*) FROM `Samples` GROUP BY SHA2(`WebGLRenderer`, 256);
+INSERT INTO `CountTouchDetails` (`TouchPoints`, `TouchEvent`, `TouchStart`, `Count`)
+    SELECT `TouchPoints`, `TouchEvent`, `TouchStart`, COUNT(*)
+FROM `Samples` GROUP BY `TouchPoints`, `TouchEvent`, `TouchStart`;
+INSERT INTO `CountAudioFingerprint` (`AudioFingerprintHash`, `Count`)
+    SELECT SHA2(CONCAT_WS('', `AudioFingerprintPXI`, `AudioFingerprintPXIFullBuffer`, `AudioFingerprintNtVc`, `AudioFingerprintCC`, `AudioFingerprintHybrid`), 256), COUNT(*)
+FROM `Samples` GROUP BY SHA2(CONCAT_WS('', `AudioFingerprintPXI`, `AudioFingerprintPXIFullBuffer`, `AudioFingerprintNtVc`, `AudioFingerprintCC`, `AudioFingerprintHybrid`), 256);
+INSERT INTO `CountCookiesEnabled` (`CookiesEnabled`, `Count`)
+    SELECT `CookiesEnabled`, COUNT(*) FROM `Samples` GROUP BY `CookiesEnabled`;
+INSERT INTO `CountSuperCookie` (`SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, `Count`)
+    SELECT `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`, COUNT(*)
+FROM `Samples` GROUP BY `SuperCookieLocalStorage`, `SuperCookieSessionStorage`, `SuperCookieUserData`;
+INSERT INTO `CountHstsEnabled` (`HstsEnabled`, `Count`)
+    SELECT `HstsEnabled`, COUNT(*) FROM `Samples` GROUP BY `HstsEnabled`;
+INSERT INTO `CountIndexedDBEnabled` (`IndexedDBEnabled`, `Count`)
+    SELECT `IndexedDBEnabled`, COUNT(*) FROM `Samples` GROUP BY `IndexedDBEnabled`;
+INSERT INTO `CountClockDifference` (`ClockDifference`, `Count`)
+    SELECT `ClockDifference`, COUNT(*) FROM `Samples` GROUP BY `ClockDifference`;
+INSERT INTO `CountUsingTor` (`UsingTor`, `Count`)
+    SELECT `UsingTor`, COUNT(*) FROM `Samples` GROUP BY `UsingTor`;
+INSERT INTO `CountContrastLevel` (`ContrastLevel`, `Count`)
+    SELECT `ContrastLevel`, COUNT(*) FROM `Samples` GROUP BY `ContrastLevel`;
+
+
+--Convert the IP column to blob to get rid of that weird IP bug
+ALTER TABLE Samples MODIFY COLUMN IP BLOB;
