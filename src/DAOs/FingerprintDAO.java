@@ -1055,15 +1055,19 @@ public class FingerprintDAO {
 		CharacteristicBean chrbean = new CharacteristicBean();
 	
 		PreparedStatement getCount;
-		String querystr = "SELECT `Count` FROM `Count" + dbname + "` WHERE `" + dbname + "Hash` = SHA2(?, 256);";
-		getCount = conn.prepareStatement(querystr);
+		String querystr = "SELECT `Count` FROM `Count" + dbname + "` WHERE `" + dbname + "Hash` = ";
 		if (value != null) {
+			querystr += "SHA2(?, 256);";
+			getCount = conn.prepareStatement(querystr);
+			getCount.setString(1, value);
 			chrbean.setValue(StringEscapeUtils.escapeHtml4(value));
 		} else {
+			querystr += "'';";
+			getCount = conn.prepareStatement(querystr);
 			chrbean.setValue(NO_JAVASCRIPT);
 		}
-		getCount.setString(1, value);
 
+		try{
 		ResultSet rs = getCount.executeQuery();
 		rs.next();
 		int count = rs.getInt(1);
@@ -1071,6 +1075,12 @@ public class FingerprintDAO {
 		chrbean.setNumOccurrences(count);
 		chrbean.setInX(((double) num_samples) / ((double) count));
 		chrbean.setBits(Math.abs(Math.log(chrbean.getInX()) / Math.log(2)));
+		}
+		catch(SQLException ex){
+			System.out.println("Error is at dbname = " + dbname + " with value " + value);
+			System.err.println("Error is at dbname = " + dbname + " with value " + value);
+			throw ex;
+		}
 
 		return chrbean;
 	}
@@ -1533,6 +1543,16 @@ public class FingerprintDAO {
 		if(fingerprint.getAudioFingerprintPXI() == null && fingerprint.getAudioFingerprintPXIFullBuffer() == null && fingerprint.getAudioFingerprintNtVc() == null
 				&& fingerprint.getAudioFingerprintCC() == null && fingerprint.getAudioFingerprintHybrid() == null){
 			touchStr = NO_JAVASCRIPT;
+			getCount.setNull(index, java.sql.Types.VARCHAR);
+			++index;
+			getCount.setNull(index, java.sql.Types.VARCHAR);
+			++index;
+			getCount.setNull(index, java.sql.Types.VARCHAR);
+			++index;
+			getCount.setNull(index, java.sql.Types.VARCHAR);
+			++index;
+			getCount.setNull(index, java.sql.Types.VARCHAR);
+			++index;
 		}
 		else{
 			touchStr = "<b>Fingerprint using DynamicsCompressor (sum of buffer values):</b><br> ";
@@ -1543,6 +1563,8 @@ public class FingerprintDAO {
 			}
 			else{
 				touchStr += "NoJS";
+				getCount.setNull(index, java.sql.Types.VARCHAR);
+				++index;
 			}
 			
 			touchStr += "<br><b>Fingerprint using DynamicsCompressor (hash of full buffer):</b><br> ";
@@ -1553,6 +1575,8 @@ public class FingerprintDAO {
 			}
 			else{
 				touchStr += "NoJS";
+				getCount.setNull(index, java.sql.Types.VARCHAR);
+				++index;
 			}
 			
 			touchStr += "<br><b>AudioContext properties:</b><br> ";
@@ -1563,6 +1587,8 @@ public class FingerprintDAO {
 			}
 			else{
 				touchStr += "NoJS";
+				getCount.setNull(index, java.sql.Types.VARCHAR);
+				++index;
 			}
 			
 			touchStr += "<br><b>Fingerprint using OscillatorNode:</b><br> ";
@@ -1573,6 +1599,8 @@ public class FingerprintDAO {
 			}
 			else{
 				touchStr += "NoJS";
+				getCount.setNull(index, java.sql.Types.VARCHAR);
+				++index;
 			}
 			
 			touchStr += "<br><b>Fingerprint using hybrid of OscillatorNode/DynamicsCompressor method:</b><br> ";
@@ -1583,6 +1611,8 @@ public class FingerprintDAO {
 			}
 			else{
 				touchStr += "NoJS";
+				getCount.setNull(index, java.sql.Types.VARCHAR);
+				++index;
 			}
 		}
 		chrbean.setValue(touchStr);

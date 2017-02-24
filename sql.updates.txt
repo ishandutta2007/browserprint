@@ -174,6 +174,43 @@ DROP INDEX `AudioFingerprintNtVc` ON `Samples`;
 DROP INDEX `AudioFingerprintCC` ON `Samples`;
 DROP INDEX `AudioFingerprintHybrid` ON `Samples`;
 
+
+DROP TABLE `CountBrowserprintVersion`;
+DROP TABLE `CountFingerprintHash`;
+DROP TABLE `CountUserAgent`;
+DROP TABLE `CountAcceptHeaders`;
+DROP TABLE `CountPlatform`;
+DROP TABLE `CountPlatformFlash`;
+DROP TABLE `CountPluginDetails`;
+DROP TABLE `CountTimeZone`;
+DROP TABLE `CountScreenDetails`;
+DROP TABLE `CountScreenDetailsFlash`;
+DROP TABLE `CountScreenDetailsCSS`;
+DROP TABLE `CountLanguageFlash`;
+DROP TABLE `CountFonts`;
+DROP TABLE `CountFontsJS_CSS`;
+DROP TABLE `CountFontsCSS`;
+DROP TABLE `CountCharSizes`;
+DROP TABLE `CountDoNotTrack`;
+DROP TABLE `CountDateTime`;
+DROP TABLE `CountMathTan`;
+DROP TABLE `CountTbbVersion`;
+DROP TABLE `CountAdsBlocked`;
+DROP TABLE `CountLikeShare`;
+DROP TABLE `CountCanvas`;
+DROP TABLE `CountWebGLVendor`;
+DROP TABLE `CountWebGLRenderer`;
+DROP TABLE `CountTouchDetails`;
+DROP TABLE `CountAudioFingerprint`;
+DROP TABLE `CountCookiesEnabled`;
+DROP TABLE `CountSuperCookie`;
+DROP TABLE `CountHstsEnabled`;
+DROP TABLE `CountIndexedDBEnabled`;
+DROP TABLE `CountClockDifference`;
+DROP TABLE `CountUsingTor`;
+DROP TABLE `CountContrastLevel`;
+
+
 --CREATE COUNT TABLES AND UPDATE THEM WITH COUNTS THEN INSTALL TRIGGER TO KEEP THE COUNTS CORRECT
 --Stuff to keep track of version counts for efficiency's sake
 CREATE TABLE `CountBrowserprintVersion` (
@@ -391,29 +428,29 @@ CREATE TRIGGER `CountProperties` AFTER INSERT ON `Samples`
 FOR EACH ROW BEGIN
     INSERT INTO `CountBrowserprintVersion` (`BrowserprintVersion`, `Count`) VALUES(`NEW`.`BrowserprintVersion`, 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
     INSERT INTO `CountFingerprintHash` (`FingerprintHash`, `Count`) VALUES(`NEW`.`FingerprintHash`, 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
-    INSERT INTO `CountUserAgent` (`UserAgentHash`, `Count`) VALUES(SHA2(`NEW`.`UserAgent`, 256), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
-    INSERT INTO `CountAcceptHeaders` (`AcceptHeadersHash`, `Count`) VALUES(SHA2(`NEW`.`AcceptHeaders`, 256), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
-    INSERT INTO `CountPlatform` (`PlatformHash`, `Count`) VALUES(SHA2(`NEW`.`Platform`, 256), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
-    INSERT INTO `CountPlatformFlash` (`PlatformFlashHash`, `Count`) VALUES(SHA2(`NEW`.`PlatformFlash`, 256), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
-    INSERT INTO `CountPluginDetails` (`PluginDetailsHash`, `Count`) VALUES(SHA2(`NEW`.`PluginDetails`, 256), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
-    INSERT INTO `CountTimeZone` (`TimeZoneHash`, `Count`) VALUES(SHA2(`NEW`.`TimeZone`, 256), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
-    INSERT INTO `CountScreenDetails` (`ScreenDetailsHash`, `Count`) VALUES(SHA2(`NEW`.`ScreenDetails`, 256), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
-    INSERT INTO `CountScreenDetailsFlash` (`ScreenDetailsFlashHash`, `Count`) VALUES(SHA2(`NEW`.`ScreenDetailsFlash`, 256), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
-    INSERT INTO `CountScreenDetailsCSS` (`ScreenDetailsCSSHash`, `Count`) VALUES(SHA2(`NEW`.`ScreenDetailsCSS`, 256), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
-    INSERT INTO `CountLanguageFlash` (`LanguageFlashHash`, `Count`) VALUES(SHA2(`NEW`.`LanguageFlash`, 256), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
-    INSERT INTO `CountFonts` (`FontsHash`, `Count`) VALUES(SHA2(`NEW`.`Fonts`, 256), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
-    INSERT INTO `CountFontsJS_CSS` (`FontsJS_CSSHash`, `Count`) VALUES(SHA2(`NEW`.`FontsJS_CSS`, 256), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
-    INSERT INTO `CountFontsCSS` (`FontsCSSHash`, `Count`) VALUES(SHA2(`NEW`.`FontsCSS`, 256), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
-    INSERT INTO `CountCharSizes` (`CharSizesHash`, `Count`) VALUES(SHA2(`NEW`.`CharSizes`, 256), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
-    INSERT INTO `CountDoNotTrack` (`DoNotTrackHash`, `Count`) VALUES(SHA2(`NEW`.`DoNotTrack`, 256), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
-    INSERT INTO `CountDateTime` (`DateTimeHash`, `Count`) VALUES(SHA2(`NEW`.`DateTime`, 256), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
-    INSERT INTO `CountMathTan` (`MathTanHash`, `Count`) VALUES(SHA2(`NEW`.`MathTan`, 256), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
-    INSERT INTO `CountTbbVersion` (`TbbVersionHash`, `Count`) VALUES(SHA2(`NEW`.`TbbVersion`, 256), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountUserAgent` (`UserAgentHash`, `Count`) VALUES(IF(`NEW`.`UserAgent` IS NULL, '', SHA2(`NEW`.`UserAgent`, 256)), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountAcceptHeaders` (`AcceptHeadersHash`, `Count`) VALUES(IF(`NEW`.`AcceptHeaders` IS NULL, '', SHA2(`NEW`.`AcceptHeaders`, 256)), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountPlatform` (`PlatformHash`, `Count`) VALUES(IF(`NEW`.`Platform` IS NULL, '', SHA2(`NEW`.`Platform`, 256)), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountPlatformFlash` (`PlatformFlashHash`, `Count`) VALUES(IF(`NEW`.`PlatformFlash` IS NULL, '', SHA2(`NEW`.`PlatformFlash`, 256)), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountPluginDetails` (`PluginDetailsHash`, `Count`) VALUES(IF(`NEW`.`PluginDetails` IS NULL, '', SHA2(`NEW`.`PluginDetails`, 256)), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountTimeZone` (`TimeZoneHash`, `Count`) VALUES(IF(`NEW`.`TimeZone` IS NULL, '', SHA2(`NEW`.`TimeZone`, 256)), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountScreenDetails` (`ScreenDetailsHash`, `Count`) VALUES(IF(`NEW`.`ScreenDetails` IS NULL, '', SHA2(`NEW`.`ScreenDetails`, 256)), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountScreenDetailsFlash` (`ScreenDetailsFlashHash`, `Count`) VALUES(IF(`NEW`.`ScreenDetailsFlash` IS NULL, '', SHA2(`NEW`.`ScreenDetailsFlash`, 256)), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountScreenDetailsCSS` (`ScreenDetailsCSSHash`, `Count`) VALUES(IF(`NEW`.`ScreenDetailsCSS` IS NULL, '', SHA2(`NEW`.`ScreenDetailsCSS`, 256)), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountLanguageFlash` (`LanguageFlashHash`, `Count`) VALUES(IF(`NEW`.`LanguageFlash` IS NULL, '', SHA2(`NEW`.`LanguageFlash`, 256)), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountFonts` (`FontsHash`, `Count`) VALUES(IF(`NEW`.`Fonts` IS NULL, '', SHA2(`NEW`.`Fonts`, 256)), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountFontsJS_CSS` (`FontsJS_CSSHash`, `Count`) VALUES(IF(`NEW`.`FontsJS_CSS` IS NULL, '', SHA2(`NEW`.`FontsJS_CSS`, 256)), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountFontsCSS` (`FontsCSSHash`, `Count`) VALUES(IF(`NEW`.`FontsCSS` IS NULL, '', SHA2(`NEW`.`FontsCSS`, 256)), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountCharSizes` (`CharSizesHash`, `Count`) VALUES(IF(`NEW`.`CharSizes` IS NULL, '', SHA2(`NEW`.`CharSizes`, 256)), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountDoNotTrack` (`DoNotTrackHash`, `Count`) VALUES(IF(`NEW`.`DoNotTrack` IS NULL, '', SHA2(`NEW`.`DoNotTrack`, 256)), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountDateTime` (`DateTimeHash`, `Count`) VALUES(IF(`NEW`.`DateTime` IS NULL, '', SHA2(`NEW`.`DateTime`, 256)), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountMathTan` (`MathTanHash`, `Count`) VALUES(IF(`NEW`.`MathTan` IS NULL, '', SHA2(`NEW`.`MathTan`, 256)), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountTbbVersion` (`TbbVersionHash`, `Count`) VALUES(IF(`NEW`.`TbbVersion` IS NULL, '', SHA2(`NEW`.`TbbVersion`, 256)), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
     INSERT INTO `CountAdsBlocked` (`AdsBlockedGoogle`, `AdsBlockedBanner`, `AdsBlockedScript`, `Count`) VALUES(`NEW`.`AdsBlockedGoogle`, `NEW`.`AdsBlockedBanner`, `NEW`.`AdsBlockedScript`, 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
     INSERT INTO `CountLikeShare` (`LikeShareFacebook`, `LikeShareTwitter`, `LikeShareReddit`, `Count`) VALUES(`NEW`.`LikeShareFacebook`, `NEW`.`LikeShareTwitter`, `NEW`.`LikeShareReddit`, 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
-    INSERT INTO `CountCanvas` (`CanvasHash`, `Count`) VALUES(SHA2(`NEW`.`Canvas`, 256), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
-    INSERT INTO `CountWebGLVendor` (`WebGLVendorHash`, `Count`) VALUES(SHA2(`NEW`.`WebGLVendor`, 256), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
-    INSERT INTO `CountWebGLRenderer` (`WebGLRendererHash`, `Count`) VALUES(SHA2(`NEW`.`WebGLRenderer`, 256), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountCanvas` (`CanvasHash`, `Count`) VALUES(IF(`NEW`.`Canvas` IS NULL, '', SHA2(`NEW`.`Canvas`, 256)), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountWebGLVendor` (`WebGLVendorHash`, `Count`) VALUES(IF(`NEW`.`WebGLVendor` IS NULL, '', SHA2(`NEW`.`WebGLVendor`, 256)), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
+    INSERT INTO `CountWebGLRenderer` (`WebGLRendererHash`, `Count`) VALUES(IF(`NEW`.`WebGLRenderer` IS NULL, '', SHA2(`NEW`.`WebGLRenderer`, 256)), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
     INSERT INTO `CountTouchDetails` (`TouchPoints`, `TouchEvent`, `TouchStart`, `Count`) VALUES(`NEW`.`TouchPoints`, `NEW`.`TouchEvent`, `NEW`.`TouchStart`, 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
     INSERT INTO `CountAudioFingerprint` (`AudioFingerprintHash`, `Count`) VALUES(SHA2(CONCAT_WS('', `NEW`.`AudioFingerprintPXI`, `NEW`.`AudioFingerprintPXIFullBuffer`, `NEW`.`AudioFingerprintNtVc`, `NEW`.`AudioFingerprintCC`, `NEW`.`AudioFingerprintHybrid`), 256), 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;    
     INSERT INTO `CountCookiesEnabled` (`CookiesEnabled`, `Count`) VALUES(`NEW`.`CookiesEnabled`, 1) ON DUPLICATE KEY UPDATE `Count` = `Count` + 1;
@@ -499,7 +536,6 @@ INSERT INTO `CountUsingTor` (`UsingTor`, `Count`)
     SELECT `UsingTor`, COUNT(*) FROM `Samples` GROUP BY `UsingTor`;
 INSERT INTO `CountContrastLevel` (`ContrastLevel`, `Count`)
     SELECT `ContrastLevel`, COUNT(*) FROM `Samples` GROUP BY `ContrastLevel`;
-
 
 --Convert the IP column to blob to get rid of that weird IP bug
 ALTER TABLE Samples MODIFY COLUMN IP BLOB;
