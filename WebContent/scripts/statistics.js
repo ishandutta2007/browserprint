@@ -30,17 +30,17 @@ $(function() {
 		}
 		
 		$.each(jsonData["JavaScript disabled"], function(setSize, num) {
-			jsDisabledArray[setSize - 1] = num;
+			jsDisabledArray[setSize - 1] = setSize * num;
 		});
 		
 		$.each(jsonData["JavaScript enabled"], function(setSize, num) {
-			jsEnabledArray[setSize - 1] = num;
+			jsEnabledArray[setSize - 1] = setSize * num;
 		});
 		
 		var totalCount = 0;
 		$.each(jsonData["Both"], function(setSize, num) {
 			totalCount += num;
-			bothArray[setSize - 1] = num;
+			bothArray[setSize - 1] = setSize * num;
 		});
 
 		$('#anonymitySets').highcharts({
@@ -56,7 +56,7 @@ $(function() {
 		    yAxis: {
 		    	type: 'logarithmic',
 		        title: {
-		            text: 'Number of fingerprints with this anonymity set size'
+		            text: 'Number of fingerprints who are the same as x other fingerprints'
 		        },
 		        min: 0.1
 		    },
@@ -69,7 +69,7 @@ $(function() {
 		    legend: {
 		        layout: 'vertical',
 		        align: 'right',
-		        verticalAlign: 'middle',
+		        verticalAlign: 'top',
 		        floating: true
 		    },
 		    plotOptions: {
