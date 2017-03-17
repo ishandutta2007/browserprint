@@ -17,6 +17,83 @@
  * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 $(function() {
+	/* Anonymity sets line graph */
+	jQuery.getJSON("json?chart=anonymitySets", function(jsonData){
+		var largestSetSize = jsonData["Largest anonymity set"];
+		
+		var jsDisabledArray = new Array(largestSetSize);
+		var jsEnabledArray = new Array(largestSetSize);
+		var bothArray = new Array(largestSetSize);
+		//Initialise the arrays to zero instead of null
+		for(var i = 0; i < largestSetSize; ++i){
+			bothArray[i] = jsEnabledArray[i] = jsDisabledArray[i] = 0.0001;
+		}
+		
+		$.each(jsonData["JavaScript disabled"], function(setSize, num) {
+			jsDisabledArray[setSize - 1] = num;
+		});
+		
+		$.each(jsonData["JavaScript enabled"], function(setSize, num) {
+			jsEnabledArray[setSize - 1] = num;
+		});
+		
+		var totalCount = 0;
+		$.each(jsonData["Both"], function(setSize, num) {
+			totalCount += num;
+			bothArray[setSize - 1] = num;
+		});
+
+		$('#anonymitySets').highcharts({
+			chart : {
+				type : 'line'
+			},
+		    title: {
+		        text: 'Anonymity set sizes'
+		    },
+		    subtitle: {
+		        text: 'Or in other words: How many fingerprints match x other fingerprints'
+		    },
+		    yAxis: {
+		    	type: 'logarithmic',
+		        title: {
+		            text: 'Number of fingerprints with this anonymity set size'
+		        },
+		        min: 0.1
+		    },
+		    xAxis: {
+		    	type: 'logarithmic',
+		        title: {
+		            text: 'Anonymity set size'
+		        }
+		    },
+		    legend: {
+		        layout: 'vertical',
+		        align: 'right',
+		        verticalAlign: 'middle',
+		        floating: true
+		    },
+		    plotOptions: {
+		        series: {
+		            pointStart: 1
+		        }
+		    },
+		    series: [
+		    	{
+		    		name: 'Both fingerprints with JavaScript enabled and disabled',
+		    		data: bothArray
+		    	},
+		    	{
+		    		name: 'Fingerprints with JavaScript enabled',
+		    		data: jsEnabledArray
+		    	},
+		    	{
+		    		name: 'Fingerprints with JavaScript disabled',
+		    		data: jsDisabledArray
+		    	},
+		    ]
+		})
+	});
+	
 	/* Uniqueness */
 	jQuery.getJSON("json?chart=uniqueness", function(jsonData){
 		var nbTotal = 0;
@@ -58,7 +135,7 @@ $(function() {
 				text : 'Fingerprint uniqueness'
 			},
 			subtitle: {
-				text: 'Among samples taken from 2016-07-06 onwards.'
+				text: 'With less stable tests not included. Among samples taken from 2016-07-06 onwards.'
 			},
 			yAxis : {
 				title : {
