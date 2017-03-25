@@ -56,14 +56,14 @@ $(function() {
 		    yAxis: {
 		    	type: 'logarithmic',
 		        title: {
-		            text: 'Number of fingerprints who are the same as x other fingerprints'
+		            text: 'Number of fingerprints who are the same as x other fingerprints (log scale)'
 		        },
 		        min: 0.1
 		    },
 		    xAxis: {
 		    	type: 'logarithmic',
 		        title: {
-		            text: 'Anonymity set size'
+		            text: 'Anonymity set size (log scale)'
 		        }
 		    },
 		    legend: {
