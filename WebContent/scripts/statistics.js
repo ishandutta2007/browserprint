@@ -24,9 +24,10 @@ $(function() {
 		var jsDisabledArray = new Array(largestSetSize);
 		var jsEnabledArray = new Array(largestSetSize);
 		var bothArray = new Array(largestSetSize);
+		
 		//Initialise the arrays to zero instead of null
 		for(var i = 0; i < largestSetSize; ++i){
-			bothArray[i] = jsEnabledArray[i] = jsDisabledArray[i] = 0.0001;
+			bothArray[i] = jsEnabledArray[i] = jsDisabledArray[i] = 0.0;
 		}
 		
 		$.each(jsonData["JavaScript disabled"], function(setSize, num) {
@@ -42,56 +43,88 @@ $(function() {
 			totalCount += num;
 			bothArray[setSize - 1] = setSize * num;
 		});
-
-		$('#anonymitySets').highcharts({
-			chart : {
-				type : 'line'
-			},
-		    title: {
-		        text: 'Anonymity set sizes'
-		    },
-		    subtitle: {
-		        text: 'Or in other words: How many fingerprints match x other fingerprints'
-		    },
-		    yAxis: {
-		    	type: 'logarithmic',
-		        title: {
-		            text: 'Number of fingerprints who are the same as x other fingerprints (log scale)'
-		        },
-		        min: 0.1
-		    },
-		    xAxis: {
-		    	type: 'logarithmic',
-		        title: {
-		            text: 'Anonymity set size (log scale)'
-		        }
-		    },
-		    legend: {
-		        layout: 'vertical',
-		        align: 'right',
-		        verticalAlign: 'top',
-		        floating: true
-		    },
-		    plotOptions: {
-		        series: {
-		            pointStart: 1
-		        }
-		    },
-		    series: [
-		    	{
-		    		name: 'Both fingerprints with JavaScript enabled and disabled',
-		    		data: bothArray
-		    	},
-		    	{
-		    		name: 'Fingerprints with JavaScript enabled',
-		    		data: jsEnabledArray
-		    	},
-		    	{
-		    		name: 'Fingerprints with JavaScript disabled',
-		    		data: jsDisabledArray
-		    	},
-		    ]
-		})
+		
+		var totalJsDisabled = 0;
+		var totalJsEnabled = 0;
+		var totalBoth = 0;
+		for(var i = 0; i < bothArray.length; ++i){
+			totalJsDisabled += jsDisabledArray[i];
+			totalJsEnabled += jsEnabledArray[i];
+			totalBoth += bothArray[i];
+		}
+		
+		{
+			var jsDisabledSum = 0;
+			var jsEnabledSum = 0;
+			var bothSum = 0;
+			for(var i = 0; i < bothArray.length; ++i){
+				jsDisabledSum += jsDisabledArray[i]; 
+				jsDisabledArray[i] = 100 * (1 - jsDisabledSum / totalJsDisabled);
+								
+				jsEnabledSum += jsEnabledArray[i]; 
+				jsEnabledArray[i] = 100 * (1 - jsEnabledSum / totalJsEnabled);
+				
+				bothSum += bothArray[i]; 
+				bothArray[i] = 100 * (1 - bothSum / totalBoth);
+			}
+		}
+		{			
+			$('#anonymitySetsCCDF').highcharts({
+				chart : {
+					type : 'line'
+				},
+			    title: {
+			        text: 'CCDF of anonymity set sizes'
+			    },
+			    subtitle: {
+			        text: 'Or in other words: Percentage of fingerprints that match more than x other fingerprints'
+			    },
+			    yAxis: {
+			    	type: 'logarithmic',
+			        title: {
+			            text: '% of fingerprints that are the same as > x others (log scale)'
+			        },
+			        min: 0.1
+			    },
+			    xAxis: {
+			    	type: 'logarithmic',
+			        title: {
+			            text: 'Anonymity set size (log scale)'
+			        }
+			    },
+			    legend: {
+			        layout: 'vertical',
+			        align: 'right',
+			        verticalAlign: 'top',
+			        floating: true
+			    },
+			    plotOptions: {
+			        series: {
+			            pointStart: 1
+			        }
+			    },
+			    tooltip : {
+					valueSuffix : '%',
+					formatter : function() {
+						return '<b>' + this.series.name + '</b><br><b>Percentage that match &gt; ' + this.x + ':</b> ' + Highcharts.numberFormat(this.y, 2) + '%';
+					}
+				},
+			    series: [
+			    	{
+			    		name: 'Both fingerprints with JavaScript enabled and disabled',
+			    		data: bothArray
+			    	},
+			    	{
+			    		name: 'Fingerprints with JavaScript enabled',
+			    		data: jsEnabledArray
+			    	},
+			    	{
+			    		name: 'Fingerprints with JavaScript disabled',
+			    		data: jsDisabledArray
+			    	},
+			    ]
+			});
+		}
 	});
 	
 	/* Uniqueness */
@@ -226,8 +259,8 @@ $(function() {
 				}
 			},
 			tooltip: {
-				headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-				pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
+				headerFormat: '',
+				pointFormat: '{point.name}: <b>{point.y:.2f}%</b> of total<br/>'
 			},
 			series: [{
 				name: 'Clients',
@@ -272,8 +305,8 @@ $(function() {
 				}
 			},
 			tooltip: {
-				headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-				pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
+				headerFormat: '',
+				pointFormat: '{point.name}: <b>{point.y:.2f}%</b> of total<br/>'
 			},
 			series: [{
 				name: 'Clients',
@@ -531,8 +564,8 @@ $(function() {
 				}
 			},
 			tooltip: {
-				headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-				pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
+				headerFormat: '',
+				pointFormat: '{point.name}: <b>{point.y:.2f}%</b> of total<br/>'
 			},
 			series: [{
 				name: 'Timezones',
@@ -585,8 +618,8 @@ $(function() {
 				}
 			},
 			tooltip: {
-				headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-				pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
+				headerFormat: '',
+				pointFormat: '{point.name}: <b>{point.y:.2f}%</b> of total<br/>'
 			},
 			series: [{
 				name: 'Client languages',
@@ -637,8 +670,8 @@ $(function() {
 				}
 			},
 			tooltip: {
-				headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-				pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
+				headerFormat: '',
+				pointFormat: '{point.name}: <b>{point.y:.2f}%</b> of total<br/>'
 			},
 			series: [{
 				name: 'Clients',
@@ -688,8 +721,8 @@ $(function() {
 				}
 			},
 			tooltip: {
-				headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-				pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
+				headerFormat: '',
+				pointFormat: '{point.name}: <b>{point.y:.2f}%</b> of total<br/>'
 			},
 			series: [{
 				name: 'Client languages',

@@ -19,7 +19,7 @@
 		Out of a total of ${ statisticsBean.numSamples } fingerprint samples:
 	</h1>
 	<div id="statisticsDiv">
-		<div id="anonymitySets" style="height: auto; width: auto;"></div>
+		<div id="anonymitySetsCCDF" style="height: auto; width: auto;"></div>
 		<div id="uniquenessGraph" style="height: auto; width: auto; float: left"></div>
 		<div id="torUsersGraph" style="height: auto; width: auto; float: right"></div>
 		<div id="osGraph" style="height: auto; width: auto; float: left"></div>
