@@ -186,16 +186,66 @@ public class TestServlet extends HttpServlet {
 		/*
 		 * Extract the rest of the fingerprint from the POST details.
 		 */
-		fingerprint.setPlatform(request.getParameter("Platform"));
-		fingerprint.setPlatformFlash(request.getParameter("PlatformFlash"));
-		fingerprint.setPluginDetails(request.getParameter("PluginDetails"));
-		fingerprint.setTimeZone(request.getParameter("TimeZone"));
-		fingerprint.setScreenDetails(request.getParameter("ScreenDetails"));
-		fingerprint.setScreenDetailsFlash(request.getParameter("ScreenDetailsFlash"));
-		fingerprint.setLanguageFlash(request.getParameter("LanguageFlash"));
-		fingerprint.setFonts(request.getParameter("Fonts"));
-		fingerprint.setFontsJS_CSS(request.getParameter("FontsJS_CSS"));
-		fingerprint.setCharSizes(request.getParameter("CharSizes"));
+		try{
+			fingerprint.setPlatform(new String(request.getParameter("Platform").getBytes("ISO8859-1"), "UTF-8"));
+		}
+		catch(UnsupportedEncodingException ex){
+			fingerprint.setPlatform(request.getParameter("Platform"));
+		}
+		try{
+			fingerprint.setPlatformFlash(new String(request.getParameter("PlatformFlash").getBytes("ISO8859-1"), "UTF-8"));
+		}
+		catch(UnsupportedEncodingException ex){
+			fingerprint.setPlatformFlash(request.getParameter("PlatformFlash"));
+		}
+		try{
+			fingerprint.setPluginDetails(new String(request.getParameter("PluginDetails").getBytes("ISO8859-1"), "UTF-8"));
+		}
+		catch(UnsupportedEncodingException ex){
+			fingerprint.setPluginDetails(request.getParameter("PluginDetails"));
+		}
+		try{
+			fingerprint.setTimeZone(new String(request.getParameter("TimeZone").getBytes("ISO8859-1"), "UTF-8"));
+		}
+		catch(UnsupportedEncodingException ex){
+			fingerprint.setTimeZone(request.getParameter("TimeZone"));
+		}
+		try{
+			fingerprint.setScreenDetails(new String(request.getParameter("ScreenDetails").getBytes("ISO8859-1"), "UTF-8"));
+		}
+		catch(UnsupportedEncodingException ex){
+			fingerprint.setScreenDetails(request.getParameter("ScreenDetails"));
+		}
+		try{
+			fingerprint.setScreenDetailsFlash(new String(request.getParameter("ScreenDetailsFlash").getBytes("ISO8859-1"), "UTF-8"));
+		}
+		catch(UnsupportedEncodingException ex){
+			fingerprint.setScreenDetailsFlash(request.getParameter("ScreenDetailsFlash"));
+		}
+		try{
+			fingerprint.setLanguageFlash(new String(request.getParameter("LanguageFlash").getBytes("ISO8859-1"), "UTF-8"));
+		}
+		catch(UnsupportedEncodingException ex){
+			fingerprint.setLanguageFlash(request.getParameter("LanguageFlash"));
+		}
+		try{
+			fingerprint.setFonts(new String(request.getParameter("Fonts").getBytes("ISO8859-1"), "UTF-8"));
+		}
+		catch(UnsupportedEncodingException ex){
+			fingerprint.setFonts(request.getParameter("Fonts"));
+		}
+		try{
+			fingerprint.setFontsJS_CSS(new String(request.getParameter("FontsJS_CSS").getBytes("ISO8859-1"), "UTF-8"));
+		}
+		catch(UnsupportedEncodingException ex){
+			fingerprint.setFontsJS_CSS(request.getParameter("FontsJS_CSS"));
+		}
+		try{
+			fingerprint.setCharSizes(new String(request.getParameter("CharSizes").getBytes("ISO8859-1"), "UTF-8"));
+		}
+		catch(UnsupportedEncodingException ex){
+			fingerprint.setCharSizes(request.getParameter("CharSizes"));
+		}
 		{
 			String val = request.getParameter("SuperCookieLocalStorage");
 			if (val != null) {
@@ -250,8 +300,18 @@ public class TestServlet extends HttpServlet {
 			long difference = (ourTime - theirTime) / (1000 * 60);
 			fingerprint.setClockDifference(difference);
 		}
-		fingerprint.setDateTime(request.getParameter("DateTime"));
-		fingerprint.setMathTan(request.getParameter("MathTan"));
+		try{
+			fingerprint.setDateTime(new String(request.getParameter("DateTime").getBytes("ISO8859-1"), "UTF-8"));
+		}
+		catch(UnsupportedEncodingException ex){
+			fingerprint.setDateTime(request.getParameter("DateTime"));
+		}
+		try{
+			fingerprint.setMathTan(new String(request.getParameter("MathTan").getBytes("ISO8859-1"), "UTF-8"));
+		}
+		catch(UnsupportedEncodingException ex){
+			fingerprint.setMathTan(request.getParameter("MathTan"));
+		}
 		fingerprint.setTbbVersion(request.getParameter("TbbVersion"));
 		{
 			String val = request.getParameter("AdsBlockedGoogle");
@@ -305,8 +365,18 @@ public class TestServlet extends HttpServlet {
 			}
 		}
 		fingerprint.setCanvas(request.getParameter("Canvas"));
-		fingerprint.setWebGLVendor(request.getParameter("WebGLVendor"));
-		fingerprint.setWebGLRenderer(request.getParameter("WebGLRenderer"));
+		try{
+			fingerprint.setWebGLVendor(new String(request.getParameter("WebGLVendor").getBytes("ISO8859-1"), "UTF-8"));
+		}
+		catch(UnsupportedEncodingException ex){
+			fingerprint.setWebGLVendor(request.getParameter("WebGLVendor"));
+		}
+		try{
+			fingerprint.setWebGLRenderer(new String(request.getParameter("WebGLRenderer").getBytes("ISO8859-1"), "UTF-8"));
+		}
+		catch(UnsupportedEncodingException ex){
+			fingerprint.setWebGLRenderer(request.getParameter("WebGLRenderer"));
+		}
 		{
 			try {
 				fingerprint.setTouchPoints(Integer.parseInt(request.getParameter("TouchPoints")));
@@ -334,7 +404,12 @@ public class TestServlet extends HttpServlet {
 				}
 			}
 		}
-		fingerprint.setAudioFingerprintPXI(request.getParameter("AudioFingerprintPXI"));
+		try{
+			fingerprint.setAudioFingerprintPXI(new String(request.getParameter("AudioFingerprintPXI").getBytes("ISO8859-1"), "UTF-8"));
+		}
+		catch(UnsupportedEncodingException ex){
+			fingerprint.setAudioFingerprintPXI(request.getParameter("AudioFingerprintPXI"));
+		}
 		fingerprint.setAudioFingerprintPXIFullBuffer(request.getParameter("AudioFingerprintPXIFullBuffer"));
 		fingerprint.setAudioFingerprintNtVc(request.getParameter("AudioFingerprintNtVc"));
 		fingerprint.setAudioFingerprintCC(request.getParameter("AudioFingerprintCC"));
@@ -451,6 +526,11 @@ public class TestServlet extends HttpServlet {
 			headers += headerName + ": " + header + "\n";
 		}
 		
+		try{
+			headers = new String(headers.getBytes("ISO8859-1"), "UTF-8");
+		} catch (Exception e) {
+			headers = request.getHeader("User-Agent");
+		}
 		return headers;
 	}
 	
