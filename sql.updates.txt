@@ -539,3 +539,8 @@ INSERT INTO `CountContrastLevel` (`ContrastLevel`, `Count`)
 
 --Convert the IP column to blob to get rid of that weird IP bug
 ALTER TABLE Samples MODIFY COLUMN IP BLOB;
+
+--Increment database version after site was made compatible with Chinese browsers
+START TRANSACTION;
+ALTER TABLE `Samples` MODIFY COLUMN `BrowserprintVersion` SMALLINT UNSIGNED NOT NULL DEFAULT 23;
+COMMIT;
