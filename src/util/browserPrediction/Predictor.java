@@ -28,22 +28,22 @@ public class Predictor {
 	private static final ArrayList<String> browserGroupsWeCareAbout;
 	static{
 		browserGroupsWeCareAbout = new ArrayList<String>();
-		browserGroupsWeCareAbout.add("OPERA");
-		browserGroupsWeCareAbout.add("FIREFOX");
 		browserGroupsWeCareAbout.add("CHROME");
-		browserGroupsWeCareAbout.add("SAFARI");
 		browserGroupsWeCareAbout.add("EDGE");
+		browserGroupsWeCareAbout.add("FIREFOX");
 		browserGroupsWeCareAbout.add("IE");
+		browserGroupsWeCareAbout.add("OPERA");
+		browserGroupsWeCareAbout.add("SAFARI");
 	}
 	
 	private static final ArrayList<String> osGroupsWeCareAbout;
 	static{
 		osGroupsWeCareAbout = new ArrayList<String>();
 		osGroupsWeCareAbout.add("WINDOWS");
-		osGroupsWeCareAbout.add("LINUX");
-		osGroupsWeCareAbout.add("ANDROID");
 		osGroupsWeCareAbout.add("IOS");
+		osGroupsWeCareAbout.add("LINUX");
 		osGroupsWeCareAbout.add("MAC_OS_X");
+		osGroupsWeCareAbout.add("ANDROID");
 	}
 	
 	public static void initialise(String browserModelFilePath, String osModelFilePath, String fontsPath) throws Exception{
