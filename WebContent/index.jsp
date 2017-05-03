@@ -37,6 +37,9 @@
 		This project would not be possible without these institutions' help.
 	</p>
 	<p>
+		<b>News 2017-05-03</b> A new <a href="blog/defeatingSpoofing">blog post</a> in which we discuss how Browserprint guesses your browser family and operating system, and how accurate this is.
+	</p>
+	<p>
 		<b>News 2017-02-15</b> Browserprint now tries to guess what operating system you're using in the same way that it guesses your browser.
 		This can also theoretically be used to detect and defeat fingerprint spoofing.
 	</p>

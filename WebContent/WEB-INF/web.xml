@@ -215,6 +215,15 @@
     <servlet-name>blogMutualInfoClustering</servlet-name>
     <url-pattern>/blog/mutualInfoClustering</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <display-name>blogDefeatingSpoofing</display-name>
+    <servlet-name>blogDefeatingSpoofing</servlet-name>
+    <jsp-file>/WEB-INF/blog/defeatingSpoofing.jsp</jsp-file>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>blogDefeatingSpoofing</servlet-name>
+    <url-pattern>/blog/defeatingSpoofing</url-pattern>
+  </servlet-mapping>
   <security-constraint>
     <web-resource-collection>
       <web-resource-name>HstsTest any protocol</web-resource-name>

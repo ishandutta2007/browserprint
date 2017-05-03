@@ -9,6 +9,13 @@
 		<link>https://${ initParam['websiteBaseURL'] }/</link>
 		<description>Blog posts from Browserprint.</description>
 		<item>
+			<title>Detecting and defeating browser spoofing</title>
+			<link>https://${ initParam['websiteBaseURL'] }/blog/defeatingSpoofing</link>
+			<guid>https://${ initParam['websiteBaseURL'] }/blog/defeatingSpoofing</guid>
+			<pubDate>Wed, 3 May 2017 11:30:00 +0930</pubDate>
+			<description>A blog post where we talk about how Browserprint guesses your browser family and operating system, and how accurate it is.</description>
+		</item>
+		<item>
 			<title>Finding independent clusters of fingerprint features</title>
 			<link>https://${ initParam['websiteBaseURL'] }/blog/mutualInfoClustering</link>
 			<guid>https://${ initParam['websiteBaseURL'] }/blog/mutualInfoClustering</guid>

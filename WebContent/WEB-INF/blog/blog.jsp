@@ -11,6 +11,20 @@
 <body>
 <common:header/>
 <div id="content">
+	<h2><a href="defeatingSpoofing">Detecting and defeating browser spoofing</a></h2>
+	<h4>Posted: 2017-05-03<br/>
+	By <a href="mailto:${initParam['devEmail']}?subject=Blog%20-%20Defeating%20spoofing">Lachlan Kang</a></h4>
+	<p>
+		Today we'll be discussing how Browserprint uses machine learning and your fingerprint to guess what browser family your browser is from, and what operating system you're using.
+		The motivation for guessing these properties is to see if we can defeat fingerprint spoofing, particularly user-agent string spoofing, as this is simplest and most common form of spoofing.
+		Because of this we ignored user-agent string when guessing browser families and operating systems, except when otherwise specified.
+		We find that our method of browser guessing provides accuracy much better than random guessing.
+		In fact we'll show that we can detect the true browser and operating system of a browser that is spoofing these things around 76% of the time,
+		 and that we can guess the operating system and browser family of browsers in general approximately 90% of the time, all with a final training set of less than 1000 fingerprints (imagine what could be done with 10,000).
+	</p>
+	<p class="continueReading">
+		<a href="defeatingSpoofing">Continue reading ...</a>
+	</p>
 	<h2><a href="mutualInfoClustering">Finding independent clusters of fingerprint features</a></h2>
 	<h4>Posted: 2017-01-24<br/>
 	By <a href="mailto:${initParam['devEmail']}?subject=Blog%20-%20Mutual%20info%20clustering">Lachlan Kang</a></h4>
