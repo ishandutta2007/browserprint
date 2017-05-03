@@ -7,7 +7,9 @@ import java.sql.SQLException;
 import beans.StatisticsBean;
 import datastructures.Fingerprint;
 import eu.bitwalker.useragentutils.Browser;
+import eu.bitwalker.useragentutils.OperatingSystem;
 import eu.bitwalker.useragentutils.UserAgent;
+import eu.bitwalker.useragentutils.Version;
 
 public class StatisticsDAO {
 	public static final void saveStatistics(int sampleID, Fingerprint fingerprint){
@@ -23,14 +25,31 @@ public class StatisticsDAO {
 			
 			UserAgent ua = new UserAgent(fingerprint.getUser_agent());
 			insertStatistics.setString(2, ua.getBrowser().getGroup().toString());
-			if(ua.getBrowser().getGroup().equals(Browser.UNKNOWN)){
+			Browser browser = ua.getBrowser();
+			if(browser == null){
+				insertStatistics.setString(3, "Unknown1");
+			}
+			else if(browser.getGroup().equals(Browser.UNKNOWN)){
 				insertStatistics.setString(3, "Unknown");
 			}
 			else{
-				insertStatistics.setString(3, ua.getBrowserVersion().getMajorVersion());
+				Version ver = ua.getBrowserVersion();
+				if(ver == null){
+					insertStatistics.setString(3, "Unknown2");
+				}
+				else{
+					insertStatistics.setString(3, ua.getBrowserVersion().getMajorVersion());
+				}
 			}
-			insertStatistics.setString(4, ua.getOperatingSystem().getGroup().toString());
-			insertStatistics.setString(5, ua.getOperatingSystem().getName());
+			OperatingSystem os = ua.getOperatingSystem();
+			if(os == null){
+				insertStatistics.setString(4, "Unknown");
+				insertStatistics.setString(5, "Unknown");
+			}
+			else{
+				insertStatistics.setString(4, os.getGroup().toString());
+				insertStatistics.setString(5, os.getName());
+			}
 			
 			insertStatistics.execute();
 		} catch (Exception e) {

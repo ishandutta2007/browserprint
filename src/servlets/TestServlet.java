@@ -191,59 +191,69 @@ public class TestServlet extends HttpServlet {
 		}
 		catch(UnsupportedEncodingException ex){
 			fingerprint.setPlatform(request.getParameter("Platform"));
+			ex.printStackTrace();
 		}
 		try{
 			fingerprint.setPlatformFlash(new String(request.getParameter("PlatformFlash").getBytes("ISO8859-1"), "UTF-8"));
 		}
 		catch(UnsupportedEncodingException ex){
 			fingerprint.setPlatformFlash(request.getParameter("PlatformFlash"));
+			ex.printStackTrace();
 		}
 		try{
 			fingerprint.setPluginDetails(new String(request.getParameter("PluginDetails").getBytes("ISO8859-1"), "UTF-8"));
 		}
 		catch(UnsupportedEncodingException ex){
 			fingerprint.setPluginDetails(request.getParameter("PluginDetails"));
+			ex.printStackTrace();
 		}
 		try{
 			fingerprint.setTimeZone(new String(request.getParameter("TimeZone").getBytes("ISO8859-1"), "UTF-8"));
 		}
 		catch(UnsupportedEncodingException ex){
 			fingerprint.setTimeZone(request.getParameter("TimeZone"));
+			ex.printStackTrace();
 		}
 		try{
 			fingerprint.setScreenDetails(new String(request.getParameter("ScreenDetails").getBytes("ISO8859-1"), "UTF-8"));
 		}
 		catch(UnsupportedEncodingException ex){
 			fingerprint.setScreenDetails(request.getParameter("ScreenDetails"));
+			ex.printStackTrace();
 		}
 		try{
 			fingerprint.setScreenDetailsFlash(new String(request.getParameter("ScreenDetailsFlash").getBytes("ISO8859-1"), "UTF-8"));
 		}
 		catch(UnsupportedEncodingException ex){
 			fingerprint.setScreenDetailsFlash(request.getParameter("ScreenDetailsFlash"));
+			ex.printStackTrace();
 		}
 		try{
 			fingerprint.setLanguageFlash(new String(request.getParameter("LanguageFlash").getBytes("ISO8859-1"), "UTF-8"));
 		}
 		catch(UnsupportedEncodingException ex){
 			fingerprint.setLanguageFlash(request.getParameter("LanguageFlash"));
+			ex.printStackTrace();
 		}
 		try{
 			fingerprint.setFonts(new String(request.getParameter("Fonts").getBytes("ISO8859-1"), "UTF-8"));
 		}
 		catch(UnsupportedEncodingException ex){
+			ex.printStackTrace();
 			fingerprint.setFonts(request.getParameter("Fonts"));
 		}
 		try{
 			fingerprint.setFontsJS_CSS(new String(request.getParameter("FontsJS_CSS").getBytes("ISO8859-1"), "UTF-8"));
 		}
 		catch(UnsupportedEncodingException ex){
+			ex.printStackTrace();
 			fingerprint.setFontsJS_CSS(request.getParameter("FontsJS_CSS"));
 		}
 		try{
 			fingerprint.setCharSizes(new String(request.getParameter("CharSizes").getBytes("ISO8859-1"), "UTF-8"));
 		}
 		catch(UnsupportedEncodingException ex){
+			ex.printStackTrace();
 			fingerprint.setCharSizes(request.getParameter("CharSizes"));
 		}
 		{
@@ -305,12 +315,14 @@ public class TestServlet extends HttpServlet {
 		}
 		catch(UnsupportedEncodingException ex){
 			fingerprint.setDateTime(request.getParameter("DateTime"));
+			ex.printStackTrace();
 		}
 		try{
 			fingerprint.setMathTan(new String(request.getParameter("MathTan").getBytes("ISO8859-1"), "UTF-8"));
 		}
 		catch(UnsupportedEncodingException ex){
 			fingerprint.setMathTan(request.getParameter("MathTan"));
+			ex.printStackTrace();
 		}
 		fingerprint.setTbbVersion(request.getParameter("TbbVersion"));
 		{
@@ -370,12 +382,14 @@ public class TestServlet extends HttpServlet {
 		}
 		catch(UnsupportedEncodingException ex){
 			fingerprint.setWebGLVendor(request.getParameter("WebGLVendor"));
+			ex.printStackTrace();
 		}
 		try{
 			fingerprint.setWebGLRenderer(new String(request.getParameter("WebGLRenderer").getBytes("ISO8859-1"), "UTF-8"));
 		}
 		catch(UnsupportedEncodingException ex){
 			fingerprint.setWebGLRenderer(request.getParameter("WebGLRenderer"));
+			ex.printStackTrace();
 		}
 		{
 			try {
