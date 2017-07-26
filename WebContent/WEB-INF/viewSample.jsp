@@ -31,7 +31,7 @@
 	<p>
 		View past browser fingerprints.
 	</p>
-	<c:if test="${ !requestScope.cookiesEnabled }"><p class="error">
+	<c:if test="${ cookie['cookies_enabled'] == null }"><p class="error">
 		To keep track of your history you need cookies enabled.
 	</p></c:if>
 	<div id="viewDiv">
