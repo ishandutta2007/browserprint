@@ -49,6 +49,11 @@ public class CookieFilter implements Filter {
 		((HttpServletResponse) response).addCookie(cookie);
 
 		// pass the request along the filter chain
-		chain.doFilter(request, response);
+		if(chain != null){
+			chain.doFilter(request, response);
+		}
+		else{
+			return;
+		}
 	}
 }

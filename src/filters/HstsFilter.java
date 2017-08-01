@@ -55,6 +55,11 @@ public class HstsFilter implements Filter {
 		}
 
 		// pass the request along the filter chain
-		chain.doFilter(request, response);
+		if(chain != null){
+			chain.doFilter(request, response);
+		}
+		else{
+			return;
+		}
 	}
 }

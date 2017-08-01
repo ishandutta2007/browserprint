@@ -1,7 +1,6 @@
 package servlets;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
@@ -19,8 +18,8 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import DAOs.FingerprintDAO;
-import beans.PredictionBean;
 import beans.CharacteristicsBean;
+import beans.PredictionBean;
 import beans.UniquenessBean;
 import datastructures.ContrastCaptcha;
 import datastructures.Fingerprint;
@@ -189,70 +188,70 @@ public class TestServlet extends HttpServlet {
 		try{
 			fingerprint.setPlatform(new String(request.getParameter("Platform").getBytes("ISO8859-1"), "UTF-8"));
 		}
-		catch(UnsupportedEncodingException ex){
+		catch(Exception ex){
 			fingerprint.setPlatform(request.getParameter("Platform"));
 			ex.printStackTrace();
 		}
 		try{
 			fingerprint.setPlatformFlash(new String(request.getParameter("PlatformFlash").getBytes("ISO8859-1"), "UTF-8"));
 		}
-		catch(UnsupportedEncodingException ex){
+		catch(Exception ex){
 			fingerprint.setPlatformFlash(request.getParameter("PlatformFlash"));
 			ex.printStackTrace();
 		}
 		try{
 			fingerprint.setPluginDetails(new String(request.getParameter("PluginDetails").getBytes("ISO8859-1"), "UTF-8"));
 		}
-		catch(UnsupportedEncodingException ex){
+		catch(Exception ex){
 			fingerprint.setPluginDetails(request.getParameter("PluginDetails"));
 			ex.printStackTrace();
 		}
 		try{
 			fingerprint.setTimeZone(new String(request.getParameter("TimeZone").getBytes("ISO8859-1"), "UTF-8"));
 		}
-		catch(UnsupportedEncodingException ex){
+		catch(Exception ex){
 			fingerprint.setTimeZone(request.getParameter("TimeZone"));
 			ex.printStackTrace();
 		}
 		try{
 			fingerprint.setScreenDetails(new String(request.getParameter("ScreenDetails").getBytes("ISO8859-1"), "UTF-8"));
 		}
-		catch(UnsupportedEncodingException ex){
+		catch(Exception ex){
 			fingerprint.setScreenDetails(request.getParameter("ScreenDetails"));
 			ex.printStackTrace();
 		}
 		try{
 			fingerprint.setScreenDetailsFlash(new String(request.getParameter("ScreenDetailsFlash").getBytes("ISO8859-1"), "UTF-8"));
 		}
-		catch(UnsupportedEncodingException ex){
+		catch(Exception ex){
 			fingerprint.setScreenDetailsFlash(request.getParameter("ScreenDetailsFlash"));
 			ex.printStackTrace();
 		}
 		try{
 			fingerprint.setLanguageFlash(new String(request.getParameter("LanguageFlash").getBytes("ISO8859-1"), "UTF-8"));
 		}
-		catch(UnsupportedEncodingException ex){
+		catch(Exception ex){
 			fingerprint.setLanguageFlash(request.getParameter("LanguageFlash"));
 			ex.printStackTrace();
 		}
 		try{
 			fingerprint.setFonts(new String(request.getParameter("Fonts").getBytes("ISO8859-1"), "UTF-8"));
 		}
-		catch(UnsupportedEncodingException ex){
+		catch(Exception ex){
 			ex.printStackTrace();
 			fingerprint.setFonts(request.getParameter("Fonts"));
 		}
 		try{
 			fingerprint.setFontsJS_CSS(new String(request.getParameter("FontsJS_CSS").getBytes("ISO8859-1"), "UTF-8"));
 		}
-		catch(UnsupportedEncodingException ex){
+		catch(Exception ex){
 			ex.printStackTrace();
 			fingerprint.setFontsJS_CSS(request.getParameter("FontsJS_CSS"));
 		}
 		try{
 			fingerprint.setCharSizes(new String(request.getParameter("CharSizes").getBytes("ISO8859-1"), "UTF-8"));
 		}
-		catch(UnsupportedEncodingException ex){
+		catch(Exception ex){
 			ex.printStackTrace();
 			fingerprint.setCharSizes(request.getParameter("CharSizes"));
 		}
@@ -313,14 +312,14 @@ public class TestServlet extends HttpServlet {
 		try{
 			fingerprint.setDateTime(new String(request.getParameter("DateTime").getBytes("ISO8859-1"), "UTF-8"));
 		}
-		catch(UnsupportedEncodingException ex){
+		catch(Exception ex){
 			fingerprint.setDateTime(request.getParameter("DateTime"));
 			ex.printStackTrace();
 		}
 		try{
 			fingerprint.setMathTan(new String(request.getParameter("MathTan").getBytes("ISO8859-1"), "UTF-8"));
 		}
-		catch(UnsupportedEncodingException ex){
+		catch(Exception ex){
 			fingerprint.setMathTan(request.getParameter("MathTan"));
 			ex.printStackTrace();
 		}
@@ -380,14 +379,14 @@ public class TestServlet extends HttpServlet {
 		try{
 			fingerprint.setWebGLVendor(new String(request.getParameter("WebGLVendor").getBytes("ISO8859-1"), "UTF-8"));
 		}
-		catch(UnsupportedEncodingException ex){
+		catch(Exception ex){
 			fingerprint.setWebGLVendor(request.getParameter("WebGLVendor"));
 			ex.printStackTrace();
 		}
 		try{
 			fingerprint.setWebGLRenderer(new String(request.getParameter("WebGLRenderer").getBytes("ISO8859-1"), "UTF-8"));
 		}
-		catch(UnsupportedEncodingException ex){
+		catch(Exception ex){
 			fingerprint.setWebGLRenderer(request.getParameter("WebGLRenderer"));
 			ex.printStackTrace();
 		}
@@ -421,7 +420,7 @@ public class TestServlet extends HttpServlet {
 		try{
 			fingerprint.setAudioFingerprintPXI(new String(request.getParameter("AudioFingerprintPXI").getBytes("ISO8859-1"), "UTF-8"));
 		}
-		catch(UnsupportedEncodingException ex){
+		catch(Exception ex){
 			fingerprint.setAudioFingerprintPXI(request.getParameter("AudioFingerprintPXI"));
 		}
 		fingerprint.setAudioFingerprintPXIFullBuffer(request.getParameter("AudioFingerprintPXIFullBuffer"));
@@ -591,7 +590,7 @@ public class TestServlet extends HttpServlet {
 		try {
 			// We get the headers this more long-winded way so that they may have unicode characters inside them.
 			return new String(accept.getBytes("ISO8859-1"), "UTF-8") + " " + new String(accept_encoding.getBytes("ISO8859-1"), "UTF-8") + " " + new String(accept_language.getBytes("ISO8859-1"), "UTF-8");
-		} catch (UnsupportedEncodingException e) {
+		} catch (Exception e) {
 			// Fallback to regular method.
 			return accept + " " + accept_encoding + " " + accept_language;
 		}
@@ -650,7 +649,7 @@ public class TestServlet extends HttpServlet {
 					return new String(digest.digest());
 				} catch (NoSuchAlgorithmException ex) {
 					throw new ServletException(ex);
-				} catch (UnsupportedEncodingException ex) {
+				} catch (Exception ex) {
 					throw new ServletException(ex);
 				}
 			} else if (ipHandling.equals("PARTIAL")) {
