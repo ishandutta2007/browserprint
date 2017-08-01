@@ -80,6 +80,10 @@
 	</p>
 	<h3>Method 3: Use multiple browsers</h3>
 	<p>
+		<b>Update 2017-08-01:</b> This method is no longer recommended as Cao, Li, and Wijmans [<a href="#ref8">8</a>] published techniques for cross browser fingerprinting which actually showed decent effectiveness.
+		If their results hold true then this technique is now, in the worst case scenario, little more than a placebo.
+	</p>
+	<p>
 		The third method is to use a different browser for different activities on the web.
 		In its simplest form you partition your browsing habits between two browsers,
 		 for instance one browser for things tied to your identity (LinkedIn, Facebook, Google+, banking, online shopping) and one another for general browsing.
@@ -164,6 +168,7 @@
 		<li><a name="ref5"></a>Laperdrix, P., Rudametkin, W., Baudry, B.: Beauty and the Beast: Diverting modern web browsers to build unique browser fingerprints. In: 37th IEEE Symposium on Security and Privacy (S&P 2016) (2016)</li>
 		<li><a name="ref6"></a>Torres, C.F., Jonker, H., Mauw, S.: FP-Block: usable web privacy by controlling browser fingerprinting. In: European Symposium on Research in Computer Security, pp. 3–19. Springer (2015)</li>
 		<li><a name="ref7"></a>Nikiforakis, N., Joosen, W., Livshits, B.: PriVaricator: Deceiving Fingerprinters With Little White Lies. In: Proceedings of the 24th International Conference on World Wide Web, pp. 820–830. ACM (2015)</li>
+		<li><a name="ref8"></a>Yinzhi Cao, Song Li, and Erik Wijmans. 2017. (Cross-)Browser Fingerprinting via OS and Hardware Level Features. In Proc. of Network & Distributed System Security Symposium (NDSS).</li>
 	</ol>
 </div>
 <common:footer/>
